@@ -4,71 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Comercial · Gaideski</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --verde: #00C896;
-    --verde-escuro: #00A07A;
-    --azul: #0A1628;
-    --azul-meio: #0F2040;
-    --cinza: #1A2E48;
-    --borda: rgba(0,200,150,0.15);
-    --texto: #E8F4F0;
-    --texto-fraco: #7A9E90;
-  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--azul); color: var(--texto); min-height: 100vh; }
-  header { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--borda); background: var(--azul-meio); }
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: var(--verde); letter-spacing: -0.5px; }
-  .logo span { color: var(--texto); }
-  #status-pill { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--texto-fraco); background: var(--cinza); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--borda); }
-  #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; transition: background 0.3s; }
-  #status-dot.ok { background: var(--verde); box-shadow: 0 0 6px var(--verde); }
-  #status-dot.erro { background: #FF4D4D; }
-  .main { padding: 28px 32px; }
-  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-  .card { background: var(--azul-meio); border: 1px solid var(--borda); border-radius: 16px; padding: 22px 24px; position: relative; overflow: hidden; transition: transform 0.2s; }
-  .card:hover { transform: translateY(-2px); border-color: rgba(0,200,150,0.35); }
-  .card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--texto-fraco); margin-bottom: 10px; font-family: 'Syne', sans-serif; font-weight: 600; }
-  .card-valor { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: var(--verde); line-height: 1; }
-  .card-sub { font-size: 12px; color: var(--texto-fraco); margin-top: 6px; }
-  .secao { margin-bottom: 28px; }
-  .secao-titulo { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--verde); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-  .secao-titulo::after { content: ''; flex: 1; height: 1px; background: var(--borda); }
-  .funil-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-  .etapa-card { background: var(--cinza); border: 1px solid var(--borda); border-radius: 12px; padding: 16px; text-align: center; }
-  .etapa-nome { font-size: 12px; color: var(--texto-fraco); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .etapa-count { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--texto); }
-  .etapa-bar { height: 3px; background: var(--borda); border-radius: 2px; margin-top: 10px; overflow: hidden; }
-  .etapa-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde-escuro), var(--verde)); border-radius: 2px; transition: width 0.8s ease; }
-  .tabela-wrap { background: var(--azul-meio); border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; }
-  .tabela-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--borda); }
-  .tabela-titulo { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
-  #busca-lead { background: var(--cinza); border: 1px solid var(--borda); border-radius: 8px; padding: 7px 14px; color: var(--texto); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 220px; }
-  #busca-lead:focus { border-color: var(--verde); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { padding: 10px 16px; text-align: left; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--texto-fraco); background: var(--cinza); }
-  td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--texto); }
+  body { font-family: 'Inter', sans-serif; background: #F5F6F8; color: #1A1D23; min-height: 100vh; font-size: 14px; }
+  header { background: #fff; border-bottom: 1px solid #E5E7EB; padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-size: 15px; font-weight: 600; color: #1A1D23; letter-spacing: -0.3px; }
+  .logo span { color: #9CA3AF; font-weight: 400; }
+  #status-pill { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #6B7280; background: #F9FAFB; padding: 5px 12px; border-radius: 20px; border: 1px solid #E5E7EB; }
+  #status-dot { width: 7px; height: 7px; border-radius: 50%; background: #D1D5DB; }
+  #status-dot.ok   { background: #10B981; }
+  #status-dot.erro { background: #EF4444; }
+  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  .page-title { font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px; }
+  .page-title span { font-size: 13px; font-weight: 400; color: #9CA3AF; margin-left: 8px; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 20px 22px; }
+  .card-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; color: #9CA3AF; margin-bottom: 10px; }
+  .card-valor { font-size: 32px; font-weight: 700; color: #111827; line-height: 1; }
+  .card-sub { font-size: 12px; color: #9CA3AF; margin-top: 5px; }
+  .card-accent { border-left: 3px solid #111827; }
+  .card-green  { border-left: 3px solid #10B981; }
+  .card-blue   { border-left: 3px solid #3B82F6; }
+  .card-gray   { border-left: 3px solid #9CA3AF; }
+  .secao { margin-bottom: 24px; }
+  .secao-titulo { font-size: 11px; font-weight: 600; color: #6B7280; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .funil-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .etapa-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; }
+  .etapa-nome { font-size: 11px; color: #6B7280; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .etapa-count { font-size: 24px; font-weight: 700; color: #111827; }
+  .etapa-bar { height: 2px; background: #F3F4F6; border-radius: 2px; margin-top: 8px; }
+  .etapa-bar-fill { height: 100%; background: #374151; border-radius: 2px; transition: width 0.6s ease; }
+  .tabela-wrap { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
+  .tabela-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #F3F4F6; }
+  .tabela-titulo { font-size: 13px; font-weight: 600; color: #374151; }
+  #busca-lead { background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 6px 12px; color: #374151; font-family: 'Inter', sans-serif; font-size: 13px; outline: none; width: 200px; }
+  #busca-lead:focus { border-color: #9CA3AF; }
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: #9CA3AF; background: #F9FAFB; border-bottom: 1px solid #F3F4F6; }
+  td { padding: 11px 16px; border-bottom: 1px solid #F9FAFB; color: #374151; font-size: 13px; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(0,200,150,0.04); }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-  .badge-verde { background: rgba(0,200,150,0.15); color: var(--verde); }
-  .badge-azul  { background: rgba(30,100,255,0.15); color: #6BAAFF; }
-  .badge-roxo  { background: rgba(160,80,255,0.15); color: #C084FC; }
-  .badge-cinza { background: rgba(255,255,255,0.08); color: var(--texto-fraco); }
-  #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
-  .spinner { width: 40px; height: 40px; border: 3px solid var(--borda); border-top-color: var(--verde); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  tr:hover td { background: #FAFAFA; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+  .badge-ganho    { background: #ECFDF5; color: #065F46; }
+  .badge-proposta { background: #EFF6FF; color: #1D4ED8; }
+  .badge-negoc    { background: #FEF3C7; color: #92400E; }
+  .badge-contato  { background: #F9FAFB; color: #374151; border: 1px solid #E5E7EB; }
+  #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 14px; }
+  .spinner { width: 28px; height: 28px; border: 2px solid #E5E7EB; border-top-color: #374151; border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-txt { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--texto-fraco); }
-  #erro-msg { display: none; background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); border-radius: 12px; padding: 20px 24px; margin: 20px 0; color: #FF8080; font-size: 14px; }
-  .atualizado { font-size: 12px; color: var(--texto-fraco); }
-  @media (max-width: 600px) { .main { padding: 16px; } header { padding: 16px; } .card-valor { font-size: 28px; } #busca-lead { width: 150px; } th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { display: none; } }
+  .loading-txt { font-size: 13px; color: #9CA3AF; }
+  #erro-msg { display: none; background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 16px 20px; margin: 16px 0; color: #991B1B; font-size: 13px; }
+  .atualizado { font-size: 11px; color: #D1D5DB; margin-top: 16px; }
+  @media (max-width: 600px) { .main { padding: 16px; } header { padding: 0 16px; } th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { display: none; } }
 </style>
 </head>
 <body>
  
 <header>
-  <div class="logo">Gaideski <span>· CRM</span></div>
+  <div class="logo">Gaideski <span>· Dashboard Comercial</span></div>
   <div id="status-pill">
     <div id="status-dot"></div>
     <span id="status-txt">Conectando...</span>
@@ -76,22 +70,24 @@
 </header>
  
 <div class="main">
-  <div id="loading">
-    <div class="spinner"></div>
-    <div class="loading-txt">Carregando dados do Kommo...</div>
-  </div>
+  <div id="loading"><div class="spinner"></div><div class="loading-txt">Carregando dados do Kommo...</div></div>
   <div id="erro-msg"></div>
   <div id="conteudo" style="display:none">
+ 
+    <div class="page-title">Visão Geral <span id="data-atual"></span></div>
+ 
     <div class="cards-grid">
-      <div class="card"><div class="card-label">Total de Leads</div><div class="card-valor" id="total-leads">—</div><div class="card-sub">no funil principal</div></div>
-      <div class="card"><div class="card-label">Novos (7 dias)</div><div class="card-valor" id="leads-semana">—</div><div class="card-sub">últimos 7 dias</div></div>
-      <div class="card"><div class="card-label">Em Negociação</div><div class="card-valor" id="em-negociacao">—</div><div class="card-sub">propostas ativas</div></div>
-      <div class="card"><div class="card-label">Ganhos</div><div class="card-valor" id="ganhos">—</div><div class="card-sub">clientes fechados</div></div>
+      <div class="card card-accent"><div class="card-label">Total de Leads</div><div class="card-valor" id="total-leads">—</div><div class="card-sub">no funil</div></div>
+      <div class="card card-blue"><div class="card-label">Novos (7 dias)</div><div class="card-valor" id="leads-semana">—</div><div class="card-sub">últimos 7 dias</div></div>
+      <div class="card card-gray"><div class="card-label">Em Negociação</div><div class="card-valor" id="em-negociacao">—</div><div class="card-sub">propostas ativas</div></div>
+      <div class="card card-green"><div class="card-label">Ganhos</div><div class="card-valor" id="ganhos">—</div><div class="card-sub">clientes fechados</div></div>
     </div>
+ 
     <div class="secao">
       <div class="secao-titulo">Etapas do Funil</div>
       <div class="funil-grid" id="funil-etapas"></div>
     </div>
+ 
     <div class="secao">
       <div class="secao-titulo">Leads Recentes</div>
       <div class="tabela-wrap">
@@ -101,113 +97,103 @@
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Nome</th><th>Etapa</th><th>Responsável</th><th>Criado em</th><th>Valor</th></tr></thead>
+            <thead><tr><th>Nome</th><th>Etapa</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
             <tbody id="tabela-leads"></tbody>
           </table>
         </div>
       </div>
     </div>
+ 
     <div class="atualizado" id="atualizado-em"></div>
   </div>
 </div>
  
 <script>
-// Usa o proxy interno do Netlify — sem CORS!
 const BASE = '/kommo-api';
- 
 let todosLeads = [];
+let _statusMap = {};
  
-async function kommoFetch(endpoint) {
-  const r = await fetch(BASE + endpoint);
-  if (!r.ok) throw new Error('Erro ' + r.status + ' ao buscar dados');
+async function kommoFetch(ep) {
+  const r = await fetch(BASE + ep);
+  if (!r.ok) throw new Error('Erro ' + r.status);
   return r.json();
 }
  
-function statusOk(txt)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=txt; }
-function statusErro(txt) { document.getElementById('status-dot').className='erro'; document.getElementById('status-txt').textContent=txt; }
+function statusOk(t)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=t; }
+function statusErro(t) { document.getElementById('status-dot').className='erro'; document.getElementById('status-txt').textContent=t; }
  
-function mostrarErro(msg) {
-  document.getElementById('loading').style.display = 'none';
-  const el = document.getElementById('erro-msg');
-  el.style.display = 'block';
-  el.innerHTML = '<strong>Erro ao carregar dados</strong><br><br>' + msg + '<br><br><button onclick="carregarDados()" style="background:var(--verde);color:var(--azul);border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600">Tentar novamente</button>';
-  statusErro('Erro de conexão');
+function mostrarErro(m) {
+  document.getElementById('loading').style.display='none';
+  const el=document.getElementById('erro-msg');
+  el.style.display='block';
+  el.innerHTML='<strong>Erro ao carregar dados</strong><br><br>'+m+'<br><br><button onclick="carregar()" style="background:#1F2937;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px">Tentar novamente</button>';
+  statusErro('Erro');
 }
  
-function badgeEtapa(nome) {
-  const n = (nome||'').toLowerCase();
-  if (n.includes('novo') || n.includes('entrada')) return 'badge-cinza';
-  if (n.includes('proposta') || n.includes('enviado')) return 'badge-azul';
-  if (n.includes('contrato') || n.includes('fechado') || n.includes('ganho')) return 'badge-verde';
-  return 'badge-roxo';
+function badgeClass(nome) {
+  const n=(nome||'').toLowerCase();
+  if(n.includes('ganho')||n.includes('contrato')||n.includes('onboarding')) return 'badge-ganho';
+  if(n.includes('proposta')||n.includes('offer')||n.includes('negotiation')) return 'badge-proposta';
+  if(n.includes('atendimento')||n.includes('reunião')||n.includes('qualif')||n.includes('no-show')) return 'badge-negoc';
+  return 'badge-contato';
 }
  
-function formatData(ts) { if (!ts) return '—'; return new Date(ts * 1000).toLocaleDateString('pt-BR'); }
-function formatValor(v) { if (!v) return '—'; return 'R$ ' + Number(v).toLocaleString('pt-BR'); }
+function formatData(ts) { if(!ts)return'—'; return new Date(ts*1000).toLocaleDateString('pt-BR'); }
+function formatValor(v) { if(!v)return'—'; return 'R$ '+Number(v).toLocaleString('pt-BR'); }
  
-async function carregarDados() {
-  document.getElementById('loading').style.display = 'flex';
-  document.getElementById('conteudo').style.display = 'none';
-  document.getElementById('erro-msg').style.display = 'none';
- 
+async function carregar() {
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('conteudo').style.display='none';
+  document.getElementById('erro-msg').style.display='none';
   try {
-    const [pipeData, leadsData] = await Promise.all([
-      kommoFetch('/leads/pipelines?limit=50'),
-      kommoFetch('/leads?limit=250&order[created_at]=desc')
+    const [ld, pd] = await Promise.all([
+      kommoFetch('/leads?limit=250&order[created_at]=desc'),
+      kommoFetch('/leads/pipelines?limit=50')
     ]);
- 
-    const pipelines = pipeData?._embedded?.pipelines || [];
-    const leads = leadsData?._embedded?.leads || [];
+    const leads = ld?._embedded?.leads || [];
+    const pipes = pd?._embedded?.pipelines || [];
     todosLeads = leads;
- 
-    const agora = Math.floor(Date.now() / 1000);
+    pipes.forEach(p=>(p._embedded?.statuses||[]).forEach(s=>{_statusMap[s.id]=s.name}));
+    const agora = Math.floor(Date.now()/1000);
+    document.getElementById('data-atual').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
     document.getElementById('total-leads').textContent   = leads.length;
-    document.getElementById('leads-semana').textContent  = leads.filter(l => l.created_at >= agora - 7*86400).length;
-    document.getElementById('em-negociacao').textContent = leads.filter(l => !l.closed_at && l.status_id !== 142 && l.status_id !== 143).length;
-    document.getElementById('ganhos').textContent        = leads.filter(l => l.status_id === 142).length;
- 
-    const statusMap = {};
-    pipelines.forEach(p => (p._embedded?.statuses || []).forEach(s => { statusMap[s.id] = s.name; }));
- 
+    document.getElementById('leads-semana').textContent  = leads.filter(l=>l.created_at>=agora-7*86400).length;
+    document.getElementById('em-negociacao').textContent = leads.filter(l=>!l.closed_at&&l.status_id!==142&&l.status_id!==143).length;
+    document.getElementById('ganhos').textContent        = leads.filter(l=>l.status_id===142).length;
     const contagem = {};
-    leads.forEach(l => { contagem[l.status_id] = (contagem[l.status_id]||0) + 1; });
-    const maxCount = Math.max(...Object.values(contagem), 1);
- 
+    leads.forEach(l=>{contagem[l.status_id]=(contagem[l.status_id]||0)+1});
+    const maxCount = Math.max(...Object.values(contagem),1);
     document.getElementById('funil-etapas').innerHTML = Object.entries(contagem)
-      .sort((a,b) => b[1]-a[1]).slice(0, 10)
-      .map(([sid, cnt]) => {
-        const nome = statusMap[sid] || 'Etapa ' + sid;
-        const pct  = Math.round(cnt / maxCount * 100);
-        return '<div class="etapa-card"><div class="etapa-nome" title="' + nome + '">' + nome + '</div><div class="etapa-count">' + cnt + '</div><div class="etapa-bar"><div class="etapa-bar-fill" style="width:' + pct + '%"></div></div></div>';
-      }).join('') || '<div style="color:var(--texto-fraco);font-size:13px">Nenhuma etapa encontrada</div>';
- 
+      .sort((a,b)=>b[1]-a[1]).slice(0,12)
+      .map(([sid,cnt])=>{
+        const nome=_statusMap[sid]||'Etapa '+sid;
+        const pct=Math.round(cnt/maxCount*100);
+        return '<div class="etapa-card"><div class="etapa-nome" title="'+nome+'">'+nome+'</div><div class="etapa-count">'+cnt+'</div><div class="etapa-bar"><div class="etapa-bar-fill" style="width:'+pct+'%"></div></div></div>';
+      }).join('');
     renderTabela(leads);
-    document.getElementById('atualizado-em').textContent = 'Atualizado em ' + new Date().toLocaleString('pt-BR');
-    document.getElementById('loading').style.display  = 'none';
-    document.getElementById('conteudo').style.display = 'block';
+    document.getElementById('atualizado-em').textContent='Atualizado em '+new Date().toLocaleString('pt-BR');
+    document.getElementById('loading').style.display='none';
+    document.getElementById('conteudo').style.display='block';
     statusOk('Conectado ao Kommo');
-    setTimeout(carregarDados, 5 * 60 * 1000);
- 
-  } catch(e) {
-    mostrarErro(e.message || 'Erro desconhecido');
-  }
+    setTimeout(carregar,5*60*1000);
+  } catch(e) { mostrarErro(e.message||'Erro desconhecido'); }
 }
  
 function renderTabela(leads) {
-  const tbody = document.getElementById('tabela-leads');
-  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--texto-fraco);padding:30px">Nenhum lead encontrado</td></tr>'; return; }
-  tbody.innerHTML = leads.slice(0, 100).map(l => {
-    const etapa = l._embedded?.pipeline?.name || l.status_id || '—';
-    return '<tr><td><strong>' + (l.name||'—') + '</strong></td><td><span class="badge ' + badgeEtapa(typeof etapa === 'string' ? etapa : '') + '">' + etapa + '</span></td><td>' + (l._embedded?.responsible_user?.name||'—') + '</td><td>' + formatData(l.created_at) + '</td><td>' + formatValor(l.price) + '</td></tr>';
+  const tbody=document.getElementById('tabela-leads');
+  if(!leads.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:#9CA3AF;padding:28px">Nenhum lead encontrado</td></tr>';return;}
+  tbody.innerHTML=leads.slice(0,100).map(l=>{
+    const etapaNome=_statusMap[l.status_id]||String(l.status_id);
+    return '<tr><td><span style="font-weight:500;color:#111827">'+(l.name||'—')+'</span></td><td><span class="badge '+badgeClass(etapaNome)+'">'+etapaNome+'</span></td><td style="color:#6B7280">'+(l._embedded?.responsible_user?.name||'—')+'</td><td style="color:#9CA3AF">'+formatData(l.created_at)+'</td><td style="color:#374151">'+formatValor(l.price)+'</td></tr>';
   }).join('');
 }
  
 function filtrarLeads() {
-  const q = document.getElementById('busca-lead').value.toLowerCase();
-  renderTabela(q ? todosLeads.filter(l => (l.name||'').toLowerCase().includes(q)) : todosLeads);
+  const q=document.getElementById('busca-lead').value.toLowerCase();
+  renderTabela(q?todosLeads.filter(l=>(l.name||'').toLowerCase().includes(q)):todosLeads);
 }
  
-carregarDados();
+carregar();
 </script>
 </body>
 </html>
