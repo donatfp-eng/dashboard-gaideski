@@ -16,301 +16,53 @@
     --texto: #E8F4F0;
     --texto-fraco: #7A9E90;
   }
- 
   * { margin: 0; padding: 0; box-sizing: border-box; }
- 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--azul);
-    color: var(--texto);
-    min-height: 100vh;
-  }
- 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 32px;
-    border-bottom: 1px solid var(--borda);
-    background: var(--azul-meio);
-  }
- 
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    color: var(--verde);
-    letter-spacing: -0.5px;
-  }
- 
+  body { font-family: 'DM Sans', sans-serif; background: var(--azul); color: var(--texto); min-height: 100vh; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--borda); background: var(--azul-meio); }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; color: var(--verde); letter-spacing: -0.5px; }
   .logo span { color: var(--texto); }
- 
-  #status-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--texto-fraco);
-    background: var(--cinza);
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--borda);
-  }
- 
-  #status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #555;
-    transition: background 0.3s;
-  }
+  #status-pill { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--texto-fraco); background: var(--cinza); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--borda); }
+  #status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; transition: background 0.3s; }
   #status-dot.ok { background: var(--verde); box-shadow: 0 0 6px var(--verde); }
   #status-dot.erro { background: #FF4D4D; }
- 
   .main { padding: 28px 32px; }
- 
-  /* CARDS TOPO */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
-  }
- 
-  .card {
-    background: var(--azul-meio);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    padding: 22px 24px;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-  }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .card { background: var(--azul-meio); border: 1px solid var(--borda); border-radius: 16px; padding: 22px 24px; position: relative; overflow: hidden; transition: transform 0.2s; }
   .card:hover { transform: translateY(-2px); border-color: rgba(0,200,150,0.35); }
- 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 80px; height: 80px;
-    background: radial-gradient(circle, rgba(0,200,150,0.12) 0%, transparent 70%);
-  }
- 
-  .card-label {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--texto-fraco);
-    margin-bottom: 10px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 600;
-  }
- 
-  .card-valor {
-    font-family: 'Syne', sans-serif;
-    font-size: 38px;
-    font-weight: 800;
-    color: var(--verde);
-    line-height: 1;
-  }
- 
-  .card-sub {
-    font-size: 12px;
-    color: var(--texto-fraco);
-    margin-top: 6px;
-  }
- 
-  /* SEÇÃO FUNIS */
+  .card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--texto-fraco); margin-bottom: 10px; font-family: 'Syne', sans-serif; font-weight: 600; }
+  .card-valor { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: var(--verde); line-height: 1; }
+  .card-sub { font-size: 12px; color: var(--texto-fraco); margin-top: 6px; }
   .secao { margin-bottom: 28px; }
- 
-  .secao-titulo {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--verde);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .secao-titulo::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--borda);
-  }
- 
-  /* ETAPAS FUNIL */
-  .funil-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-  }
- 
-  .etapa-card {
-    background: var(--cinza);
-    border: 1px solid var(--borda);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-  }
- 
-  .etapa-nome {
-    font-size: 12px;
-    color: var(--texto-fraco);
-    margin-bottom: 8px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
- 
-  .etapa-count {
-    font-family: 'Syne', sans-serif;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--texto);
-  }
- 
-  .etapa-bar {
-    height: 3px;
-    background: var(--borda);
-    border-radius: 2px;
-    margin-top: 10px;
-    overflow: hidden;
-  }
-  .etapa-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--verde-escuro), var(--verde));
-    border-radius: 2px;
-    transition: width 0.8s ease;
-  }
- 
-  /* TABELA */
-  .tabela-wrap {
-    background: var(--azul-meio);
-    border: 1px solid var(--borda);
-    border-radius: 16px;
-    overflow: hidden;
-  }
- 
-  .tabela-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--borda);
-  }
- 
-  .tabela-titulo {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-  }
- 
-  #busca-lead {
-    background: var(--cinza);
-    border: 1px solid var(--borda);
-    border-radius: 8px;
-    padding: 7px 14px;
-    color: var(--texto);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    outline: none;
-    width: 220px;
-  }
-  #busca-lead::placeholder { color: var(--texto-fraco); }
+  .secao-titulo { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--verde); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .secao-titulo::after { content: ''; flex: 1; height: 1px; background: var(--borda); }
+  .funil-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .etapa-card { background: var(--cinza); border: 1px solid var(--borda); border-radius: 12px; padding: 16px; text-align: center; }
+  .etapa-nome { font-size: 12px; color: var(--texto-fraco); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .etapa-count { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--texto); }
+  .etapa-bar { height: 3px; background: var(--borda); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .etapa-bar-fill { height: 100%; background: linear-gradient(90deg, var(--verde-escuro), var(--verde)); border-radius: 2px; transition: width 0.8s ease; }
+  .tabela-wrap { background: var(--azul-meio); border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; }
+  .tabela-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--borda); }
+  .tabela-titulo { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
+  #busca-lead { background: var(--cinza); border: 1px solid var(--borda); border-radius: 8px; padding: 7px 14px; color: var(--texto); font-family: 'DM Sans', sans-serif; font-size: 13px; outline: none; width: 220px; }
   #busca-lead:focus { border-color: var(--verde); }
- 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
- 
-  th {
-    padding: 10px 16px;
-    text-align: left;
-    font-family: 'Syne', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--texto-fraco);
-    background: var(--cinza);
-  }
- 
-  td {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    color: var(--texto);
-  }
- 
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { padding: 10px 16px; text-align: left; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--texto-fraco); background: var(--cinza); }
+  td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--texto); }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: rgba(0,200,150,0.04); }
- 
-  .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-  }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
   .badge-verde { background: rgba(0,200,150,0.15); color: var(--verde); }
   .badge-azul  { background: rgba(30,100,255,0.15); color: #6BAAFF; }
   .badge-roxo  { background: rgba(160,80,255,0.15); color: #C084FC; }
   .badge-cinza { background: rgba(255,255,255,0.08); color: var(--texto-fraco); }
- 
-  /* LOADING */
-  #loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    gap: 16px;
-  }
- 
-  .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid var(--borda);
-    border-top-color: var(--verde);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+  #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; }
+  .spinner { width: 40px; height: 40px; border: 3px solid var(--borda); border-top-color: var(--verde); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
- 
-  .loading-txt {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    color: var(--texto-fraco);
-  }
- 
-  #erro-msg {
-    display: none;
-    background: rgba(255,77,77,0.1);
-    border: 1px solid rgba(255,77,77,0.3);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin: 20px 0;
-    color: #FF8080;
-    font-size: 14px;
-  }
- 
-  .atualizado {
-    font-size: 12px;
-    color: var(--texto-fraco);
-  }
- 
-  /* RESPONSIVO */
-  @media (max-width: 600px) {
-    .main { padding: 16px; }
-    header { padding: 16px; }
-    .card-valor { font-size: 28px; }
-    #busca-lead { width: 150px; }
-    th:nth-child(3), td:nth-child(3),
-    th:nth-child(4), td:nth-child(4) { display: none; }
-  }
+  .loading-txt { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--texto-fraco); }
+  #erro-msg { display: none; background: rgba(255,77,77,0.1); border: 1px solid rgba(255,77,77,0.3); border-radius: 12px; padding: 20px 24px; margin: 20px 0; color: #FF8080; font-size: 14px; }
+  .atualizado { font-size: 12px; color: var(--texto-fraco); }
+  @media (max-width: 600px) { .main { padding: 16px; } header { padding: 16px; } .card-valor { font-size: 28px; } #busca-lead { width: 150px; } th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { display: none; } }
 </style>
 </head>
 <body>
@@ -328,42 +80,18 @@
     <div class="spinner"></div>
     <div class="loading-txt">Carregando dados do Kommo...</div>
   </div>
- 
   <div id="erro-msg"></div>
- 
   <div id="conteudo" style="display:none">
- 
-    <!-- CARDS -->
     <div class="cards-grid">
-      <div class="card">
-        <div class="card-label">Total de Leads</div>
-        <div class="card-valor" id="total-leads">—</div>
-        <div class="card-sub">no funil principal</div>
-      </div>
-      <div class="card">
-        <div class="card-label">Novos (7 dias)</div>
-        <div class="card-valor" id="leads-semana">—</div>
-        <div class="card-sub">últimos 7 dias</div>
-      </div>
-      <div class="card">
-        <div class="card-label">Em Negociação</div>
-        <div class="card-valor" id="em-negociacao">—</div>
-        <div class="card-sub">propostas ativas</div>
-      </div>
-      <div class="card">
-        <div class="card-label">Ganhos</div>
-        <div class="card-valor" id="ganhos">—</div>
-        <div class="card-sub">clientes fechados</div>
-      </div>
+      <div class="card"><div class="card-label">Total de Leads</div><div class="card-valor" id="total-leads">—</div><div class="card-sub">no funil principal</div></div>
+      <div class="card"><div class="card-label">Novos (7 dias)</div><div class="card-valor" id="leads-semana">—</div><div class="card-sub">últimos 7 dias</div></div>
+      <div class="card"><div class="card-label">Em Negociação</div><div class="card-valor" id="em-negociacao">—</div><div class="card-sub">propostas ativas</div></div>
+      <div class="card"><div class="card-label">Ganhos</div><div class="card-valor" id="ganhos">—</div><div class="card-sub">clientes fechados</div></div>
     </div>
- 
-    <!-- FUNIL -->
     <div class="secao">
       <div class="secao-titulo">Etapas do Funil</div>
       <div class="funil-grid" id="funil-etapas"></div>
     </div>
- 
-    <!-- TABELA -->
     <div class="secao">
       <div class="secao-titulo">Leads Recentes</div>
       <div class="tabela-wrap">
@@ -373,56 +101,26 @@
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Etapa</th>
-                <th>Responsável</th>
-                <th>Criado em</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Nome</th><th>Etapa</th><th>Responsável</th><th>Criado em</th><th>Valor</th></tr></thead>
             <tbody id="tabela-leads"></tbody>
           </table>
         </div>
       </div>
     </div>
- 
     <div class="atualizado" id="atualizado-em"></div>
   </div>
 </div>
  
 <script>
-// =============================================
-// TOKEN DO KOMMO — gerado em 08/04/2026
-// =============================================
-const KOMMO_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImVlMjExNDY0NjljNTljYWU5Yzc5NjFiZjBiMmU1YzJjMGJiMjExMjVkMzUwMjYxOGU5NWMzOGRhNjMzM2M0ZmUzYjM3ZDNhMmFkOGExNWUzIn0.eyJhdWQiOiIxMTI0YWFjNS03MDgxLTQ0ZjItYjBmMS02ZjY0OTQyNzI2MzciLCJqdGkiOiJlZTIxMTQ2NDY5YzU5Y2FlOWM3OTYxYmYwYjJlNWMyYzBiYjIxMTI1ZDM1MDI2MThlOTVjMzhkYTYzMzNjNGZlM2IzN2QzYTJhZDhhMTVlMyIsImlhdCI6MTc3NTgyNzE2OCwibmJmIjoxNzc1ODI3MTY4LCJleHAiOjE4OTg0NjcyMDAsInN1YiI6IjEzNzAxNTQwIiwiZ3JhbnRfdHlwZSI6IiIsImFjY291bnRfaWQiOjM1MDUzNjUyLCJiYXNlX2RvbWFpbiI6ImtvbW1vLmNvbSIsInZlcnNpb24iOjIsInNjb3BlcyI6WyJwdXNoX25vdGlmaWNhdGlvbnMiLCJmaWxlcyIsImNybSIsImZpbGVzX2RlbGV0ZSIsIm5vdGlmaWNhdGlvbnMiXSwiaGFzaF91dWlkIjoiMGZmNjg4NDUtZTIyNy00YzU1LWJhOWUtODQwMWM4OWRiZDhmIiwiYXBpX2RvbWFpbiI6ImFwaS1nLmtvbW1vLmNvbSJ9.HprsEAHWoVmak6cYlQO8_W36J7KHt1fqcTOqG_DScJBwV8R9m03c6dXjJzdfXksC9S7_4rY2nw0OS-2yCS71bq0QbF_YQWlc8m1ouDnjsND24dlFDo_bDRDSFHTMH-azS4Q0La6d2c9TnyOsW3eFlB_KQiHu3H9w4OsjlHsG7xtchfHpknTiA5pb1DlSmvCce3Jw47mmUhYcIBGtMtPiTx5oVXy9iBMUKnAlsN7QFjmBV_BgkxfREDVAC-AJ8RL4u4clipkx3rvIlKiiPTLbNsye4C5L3rMDEdxlb4tO5iEfECp-ATmO8vn8sxSC_cKZMxHqqeg8gCBgKx6lcKJH6Q';
- 
-const ACCOUNT = 'kommogaideskicombr';
-const BASE    = `https://${ACCOUNT}.kommo.com/api/v4`;
- 
-// Proxies CORS públicos para tentar em sequência
-const PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url => `https://thingproxy.freeboard.io/fetch/${url}`,
-];
+// Usa o proxy interno do Netlify — sem CORS!
+const BASE = '/kommo-api';
  
 let todosLeads = [];
-let proxyIdx = 0;
  
 async function kommoFetch(endpoint) {
-  const fullUrl = BASE + endpoint;
-  for (let i = 0; i < PROXIES.length; i++) {
-    try {
-      const proxyUrl = PROXIES[i](fullUrl);
-      const r = await fetch(proxyUrl, {
-        headers: { 'Authorization': `Bearer ${KOMMO_TOKEN}` }
-      });
-      if (r.ok) { proxyIdx = i; return r.json(); }
-    } catch(e) { /* tenta próximo */ }
-  }
-  throw new Error('Todos os proxies falharam. Tente novamente em instantes.');
+  const r = await fetch(BASE + endpoint);
+  if (!r.ok) throw new Error('Erro ' + r.status + ' ao buscar dados');
+  return r.json();
 }
  
 function statusOk(txt)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=txt; }
@@ -432,7 +130,7 @@ function mostrarErro(msg) {
   document.getElementById('loading').style.display = 'none';
   const el = document.getElementById('erro-msg');
   el.style.display = 'block';
-  el.innerHTML = `<strong>⚠️ Erro ao carregar dados</strong><br><br>${msg}<br><br><button onclick="carregarDados()" style="background:var(--verde);color:var(--azul);border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600">Tentar novamente</button>`;
+  el.innerHTML = '<strong>Erro ao carregar dados</strong><br><br>' + msg + '<br><br><button onclick="carregarDados()" style="background:var(--verde);color:var(--azul);border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:inherit;font-weight:600">Tentar novamente</button>';
   statusErro('Erro de conexão');
 }
  
@@ -444,15 +142,8 @@ function badgeEtapa(nome) {
   return 'badge-roxo';
 }
  
-function formatData(ts) {
-  if (!ts) return '—';
-  return new Date(ts * 1000).toLocaleDateString('pt-BR');
-}
- 
-function formatValor(v) {
-  if (!v) return '—';
-  return 'R$ ' + Number(v).toLocaleString('pt-BR');
-}
+function formatData(ts) { if (!ts) return '—'; return new Date(ts * 1000).toLocaleDateString('pt-BR'); }
+function formatValor(v) { if (!v) return '—'; return 'R$ ' + Number(v).toLocaleString('pt-BR'); }
  
 async function carregarDados() {
   document.getElementById('loading').style.display = 'flex';
@@ -460,66 +151,41 @@ async function carregarDados() {
   document.getElementById('erro-msg').style.display = 'none';
  
   try {
-    // 1. Busca funis (pipelines)
-    const pipeData = await kommoFetch('/leads/pipelines?limit=50');
+    const [pipeData, leadsData] = await Promise.all([
+      kommoFetch('/leads/pipelines?limit=50'),
+      kommoFetch('/leads?limit=250&order[created_at]=desc')
+    ]);
+ 
     const pipelines = pipeData?._embedded?.pipelines || [];
- 
-    // 2. Busca leads (página 1 — até 250)
-    const leadsData = await kommoFetch('/leads?limit=250&with=contacts,pipeline,loss_reason&order[created_at]=desc');
     const leads = leadsData?._embedded?.leads || [];
- 
     todosLeads = leads;
  
-    // === CARDS ===
     const agora = Math.floor(Date.now() / 1000);
-    const seteDias = agora - 7 * 86400;
-    const leadsRecentes = leads.filter(l => l.created_at >= seteDias);
-    const emNegociacao  = leads.filter(l => !l.closed_at && l.status_id !== 142 && l.status_id !== 143);
-    const ganhos        = leads.filter(l => l.status_id === 142);
- 
     document.getElementById('total-leads').textContent   = leads.length;
-    document.getElementById('leads-semana').textContent  = leadsRecentes.length;
-    document.getElementById('em-negociacao').textContent = emNegociacao.length;
-    document.getElementById('ganhos').textContent        = ganhos.length;
- 
-    // === ETAPAS ===
-    // Conta por status_id
-    const contagem = {};
-    leads.forEach(l => { contagem[l.status_id] = (contagem[l.status_id]||0) + 1; });
+    document.getElementById('leads-semana').textContent  = leads.filter(l => l.created_at >= agora - 7*86400).length;
+    document.getElementById('em-negociacao').textContent = leads.filter(l => !l.closed_at && l.status_id !== 142 && l.status_id !== 143).length;
+    document.getElementById('ganhos').textContent        = leads.filter(l => l.status_id === 142).length;
  
     const statusMap = {};
-    pipelines.forEach(p => {
-      (p._embedded?.statuses || []).forEach(s => { statusMap[s.id] = s.name; });
-    });
+    pipelines.forEach(p => (p._embedded?.statuses || []).forEach(s => { statusMap[s.id] = s.name; }));
  
+    const contagem = {};
+    leads.forEach(l => { contagem[l.status_id] = (contagem[l.status_id]||0) + 1; });
     const maxCount = Math.max(...Object.values(contagem), 1);
-    const etapasHtml = Object.entries(contagem)
-      .sort((a,b) => b[1]-a[1])
-      .slice(0, 10)
+ 
+    document.getElementById('funil-etapas').innerHTML = Object.entries(contagem)
+      .sort((a,b) => b[1]-a[1]).slice(0, 10)
       .map(([sid, cnt]) => {
-        const nome = statusMap[sid] || `Etapa ${sid}`;
+        const nome = statusMap[sid] || 'Etapa ' + sid;
         const pct  = Math.round(cnt / maxCount * 100);
-        return `
-          <div class="etapa-card">
-            <div class="etapa-nome" title="${nome}">${nome}</div>
-            <div class="etapa-count">${cnt}</div>
-            <div class="etapa-bar"><div class="etapa-bar-fill" style="width:${pct}%"></div></div>
-          </div>`;
-      }).join('');
-    document.getElementById('funil-etapas').innerHTML = etapasHtml || '<div style="color:var(--texto-fraco);font-size:13px">Nenhuma etapa encontrada</div>';
+        return '<div class="etapa-card"><div class="etapa-nome" title="' + nome + '">' + nome + '</div><div class="etapa-count">' + cnt + '</div><div class="etapa-bar"><div class="etapa-bar-fill" style="width:' + pct + '%"></div></div></div>';
+      }).join('') || '<div style="color:var(--texto-fraco);font-size:13px">Nenhuma etapa encontrada</div>';
  
-    // === TABELA ===
     renderTabela(leads);
- 
-    // Atualização
-    document.getElementById('atualizado-em').textContent =
-      'Atualizado em ' + new Date().toLocaleString('pt-BR');
- 
+    document.getElementById('atualizado-em').textContent = 'Atualizado em ' + new Date().toLocaleString('pt-BR');
     document.getElementById('loading').style.display  = 'none';
     document.getElementById('conteudo').style.display = 'block';
     statusOk('Conectado ao Kommo');
- 
-    // Atualiza a cada 5 min
     setTimeout(carregarDados, 5 * 60 * 1000);
  
   } catch(e) {
@@ -529,36 +195,18 @@ async function carregarDados() {
  
 function renderTabela(leads) {
   const tbody = document.getElementById('tabela-leads');
-  if (!leads.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--texto-fraco);padding:30px">Nenhum lead encontrado</td></tr>';
-    return;
-  }
+  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--texto-fraco);padding:30px">Nenhum lead encontrado</td></tr>'; return; }
   tbody.innerHTML = leads.slice(0, 100).map(l => {
-    const nome        = l.name || '—';
-    const etapa       = l._embedded?.pipeline?.name || l.status_id || '—';
-    const responsavel = l._embedded?.responsible_user?.name || '—';
-    const criado      = formatData(l.created_at);
-    const valor       = formatValor(l.price);
-    const cls         = badgeEtapa(typeof etapa === 'string' ? etapa : '');
-    return `<tr>
-      <td><strong>${nome}</strong></td>
-      <td><span class="badge ${cls}">${etapa}</span></td>
-      <td>${responsavel}</td>
-      <td>${criado}</td>
-      <td>${valor}</td>
-    </tr>`;
+    const etapa = l._embedded?.pipeline?.name || l.status_id || '—';
+    return '<tr><td><strong>' + (l.name||'—') + '</strong></td><td><span class="badge ' + badgeEtapa(typeof etapa === 'string' ? etapa : '') + '">' + etapa + '</span></td><td>' + (l._embedded?.responsible_user?.name||'—') + '</td><td>' + formatData(l.created_at) + '</td><td>' + formatValor(l.price) + '</td></tr>';
   }).join('');
 }
  
 function filtrarLeads() {
   const q = document.getElementById('busca-lead').value.toLowerCase();
-  const filtrados = q
-    ? todosLeads.filter(l => (l.name||'').toLowerCase().includes(q))
-    : todosLeads;
-  renderTabela(filtrados);
+  renderTabela(q ? todosLeads.filter(l => (l.name||'').toLowerCase().includes(q)) : todosLeads);
 }
  
-// Inicia
 carregarDados();
 </script>
 </body>
