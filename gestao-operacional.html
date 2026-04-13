@@ -73,34 +73,38 @@ async function carregarLeads() {
   const leads = data._embedded?.leads || [];
   const agora = new Date();
 
-  let problemas = [];
+  let mapa = {};
 
-  leads.forEach(lead => {
+leads.forEach(lead => {
 
-    const ultimaAtualizacao = new Date(lead.updated_at * 1000);
-    const diffHoras = (agora - ultimaAtualizacao) / (1000 * 60 * 60);
+  const id = lead.id;
 
-    const temTarefa = lead.closest_task_at;
+  if (!mapa[id]) {
+    mapa[id] = {
+      lead,
+      problemas: []
+    };
+  }
 
-    // 🚨 REGRA 1: Sem tarefa
-    if (!temTarefa) {
-      problemas.push({
-        tipo: "SEM PRÓXIMA AÇÃO",
-        lead
-      });
-    }
+  const ultimaAtualizacao = new Date(lead.updated_at * 1000);
+  const agora = new Date();
+  const diffHoras = (agora - ultimaAtualizacao) / (1000 * 60 * 60);
 
-    // 🚨 REGRA 2: Parado +24h
-    if (diffHoras > 24) {
-      problemas.push({
-        tipo: "PARADO +24H",
-        lead
-      });
-    }
+  const temTarefa = lead.closest_task_at;
 
-  });
+  if (!temTarefa) {
+    mapa[id].problemas.push("SEM PRÓXIMA AÇÃO");
+  }
 
-  render(problemas);
+  if (diffHoras > 24) {
+    mapa[id].problemas.push("PARADO +24H");
+  }
+
+});
+
+const problemas = Object.values(mapa).filter(item => item.problemas.length > 0);
+
+render(problemas);
 }
 
 function render(problemas) {
@@ -127,7 +131,7 @@ function render(problemas) {
 
     div.innerHTML = `
       <strong>${lead.name}</strong><br>
-      Problema: ${item.tipo}<br>
+      Problemas: ${item.problemas.join(", ")}<br>
 
       <a href="${linkKommo}" target="_blank" class="btn">
         Abrir no Kommo
