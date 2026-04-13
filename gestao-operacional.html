@@ -3,148 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <title>Gestão Operacional</title>
-
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      border-left: 5px solid red;
-    }
-
-    .ok {
-      border-left: 5px solid green;
-    }
-
-    .btn {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 10px;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 12px;
-    }
-
-    .topo {
-      margin-bottom: 20px;
-      padding: 10px;
-      background: #020617;
-      border-radius: 10px;
-    }
-
-    .contador {
-      font-size: 18px;
-      font-weight: bold;
-      color: #f87171;
-    }
-
+    body { font-family: Arial, sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
+    h1 { margin-bottom: 20px; }
+    .card { background: #1e293b; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid red; }
+    .ok { border-left: 5px solid green; }
+    .btn { display: inline-block; margin-top: 8px; padding: 6px 10px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-size: 12px; }
+    .topo { margin-bottom: 20px; padding: 10px; background: #020617; border-radius: 10px; }
+    .contador { font-size: 18px; font-weight: bold; color: #f87171; }
   </style>
 </head>
-
 <body>
-
   <div class="topo">
     <h1>🚨 Central de Alertas</h1>
     <div class="contador" id="contador">Carregando...</div>
   </div>
-
   <div id="lista"></div>
-
 <script>
-
 async function carregarLeads() {
-  const res = await fetch('/api/kommo/leads');
-  const data = await res.json();
+  try {
+    // Busca até 250 leads ativos (exclui ganhos=142 e perdidos=143)
+    const res = await fetch('/api/kommo/leads?limit=250&filter[statuses][0][pipeline_id]=0&page=1');
+    const data = await res.json();
+    const todos = data._embedded?.leads || [];
 
-  const leads = data._embedded?.leads || [];
-  const agora = new Date();
+    // Filtra fora leads ganhos (142) e perdidos (143)
+    const leads = todos.filter(l => l.status_id !== 142 && l.status_id !== 143);
 
-  let mapa = {};
+    const agora = new Date();
+    const mapa = {};
 
-leads.forEach(lead => {
+    leads.forEach(lead => {
+      const id = lead.id;
+      if (!mapa[id]) mapa[id] = { lead, problemas: [] };
 
-  const id = lead.id;
+      const diffHoras = (agora - new Date(lead.updated_at * 1000)) / (1000 * 60 * 60);
 
-  if (!mapa[id]) {
-    mapa[id] = {
-      lead,
-      problemas: []
-    };
+      if (!lead.closest_task_at) mapa[id].problemas.push("SEM PRÓXIMA AÇÃO");
+      if (diffHoras > 24)        mapa[id].problemas.push("PARADO +24H");
+    });
+
+    const problemas = Object.values(mapa).filter(i => i.problemas.length > 0);
+    render(problemas);
+
+  } catch(e) {
+    document.getElementById('contador').innerText = '❌ Erro ao carregar: ' + e.message;
   }
-
-  const ultimaAtualizacao = new Date(lead.updated_at * 1000);
-  const agora = new Date();
-  const diffHoras = (agora - ultimaAtualizacao) / (1000 * 60 * 60);
-
-  const temTarefa = lead.closest_task_at;
-
-  if (!temTarefa) {
-    mapa[id].problemas.push("SEM PRÓXIMA AÇÃO");
-  }
-
-  if (diffHoras > 24) {
-    mapa[id].problemas.push("PARADO +24H");
-  }
-
-});
-
-const problemas = Object.values(mapa).filter(item => item.problemas.length > 0);
-
-render(problemas);
 }
 
 function render(problemas) {
-  const lista = document.getElementById('lista');
+  const lista    = document.getElementById('lista');
   const contador = document.getElementById('contador');
-
-  lista.innerHTML = "";
-
-  contador.innerText = `⚠️ ${problemas.length} problemas encontrados`;
+  lista.innerHTML = '';
 
   if (problemas.length === 0) {
-    lista.innerHTML = "<div class='card ok'>Tudo certo 🎉 Nenhum problema!</div>";
+    contador.innerText = '✅ Tudo certo! Nenhum problema.';
+    contador.style.color = '#4ade80';
+    lista.innerHTML = "<div class='card ok'>🎉 Nenhum lead com pendência!</div>";
     return;
   }
 
+  contador.innerText = `⚠️ ${problemas.length} problemas encontrados`;
+
   problemas.forEach(item => {
-
     const lead = item.lead;
-
-    const linkKommo = `https://kommogaideskicombr.kommo.com/leads/detail/${lead.id}`;
-
-    const div = document.createElement('div');
+    const nome = lead.name || ('Lead #' + lead.id);
+    const link = `https://kommogaideskicombr.kommo.com/leads/detail/${lead.id}`;
+    const div  = document.createElement('div');
     div.className = 'card';
-
     div.innerHTML = `
-      <strong>${lead.name}</strong><br>
-      Problemas: ${item.problemas.join(", ")}<br>
-
-      <a href="${linkKommo}" target="_blank" class="btn">
-        Abrir no Kommo
-      </a>
+      <strong>${nome}</strong><br>
+      <span style="font-size:13px;color:#94a3b8">Problemas: ${item.problemas.join(', ')}</span><br>
+      <a href="${link}" target="_blank" class="btn">Abrir no Kommo</a>
     `;
-
     lista.appendChild(div);
   });
 }
 
 carregarLeads();
-
 </script>
-
 </body>
 </html>
