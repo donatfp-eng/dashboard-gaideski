@@ -16,295 +16,135 @@
     --text-muted: #9BA3AF;
     --accent-g: #1B4FD8;
     --accent-p: #7C3AED;
+    --accent-q: #D97706;
     --accent-green: #059669;
-    --accent-amber: #D97706;
     --accent-red: #DC2626;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
     --radius: 10px;
-    --radius-sm: 6px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; font-size: 14px; }
 
-  /* HEADER */
   header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
   }
   .logo { display: flex; align-items: center; gap: 10px; }
-  .logo-mark {
-    width: 28px; height: 28px;
-    background: var(--text-primary);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .logo-mark { width: 28px; height: 28px; background: var(--text-primary); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
   .logo-mark svg { width: 14px; height: 14px; fill: white; }
-  .logo-text { font-size: 14px; font-weight: 600; letter-spacing: -0.3px; color: var(--text-primary); }
+  .logo-text { font-size: 14px; font-weight: 600; letter-spacing: -0.3px; }
   .logo-text span { color: var(--text-muted); font-weight: 400; }
   .header-right { display: flex; align-items: center; gap: 12px; }
-  #status-pill {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 12px; color: var(--text-secondary);
-    background: var(--bg); padding: 4px 10px;
-    border-radius: 20px; border: 1px solid var(--border);
-  }
+  #status-pill { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); background: var(--bg); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
   #status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
-  #status-dot.ok { background: var(--accent-green); }
+  #status-dot.ok   { background: var(--accent-green); }
   #status-dot.erro { background: var(--accent-red); }
-  .btn-atualizar {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 500;
-    color: var(--text-secondary);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .btn-atualizar:hover { background: var(--surface); color: var(--text-primary); border-color: #C8CAD0; }
+  .btn-atualizar { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+  .btn-atualizar:hover { background: var(--surface); color: var(--text-primary); }
   .btn-atualizar svg { width: 12px; height: 12px; }
 
-  /* MAIN */
   .main { padding: 20px 28px 40px; max-width: 1440px; margin: 0 auto; }
 
-  /* FILTROS */
-  .filtros-bar {
-    display: flex; align-items: center; gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 16px;
-  }
-  .filtro-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-right: 4px; white-space: nowrap; }
+  .filtros-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
+  .filtro-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; white-space: nowrap; }
   .filtro-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
 
-  /* Botões de grupo (empresa / funil) */
   .btn-group { display: flex; gap: 4px; }
-  .btn-filter {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 500;
-    padding: 5px 12px; border-radius: 5px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-secondary);
-    cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  }
+  .btn-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .btn-filter:hover { border-color: #B0B5C0; color: var(--text-primary); }
-  .btn-filter.active { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
-  .btn-filter.active-g { background: var(--accent-g); color: #fff; border-color: var(--accent-g); }
-  .btn-filter.active-p { background: var(--accent-p); color: #fff; border-color: var(--accent-p); }
+  .btn-filter.active   { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .btn-filter.active-g { background: var(--accent-g);     color: #fff; border-color: var(--accent-g); }
+  .btn-filter.active-p { background: var(--accent-p);     color: #fff; border-color: var(--accent-p); }
+  .btn-filter.active-q { background: var(--accent-q);     color: #fff; border-color: var(--accent-q); }
 
-  /* Filtro de data */
-  .select-filter {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 500;
-    padding: 5px 10px; border-radius: 5px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-secondary);
-    cursor: pointer; outline: none; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    padding-right: 26px;
-    transition: all 0.15s;
-  }
-  .select-filter:focus { border-color: #B0B5C0; color: var(--text-primary); }
+  .select-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 26px 5px 10px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: all 0.15s; }
 
-  /* Período customizado */
   #periodo-custom { display: none; align-items: center; gap: 6px; }
-  .input-date {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; padding: 5px 8px;
-    border: 1px solid var(--border);
-    border-radius: 5px; background: var(--bg);
-    color: var(--text-secondary); outline: none;
-    cursor: pointer;
-  }
-  .input-date:focus { border-color: #B0B5C0; }
+  .input-date { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text-secondary); outline: none; }
   .periodo-sep { font-size: 11px; color: var(--text-muted); }
 
-  /* Busca */
   .busca-wrap { margin-left: auto; position: relative; }
   .busca-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: var(--text-muted); pointer-events: none; }
-  #busca-lead {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; padding: 5px 12px 5px 28px;
-    border: 1px solid var(--border);
-    border-radius: 5px; background: var(--bg);
-    color: var(--text-primary); outline: none; width: 200px;
-    transition: all 0.15s;
-  }
+  #busca-lead { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px 5px 28px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text-primary); outline: none; width: 200px; transition: all 0.15s; }
   #busca-lead:focus { border-color: #B0B5C0; background: var(--surface); width: 240px; }
   #busca-lead::placeholder { color: var(--text-muted); }
 
-  /* CARDS MÉTRICAS */
   .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-  @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 500px) { .cards-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
 
-  .metric-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: box-shadow 0.2s;
-  }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s; }
   .metric-card:hover { box-shadow: var(--shadow-md); }
-  .metric-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 3px; height: 100%;
-  }
-  .metric-card.m-dark::before { background: var(--text-primary); }
-  .metric-card.m-blue::before { background: var(--accent-g); }
-  .metric-card.m-gray::before { background: #9BA3AF; }
+  .metric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+  .metric-card.m-dark::before  { background: var(--text-primary); }
+  .metric-card.m-blue::before  { background: var(--accent-g); }
+  .metric-card.m-gray::before  { background: #9BA3AF; }
   .metric-card.m-green::before { background: var(--accent-green); }
-  .metric-card.m-purple::before { background: var(--accent-p); }
   .metric-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; }
   .metric-valor { font-size: 30px; font-weight: 700; color: var(--text-primary); line-height: 1; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
-  .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
-  .metric-icon { position: absolute; right: 16px; top: 16px; opacity: 0.06; font-size: 40px; line-height: 1; }
+  .metric-sub   { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
-  /* SEÇÃO ETAPAS */
   .secao { margin-bottom: 20px; }
-  .secao-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .secao-titulo { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .secao-titulo { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
   .funis-container { display: flex; flex-direction: column; gap: 14px; }
 
-  .funil-bloco {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .funil-header {
-    display: flex; align-items: center; gap: 10px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border-light);
-    background: #FAFBFC;
-  }
-  .funil-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .funil-bloco { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .funil-header { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
+  .funil-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .funil-dot-g { background: var(--accent-g); }
   .funil-dot-p { background: var(--accent-p); }
-  .funil-dot-q { background: var(--accent-amber); }
-  .funil-nome { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+  .funil-dot-q { background: var(--accent-q); }
+  .funil-nome  { font-size: 12px; font-weight: 600; color: var(--text-primary); }
   .funil-total { font-size: 11px; color: var(--text-muted); margin-left: auto; font-family: 'DM Mono', monospace; }
 
   .etapas-row { display: flex; padding: 12px 14px; gap: 8px; overflow-x: auto; }
-  .etapa-chip {
-    flex: 0 0 auto;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 10px 14px;
-    min-width: 110px;
-  }
-  .etapa-chip-nome { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+  .etapa-chip { flex: 0 0 auto; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; min-width: 120px; }
+  .etapa-chip-nome  { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
   .etapa-chip-count { font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'DM Mono', monospace; line-height: 1; }
-  .etapa-chip-bar { height: 2px; background: var(--border); border-radius: 2px; margin-top: 7px; }
-  .etapa-chip-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+  .etapa-chip-bar   { height: 2px; background: var(--border); border-radius: 2px; margin-top: 7px; }
+  .etapa-chip-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
   .fill-g { background: var(--accent-g); }
   .fill-p { background: var(--accent-p); }
-  .fill-q { background: var(--accent-amber); }
-  .fill-gray { background: #9BA3AF; }
+  .fill-q { background: var(--accent-q); }
 
-  /* TABELA */
-  .tabela-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .tabela-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-light);
-    background: #FAFBFC;
-  }
+  .tabela-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .tabela-header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
   .tabela-titulo { font-size: 12px; font-weight: 600; color: var(--text-primary); }
-  .tabela-count { font-size: 11px; color: var(--text-muted); margin-left: 6px; font-family: 'DM Mono', monospace; }
+  .tabela-count  { font-size: 11px; color: var(--text-muted); margin-left: 6px; font-family: 'DM Mono', monospace; }
   table { width: 100%; border-collapse: collapse; }
-  th {
-    padding: 9px 16px;
-    text-align: left;
-    font-size: 10px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.8px;
-    color: var(--text-muted);
-    background: #FAFBFC;
-    border-bottom: 1px solid var(--border-light);
-  }
+  th { padding: 9px 16px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); background: #FAFBFC; border-bottom: 1px solid var(--border-light); }
   td { padding: 10px 16px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #FAFBFD; }
 
-  .lead-nome { font-weight: 500; color: var(--text-primary); max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lead-funil { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .lead-nome { font-weight: 500; color: var(--text-primary); max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 11px; font-weight: 500; white-space: nowrap;
-  }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
   .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
-  .badge-ganho    { background: #ECFDF5; color: #065F46; }
-  .badge-ganho::before { background: #059669; }
-  .badge-proposta { background: #EFF6FF; color: #1D4ED8; }
-  .badge-proposta::before { background: #3B82F6; }
-  .badge-qualif   { background: #FEF3C7; color: #92400E; }
-  .badge-qualif::before { background: #D97706; }
-  .badge-contato  { background: #F3F4F6; color: #374151; }
-  .badge-contato::before { background: #9BA3AF; }
-  .badge-perda    { background: #FEF2F2; color: #991B1B; }
-  .badge-perda::before { background: #DC2626; }
+  .badge-ganho::before    { background: #059669; } .badge-ganho    { background: #ECFDF5; color: #065F46; }
+  .badge-proposta::before { background: #3B82F6; } .badge-proposta { background: #EFF6FF; color: #1D4ED8; }
+  .badge-qualif::before   { background: #D97706; } .badge-qualif   { background: #FEF3C7; color: #92400E; }
+  .badge-contato::before  { background: #9BA3AF; } .badge-contato  { background: #F3F4F6; color: #374151; }
+  .badge-perda::before    { background: #DC2626; } .badge-perda    { background: #FEF2F2; color: #991B1B; }
 
-  .empresa-tag {
-    display: inline-block;
-    font-size: 10px; font-weight: 600;
-    padding: 1px 6px; border-radius: 3px;
-    letter-spacing: 0.3px;
-  }
+  .empresa-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
   .tag-g { background: #EFF6FF; color: var(--accent-g); }
   .tag-p { background: #F5F3FF; color: var(--accent-p); }
-  .tag-q { background: #FFFBEB; color: var(--accent-amber); }
+  .tag-q { background: #FFFBEB; color: var(--accent-q); }
 
-  /* LOADING / ERRO */
   #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 14px; }
   .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-txt { font-size: 13px; color: var(--text-muted); }
   #erro-msg { display: none; background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 16px 20px; margin: 16px 0; color: #991B1B; font-size: 13px; }
-
-  .atualizado { font-size: 11px; color: var(--text-muted); margin-top: 16px; font-family: 'DM Mono', monospace; }
   .sem-dados { text-align: center; color: var(--text-muted); padding: 32px; font-size: 13px; }
+  .atualizado { font-size: 11px; color: var(--text-muted); margin-top: 16px; font-family: 'DM Mono', monospace; }
 
   @media (max-width: 700px) {
-    .main { padding: 12px 14px 32px; }
-    header { padding: 0 14px; }
-    .filtros-bar { padding: 10px 12px; gap: 8px; }
-    .busca-wrap { width: 100%; }
-    #busca-lead { width: 100%; }
+    .main { padding: 12px 14px 32px; } header { padding: 0 14px; }
     th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { display: none; }
-    .cards-grid { grid-template-columns: repeat(2,1fr); }
-    .metric-valor { font-size: 24px; }
   }
 </style>
 </head>
@@ -313,7 +153,7 @@
 <header>
   <div class="logo">
     <div class="logo-mark">
-      <svg viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity="0.4"/></svg>
+      <svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity="0.4"/></svg>
     </div>
     <div class="logo-text">Gaideski <span>· Dashboard Comercial</span></div>
   </div>
@@ -322,10 +162,7 @@
       <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 6a5 5 0 1 0 1.2-3.2M1 2v2h2"/></svg>
       Atualizar
     </button>
-    <div id="status-pill">
-      <div id="status-dot"></div>
-      <span id="status-txt">Conectando...</span>
-    </div>
+    <div id="status-pill"><div id="status-dot"></div><span id="status-txt">Conectando...</span></div>
   </div>
 </header>
 
@@ -334,23 +171,13 @@
   <div id="erro-msg"></div>
   <div id="conteudo" style="display:none">
 
-    <!-- BARRA DE FILTROS -->
     <div class="filtros-bar">
       <span class="filtro-label">Empresa</span>
       <div class="btn-group" id="grp-empresa">
-        <button class="btn-filter active" data-val="todos" onclick="setEmpresa(this)">Todos</button>
-        <button class="btn-filter" data-val="gaideski" onclick="setEmpresa(this)">Gaideski</button>
-        <button class="btn-filter" data-val="planicom" onclick="setEmpresa(this)">Planicom</button>
-      </div>
-
-      <div class="filtro-divider"></div>
-
-      <span class="filtro-label">Funil</span>
-      <div class="btn-group" id="grp-funil">
-        <button class="btn-filter active" data-val="todos" onclick="setFunil(this)">Todos</button>
-        <button class="btn-filter" data-val="qualificacao" onclick="setFunil(this)">Qualificação</button>
-        <button class="btn-filter" data-val="gaideski" onclick="setFunil(this)">Gaideski</button>
-        <button class="btn-filter" data-val="planicom" onclick="setFunil(this)">Planicom</button>
+        <button class="btn-filter active"   data-val="todos"        onclick="setEmpresa(this)">Todos</button>
+        <button class="btn-filter"          data-val="gaideski"     onclick="setEmpresa(this)">Gaideski</button>
+        <button class="btn-filter"          data-val="planicon"     onclick="setEmpresa(this)">Planicon</button>
+        <button class="btn-filter"          data-val="qualificacao" onclick="setEmpresa(this)">Qualificação</button>
       </div>
 
       <div class="filtro-divider"></div>
@@ -369,7 +196,7 @@
         <input type="date" class="input-date" id="dt-inicio">
         <span class="periodo-sep">até</span>
         <input type="date" class="input-date" id="dt-fim">
-        <button class="btn-filter" onclick="aplicarFiltros()" style="background:var(--text-primary);color:#fff;border-color:var(--text-primary)">Aplicar</button>
+        <button class="btn-filter active" onclick="aplicarFiltros()">Aplicar</button>
       </div>
 
       <div class="busca-wrap">
@@ -378,66 +205,44 @@
       </div>
     </div>
 
-    <!-- MÉTRICAS -->
     <div class="cards-grid">
       <div class="metric-card m-dark">
         <div class="metric-label">Total de Leads</div>
         <div class="metric-valor" id="total-leads">—</div>
-        <div class="metric-sub">no funil filtrado</div>
-        <div class="metric-icon">📋</div>
+        <div class="metric-sub">no filtro atual</div>
       </div>
       <div class="metric-card m-blue">
         <div class="metric-label">Novos (período)</div>
-        <div class="metric-valor" id="leads-semana">—</div>
-        <div class="metric-sub" id="sub-periodo">últimos 7 dias</div>
-        <div class="metric-icon">✨</div>
+        <div class="metric-valor" id="leads-novos">—</div>
+        <div class="metric-sub" id="sub-periodo">todos os períodos</div>
       </div>
       <div class="metric-card m-gray">
         <div class="metric-label">Em Negociação</div>
         <div class="metric-valor" id="em-negociacao">—</div>
         <div class="metric-sub">propostas ativas</div>
-        <div class="metric-icon">🤝</div>
       </div>
       <div class="metric-card m-green">
         <div class="metric-label">Ganhos</div>
         <div class="metric-valor" id="ganhos">—</div>
         <div class="metric-sub">clientes fechados</div>
-        <div class="metric-icon">✅</div>
       </div>
     </div>
 
-    <!-- ETAPAS POR FUNIL -->
     <div class="secao">
-      <div class="secao-head">
-        <div class="secao-titulo">Etapas por Funil</div>
-      </div>
+      <div class="secao-titulo">Etapas por Funil</div>
       <div class="funis-container" id="funis-container"></div>
     </div>
 
-    <!-- TABELA LEADS -->
     <div class="secao">
-      <div class="secao-head">
-        <div class="secao-titulo">Leads</div>
-      </div>
+      <div class="secao-titulo">Leads</div>
       <div class="tabela-wrap">
         <div class="tabela-header">
-          <div>
-            <span class="tabela-titulo">Resultado</span>
-            <span class="tabela-count" id="tabela-count">0 leads</span>
-          </div>
+          <span class="tabela-titulo">Resultado</span>
+          <span class="tabela-count" id="tabela-count">0 leads</span>
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Etapa</th>
-                <th>Empresa</th>
-                <th>Responsável</th>
-                <th>Data</th>
-                <th>Valor</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Nome</th><th>Etapa</th><th>Empresa</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
             <tbody id="tabela-leads"></tbody>
           </table>
         </div>
@@ -450,28 +255,13 @@
 
 <script>
 const BASE = '/kommo-api';
-
-// Estado global
 let todosLeads = [];
-let _statusMap  = {};  // id → nome
-let _pipeMap    = {};  // status_id → pipeline_id
-let _pipes      = [];  // lista de pipelines completa
+let _statusMap = {};
+let _pipeMap   = {};
+let _pipes     = [];
+let PIPE_IDS   = { qualificacao: null, gaideski: null, planicon: null };
+let filtro     = { empresa: 'todos', periodo: 'todos' };
 
-// IDs dos funis (ajuste se necessário)
-// Detectamos dinamicamente pelo nome
-let PIPE_IDS = { qualificacao: null, gaideski: null, planicom: null };
-
-// Filtros ativos
-let filtro = {
-  empresa: 'todos',   // todos | gaideski | planicom
-  funil:   'todos',   // todos | qualificacao | gaideski | planicom
-  periodo: 'todos',   // todos | hoje | 7 | 30 | 90 | mes | custom
-  dtInicio: null,
-  dtFim: null,
-  busca: ''
-};
-
-// ---- UTILS ----
 function statusOk(t)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=t; }
 function statusErro(t) { document.getElementById('status-dot').className='erro'; document.getElementById('status-txt').textContent=t; }
 function formatData(ts){ if(!ts)return'—'; return new Date(ts*1000).toLocaleDateString('pt-BR'); }
@@ -485,207 +275,131 @@ async function kommoFetch(ep) {
 
 function mostrarErro(m) {
   document.getElementById('loading').style.display='none';
-  const el=document.getElementById('erro-msg');
+  const el = document.getElementById('erro-msg');
   el.style.display='block';
   el.innerHTML='<strong>Erro ao carregar dados</strong><br><br>'+m+'<br><br><button onclick="carregar()" style="background:#1F2937;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px">Tentar novamente</button>';
   statusErro('Erro');
 }
 
-// ---- CARREGAR DADOS ----
 async function carregar() {
   document.getElementById('loading').style.display='flex';
   document.getElementById('conteudo').style.display='none';
   document.getElementById('erro-msg').style.display='none';
   try {
-    // Buscar leads e pipelines em paralelo
     const [ld, pd] = await Promise.all([
-      kommoFetch('/leads?limit=250&order[created_at]=desc&with=contacts'),
+      kommoFetch('/leads?limit=250&order[created_at]=desc'),
       kommoFetch('/leads/pipelines?limit=50')
     ]);
-
     const leads = ld?._embedded?.leads || [];
     const pipes  = pd?._embedded?.pipelines || [];
     _pipes = pipes;
+    _statusMap = {}; _pipeMap = {};
+    PIPE_IDS   = { qualificacao: null, gaideski: null, planicon: null };
 
-    // Mapear status e pipelines
-    _statusMap = {};
-    _pipeMap   = {};
     pipes.forEach(p => {
-      const pNome = (p.name || '').toLowerCase();
-      if (pNome.includes('qualific')) PIPE_IDS.qualificacao = p.id;
-      else if (pNome.includes('gaideski')) PIPE_IDS.gaideski = p.id;
-      else if (pNome.includes('planicom') || pNome.includes('planicon')) PIPE_IDS.planicom = p.id;
-
-      (p._embedded?.statuses || []).forEach(s => {
-        _statusMap[s.id] = s.name;
-        _pipeMap[s.id]   = p.id;
-      });
+      const n = (p.name || '').toLowerCase();
+      if      (n.includes('qualific'))                              PIPE_IDS.qualificacao = p.id;
+      else if (n.includes('gaideski'))                              PIPE_IDS.gaideski     = p.id;
+      else if (n.includes('planicon') || n.includes('planicom'))   PIPE_IDS.planicon     = p.id;
+      (p._embedded?.statuses || []).forEach(s => { _statusMap[s.id] = s.name; _pipeMap[s.id] = p.id; });
     });
 
     todosLeads = leads;
     aplicarFiltros();
-
     document.getElementById('loading').style.display='none';
     document.getElementById('conteudo').style.display='block';
     statusOk('Conectado ao Kommo');
-    document.getElementById('atualizado-em').textContent =
-      'Atualizado em ' + new Date().toLocaleString('pt-BR');
-
-    // Auto-refresh a cada 5 minutos
+    document.getElementById('atualizado-em').textContent = 'Atualizado em ' + new Date().toLocaleString('pt-BR');
     setTimeout(carregar, 5 * 60 * 1000);
-
   } catch(e) { mostrarErro(e.message || 'Erro desconhecido'); }
 }
 
-// ---- FILTROS ----
 function setEmpresa(btn) {
-  document.querySelectorAll('#grp-empresa .btn-filter').forEach(b => {
-    b.className = 'btn-filter';
-  });
+  document.querySelectorAll('#grp-empresa .btn-filter').forEach(b => b.className = 'btn-filter');
   const val = btn.dataset.val;
-  btn.className = 'btn-filter ' + (val === 'gaideski' ? 'active-g' : val === 'planicom' ? 'active-p' : 'active');
+  const cls = { gaideski: 'active-g', planicon: 'active-p', qualificacao: 'active-q', todos: 'active' };
+  btn.className = 'btn-filter ' + (cls[val] || 'active');
   filtro.empresa = val;
-  // Sincronizar funil quando empresa muda
-  if (val !== 'todos') {
-    filtro.funil = val === 'gaideski' ? 'gaideski' : 'planicom';
-    document.querySelectorAll('#grp-funil .btn-filter').forEach(b => {
-      b.className = 'btn-filter' + (b.dataset.val === filtro.funil ? ' active' : '');
-    });
-  }
-  aplicarFiltros();
-}
-
-function setFunil(btn) {
-  document.querySelectorAll('#grp-funil .btn-filter').forEach(b => b.className = 'btn-filter');
-  btn.className = 'btn-filter active';
-  filtro.funil = btn.dataset.val;
   aplicarFiltros();
 }
 
 function setPeriodo() {
   const v = document.getElementById('sel-periodo').value;
   filtro.periodo = v;
-  const customEl = document.getElementById('periodo-custom');
-  customEl.style.display = v === 'custom' ? 'flex' : 'none';
-  if (v !== 'custom') aplicarFiltros();
-  // Atualizar sub-label
+  document.getElementById('periodo-custom').style.display = v === 'custom' ? 'flex' : 'none';
   const subs = { todos: 'todos os períodos', hoje: 'hoje', '7': 'últimos 7 dias', '30': 'últimos 30 dias', '90': 'últimos 90 dias', mes: 'este mês', custom: 'período selecionado' };
   document.getElementById('sub-periodo').textContent = subs[v] || '';
+  if (v !== 'custom') aplicarFiltros();
 }
 
 function getPeriodoBounds() {
   const agora = Math.floor(Date.now() / 1000);
   const p = filtro.periodo;
-  if (p === 'todos') return { ini: 0, fim: agora + 86400 };
-  if (p === 'hoje') {
-    const d = new Date(); d.setHours(0,0,0,0);
-    return { ini: Math.floor(d.getTime()/1000), fim: agora + 86400 };
-  }
-  if (p === 'mes') {
-    const d = new Date(); d.setDate(1); d.setHours(0,0,0,0);
-    return { ini: Math.floor(d.getTime()/1000), fim: agora + 86400 };
-  }
+  if (p === 'todos')  return { ini: 0, fim: agora + 86400 };
+  if (p === 'hoje')   { const d = new Date(); d.setHours(0,0,0,0); return { ini: Math.floor(d/1000), fim: agora + 86400 }; }
+  if (p === 'mes')    { const d = new Date(); d.setDate(1); d.setHours(0,0,0,0); return { ini: Math.floor(d/1000), fim: agora + 86400 }; }
   if (p === 'custom') {
-    const dtIni = document.getElementById('dt-inicio').value;
-    const dtFim = document.getElementById('dt-fim').value;
-    const ini = dtIni ? Math.floor(new Date(dtIni).getTime()/1000) : 0;
-    const fim = dtFim ? Math.floor(new Date(dtFim+'T23:59:59').getTime()/1000) : agora + 86400;
-    return { ini, fim };
+    const di = document.getElementById('dt-inicio').value;
+    const df = document.getElementById('dt-fim').value;
+    return { ini: di ? Math.floor(new Date(di)/1000) : 0, fim: df ? Math.floor(new Date(df+'T23:59:59')/1000) : agora + 86400 };
   }
-  // numérico = dias
   return { ini: agora - parseInt(p) * 86400, fim: agora + 86400 };
 }
 
-function getPipelinesFiltrados() {
-  // Retorna lista de pipeline IDs ativos conforme filtro de empresa/funil
-  const ids = [];
-  if (filtro.funil === 'todos') {
-    if (filtro.empresa === 'todos') {
-      // Todos os pipelines
-      _pipes.forEach(p => ids.push(p.id));
-    } else if (filtro.empresa === 'gaideski') {
-      if (PIPE_IDS.qualificacao) ids.push(PIPE_IDS.qualificacao);
-      if (PIPE_IDS.gaideski) ids.push(PIPE_IDS.gaideski);
-    } else {
-      if (PIPE_IDS.qualificacao) ids.push(PIPE_IDS.qualificacao);
-      if (PIPE_IDS.planicom) ids.push(PIPE_IDS.planicom);
-    }
-  } else {
-    const pid = PIPE_IDS[filtro.funil];
-    if (pid) ids.push(pid);
-  }
-  return ids;
+function getPipesAtivos() {
+  if (filtro.empresa === 'todos') return _pipes.map(p => p.id);
+  const pid = PIPE_IDS[filtro.empresa];
+  return pid ? [pid] : [];
 }
 
 function aplicarFiltros() {
   const { ini, fim } = getPeriodoBounds();
-  const pipeIds = getPipelinesFiltrados();
-  const busca   = (document.getElementById('busca-lead')?.value || '').toLowerCase();
-  filtro.busca  = busca;
+  const pipesAtivos  = getPipesAtivos();
+  const busca = (document.getElementById('busca-lead')?.value || '').toLowerCase();
 
-  let leads = todosLeads.filter(l => {
-    // Pipeline
-    const pidLead = _pipeMap[l.status_id];
-    if (pipeIds.length && !pipeIds.includes(pidLead)) return false;
-    // Período
+  const leads = todosLeads.filter(l => {
+    if (pipesAtivos.length && !pipesAtivos.includes(_pipeMap[l.status_id])) return false;
     if (l.created_at < ini || l.created_at > fim) return false;
-    // Busca
     if (busca && !(l.name || '').toLowerCase().includes(busca)) return false;
     return true;
   });
 
   renderMetricas(leads);
-  renderFunis(leads, pipeIds);
+  renderFunis(leads, pipesAtivos);
   renderTabela(leads);
 }
 
-// ---- MÉTRICAS ----
 function renderMetricas(leads) {
-  const { ini, fim } = getPeriodoBounds();
-  document.getElementById('total-leads').textContent    = leads.length;
-  document.getElementById('leads-semana').textContent   = leads.filter(l => l.created_at >= ini && l.created_at <= fim).length;
-  document.getElementById('em-negociacao').textContent  = leads.filter(l => !l.closed_at && l.status_id !== 142 && l.status_id !== 143).length;
-  document.getElementById('ganhos').textContent         = leads.filter(l => l.status_id === 142).length;
+  const { ini } = getPeriodoBounds();
+  document.getElementById('total-leads').textContent   = leads.length;
+  document.getElementById('leads-novos').textContent   = filtro.periodo === 'todos' ? leads.length : leads.filter(l => l.created_at >= ini).length;
+  document.getElementById('em-negociacao').textContent = leads.filter(l => l.status_id !== 142 && l.status_id !== 143 && !l.closed_at).length;
+  document.getElementById('ganhos').textContent        = leads.filter(l => l.status_id === 142).length;
 }
 
-// ---- FUNIS ----
-function renderFunis(leads, pipeIds) {
-  const container = document.getElementById('funis-container');
+function renderFunis(leads, pipesAtivos) {
+  const container   = document.getElementById('funis-container');
+  const pipesExibir = _pipes.filter(p => pipesAtivos.includes(p.id));
 
-  // Quais pipes mostrar
-  const pipesParaMostrar = pipeIds.length
-    ? _pipes.filter(p => pipeIds.includes(p.id))
-    : _pipes;
+  if (!pipesExibir.length) { container.innerHTML = '<div class="sem-dados">Nenhum funil encontrado</div>'; return; }
 
-  if (!pipesParaMostrar.length) {
-    container.innerHTML = '<div class="sem-dados">Nenhum funil encontrado</div>';
-    return;
-  }
+  container.innerHTML = pipesExibir.map(pipe => {
+    const pNome  = pipe.name || '';
+    const pLower = pNome.toLowerCase();
+    let dotClass = 'funil-dot-q', fillClass = 'fill-q';
+    if (pLower.includes('gaideski'))                              { dotClass = 'funil-dot-g'; fillClass = 'fill-g'; }
+    else if (pLower.includes('planicon') || pLower.includes('planicom')) { dotClass = 'funil-dot-p'; fillClass = 'fill-p'; }
 
-  container.innerHTML = pipesParaMostrar.map(pipe => {
-    const pNome = pipe.name || '';
-    const pNomeLower = pNome.toLowerCase();
-
-    let dotClass = 'funil-dot-q', fillClass = 'fill-q', tagClass = 'tag-q';
-    if (pNomeLower.includes('gaideski')) { dotClass = 'funil-dot-g'; fillClass = 'fill-g'; tagClass = 'tag-g'; }
-    else if (pNomeLower.includes('planicom') || pNomeLower.includes('planicon')) { dotClass = 'funil-dot-p'; fillClass = 'fill-p'; tagClass = 'tag-p'; }
-
-    const statuses = (pipe._embedded?.statuses || [])
-      .filter(s => s.id !== 142 && s.id !== 143);
-
-    const contagemPipe = {};
-    leads.forEach(l => {
-      if (_pipeMap[l.status_id] === pipe.id) {
-        contagemPipe[l.status_id] = (contagemPipe[l.status_id] || 0) + 1;
-      }
-    });
-
-    const totalPipe = Object.values(contagemPipe).reduce((a,b) => a+b, 0);
-    const maxPipe   = Math.max(...Object.values(contagemPipe), 1);
+    const statuses  = (pipe._embedded?.statuses || []).filter(s => s.id !== 142 && s.id !== 143);
+    const leadsPipe = leads.filter(l => _pipeMap[l.status_id] === pipe.id);
+    const contagem  = {};
+    leadsPipe.forEach(l => { contagem[l.status_id] = (contagem[l.status_id] || 0) + 1; });
+    const totalAtivo = Object.values(contagem).reduce((a,b) => a+b, 0);
+    const maxCount   = Math.max(...Object.values(contagem), 1);
 
     const chips = statuses.map(s => {
-      const cnt = contagemPipe[s.id] || 0;
-      const pct = Math.round(cnt / maxPipe * 100);
+      const cnt = contagem[s.id] || 0;
+      const pct = Math.round(cnt / maxCount * 100);
       return `<div class="etapa-chip">
         <div class="etapa-chip-nome" title="${s.name}">${s.name}</div>
         <div class="etapa-chip-count">${cnt}</div>
@@ -697,51 +411,43 @@ function renderFunis(leads, pipeIds) {
       <div class="funil-header">
         <div class="funil-dot ${dotClass}"></div>
         <div class="funil-nome">${pNome}</div>
-        <div class="funil-total">${totalPipe} leads</div>
+        <div class="funil-total">${totalAtivo} ativo${totalAtivo!==1?'s':''}</div>
       </div>
-      <div class="etapas-row">${chips || '<div class="sem-dados">Nenhuma etapa</div>'}</div>
+      <div class="etapas-row">${chips || '<div class="sem-dados" style="padding:16px 0">Sem leads ativos</div>'}</div>
     </div>`;
   }).join('');
 }
 
-// ---- TABELA ----
 function badgeClass(nome) {
   const n = (nome || '').toLowerCase();
-  if (n.includes('ganho') || n.includes('onboarding')) return 'badge-ganho';
-  if (n.includes('proposta') || n.includes('contrato') || n.includes('aceita')) return 'badge-proposta';
-  if (n.includes('qualif') || n.includes('reunião') || n.includes('reuniao') || n.includes('agendada')) return 'badge-qualif';
-  if (n.includes('perdida') || n.includes('perda') || n.includes('no-show')) return 'badge-perda';
+  if (n.includes('ganho') || n.includes('onboarding'))                                            return 'badge-ganho';
+  if (n.includes('proposta') || n.includes('contrato') || n.includes('aceita') || n.includes('qualificado')) return 'badge-proposta';
+  if (n.includes('qualif') || n.includes('reuniao') || n.includes('reunião') || n.includes('agendada') || n.includes('recebido') || n.includes('contato')) return 'badge-qualif';
+  if (n.includes('perdida') || n.includes('perda') || n.includes('no-show'))                      return 'badge-perda';
   return 'badge-contato';
 }
 
 function getEmpresaTag(pipeId) {
   const pipe = _pipes.find(p => p.id === pipeId);
-  if (!pipe) return '';
+  if (!pipe) return '—';
   const n = (pipe.name || '').toLowerCase();
-  if (n.includes('gaideski')) return '<span class="empresa-tag tag-g">Gaideski</span>';
-  if (n.includes('planicom') || n.includes('planicon')) return '<span class="empresa-tag tag-p">Planicom</span>';
+  if (n.includes('gaideski'))                              return '<span class="empresa-tag tag-g">Gaideski</span>';
+  if (n.includes('planicon') || n.includes('planicom'))   return '<span class="empresa-tag tag-p">Planicon</span>';
   return '<span class="empresa-tag tag-q">Qualif.</span>';
 }
 
 function renderTabela(leads) {
   const tbody = document.getElementById('tabela-leads');
   document.getElementById('tabela-count').textContent = leads.length + ' lead' + (leads.length !== 1 ? 's' : '');
-
-  if (!leads.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="sem-dados">Nenhum lead encontrado para os filtros selecionados</td></tr>';
-    return;
-  }
-
+  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="6" class="sem-dados">Nenhum lead encontrado</td></tr>'; return; }
   tbody.innerHTML = leads.slice(0, 150).map(l => {
     const etapaNome = _statusMap[l.status_id] || String(l.status_id);
     const pipeId    = _pipeMap[l.status_id];
     return `<tr>
-      <td>
-        <div class="lead-nome">${l.name || '—'}</div>
-      </td>
+      <td><div class="lead-nome">${l.name||'—'}</div></td>
       <td><span class="badge ${badgeClass(etapaNome)}">${etapaNome}</span></td>
       <td>${getEmpresaTag(pipeId)}</td>
-      <td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name || '—'}</td>
+      <td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name||'—'}</td>
       <td style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px">${formatData(l.created_at)}</td>
       <td style="color:var(--text-secondary);font-family:'DM Mono',monospace;font-size:12px">${formatValor(l.price)}</td>
     </tr>`;
