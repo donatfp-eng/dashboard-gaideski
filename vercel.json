@@ -1,8 +1,6 @@
 {
   "rewrites": [
-    {
-      "source": "/api/kommo/:path*",
-      "destination": "/api/kommo"
-    }
+    { "source": "/api/kommo/:path*", "destination": "/api/kommo" },
+    { "source": "/gestao-operacional", "destination": "/gestao-operacional.html" }
   ]
 }
