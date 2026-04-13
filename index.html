@@ -7,31 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #F4F5F7;
-    --surface: #FFFFFF;
-    --border: #E4E6EA;
-    --border-light: #F0F1F3;
-    --text-primary: #0F1117;
-    --text-secondary: #5C6270;
-    --text-muted: #9BA3AF;
-    --accent-g: #1B4FD8;
-    --accent-p: #7C3AED;
-    --accent-q: #D97706;
-    --accent-green: #059669;
-    --accent-red: #DC2626;
+    --bg: #F4F5F7; --surface: #FFFFFF; --border: #E4E6EA; --border-light: #F0F1F3;
+    --text-primary: #0F1117; --text-secondary: #5C6270; --text-muted: #9BA3AF;
+    --accent-g: #1B4FD8; --accent-p: #7C3AED; --accent-q: #D97706;
+    --accent-green: #059669; --accent-red: #DC2626;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --radius: 10px;
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08); --radius: 10px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; font-size: 14px; }
 
-  header {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0 28px; height: 56px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-  }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-mark { width: 28px; height: 28px; background: var(--text-primary); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
   .logo-mark svg { width: 14px; height: 14px; fill: white; }
@@ -40,18 +26,17 @@
   .header-right { display: flex; align-items: center; gap: 12px; }
   #status-pill { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); background: var(--bg); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
   #status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
-  #status-dot.ok   { background: var(--accent-green); }
-  #status-dot.erro { background: var(--accent-red); }
+  #status-dot.ok { background: var(--accent-green); } #status-dot.erro { background: var(--accent-red); }
   .btn-atualizar { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
   .btn-atualizar:hover { background: var(--surface); color: var(--text-primary); }
   .btn-atualizar svg { width: 12px; height: 12px; }
 
   .main { padding: 20px 28px 40px; max-width: 1440px; margin: 0 auto; }
 
+  /* FILTROS */
   .filtros-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
   .filtro-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; white-space: nowrap; }
   .filtro-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
-
   .btn-group { display: flex; gap: 4px; }
   .btn-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .btn-filter:hover { border-color: #B0B5C0; color: var(--text-primary); }
@@ -59,8 +44,10 @@
   .btn-filter.active-g { background: var(--accent-g);     color: #fff; border-color: var(--accent-g); }
   .btn-filter.active-p { background: var(--accent-p);     color: #fff; border-color: var(--accent-p); }
   .btn-filter.active-q { background: var(--accent-q);     color: #fff; border-color: var(--accent-q); }
+  .btn-filter.active-green { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+  .btn-filter.active-red   { background: var(--accent-red);   color: #fff; border-color: var(--accent-red); }
 
-  .select-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 26px 5px 10px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; transition: all 0.15s; }
+  .select-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 26px 5px 10px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
 
   #periodo-custom { display: none; align-items: center; gap: 6px; }
   .input-date { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text-secondary); outline: none; }
@@ -72,9 +59,22 @@
   #busca-lead:focus { border-color: #B0B5C0; background: var(--surface); width: 240px; }
   #busca-lead::placeholder { color: var(--text-muted); }
 
+  /* TOGGLE STATUS */
+  .status-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .status-bar-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-right: 4px; }
+  .btn-status { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow); }
+  .btn-status:hover { border-color: #B0B5C0; color: var(--text-primary); }
+  .btn-status .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .btn-status.sel-ativos   { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .btn-status.sel-ganhos   { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+  .btn-status.sel-perdidos { background: var(--accent-red);   color: #fff; border-color: var(--accent-red); }
+  .dot-gray  { background: #9BA3AF; }
+  .dot-green { background: var(--accent-green); }
+  .dot-red   { background: var(--accent-red); }
+
+  /* MÉTRICAS */
   .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
   @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
-
   .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s; }
   .metric-card:hover { box-shadow: var(--shadow-md); }
   .metric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
@@ -82,33 +82,31 @@
   .metric-card.m-blue::before  { background: var(--accent-g); }
   .metric-card.m-gray::before  { background: #9BA3AF; }
   .metric-card.m-green::before { background: var(--accent-green); }
+  .metric-card.m-red::before   { background: var(--accent-red); }
   .metric-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; }
   .metric-valor { font-size: 30px; font-weight: 700; color: var(--text-primary); line-height: 1; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
   .metric-sub   { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
+  /* FUNIS */
   .secao { margin-bottom: 20px; }
   .secao-titulo { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
   .funis-container { display: flex; flex-direction: column; gap: 14px; }
-
   .funil-bloco { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
   .funil-header { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
   .funil-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .funil-dot-g { background: var(--accent-g); }
-  .funil-dot-p { background: var(--accent-p); }
-  .funil-dot-q { background: var(--accent-q); }
+  .funil-dot-g { background: var(--accent-g); } .funil-dot-p { background: var(--accent-p); } .funil-dot-q { background: var(--accent-q); }
   .funil-nome  { font-size: 12px; font-weight: 600; color: var(--text-primary); }
   .funil-total { font-size: 11px; color: var(--text-muted); margin-left: auto; font-family: 'DM Mono', monospace; }
-
   .etapas-row { display: flex; padding: 12px 14px; gap: 8px; overflow-x: auto; }
   .etapa-chip { flex: 0 0 auto; background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 14px; min-width: 120px; }
   .etapa-chip-nome  { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
   .etapa-chip-count { font-size: 20px; font-weight: 700; color: var(--text-primary); font-family: 'DM Mono', monospace; line-height: 1; }
   .etapa-chip-bar   { height: 2px; background: var(--border); border-radius: 2px; margin-top: 7px; }
   .etapa-chip-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
-  .fill-g { background: var(--accent-g); }
-  .fill-p { background: var(--accent-p); }
-  .fill-q { background: var(--accent-q); }
+  .fill-g { background: var(--accent-g); } .fill-p { background: var(--accent-p); } .fill-q { background: var(--accent-q); }
+  .fill-green { background: var(--accent-green); } .fill-red { background: var(--accent-red); }
 
+  /* TABELA */
   .tabela-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
   .tabela-header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
   .tabela-titulo { font-size: 12px; font-weight: 600; color: var(--text-primary); }
@@ -116,11 +114,8 @@
   table { width: 100%; border-collapse: collapse; }
   th { padding: 9px 16px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); background: #FAFBFC; border-bottom: 1px solid var(--border-light); }
   td { padding: 10px 16px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #FAFBFD; }
-
+  tr:last-child td { border-bottom: none; } tr:hover td { background: #FAFBFD; }
   .lead-nome { font-weight: 500; color: var(--text-primary); max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
   .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
   .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
   .badge-ganho::before    { background: #059669; } .badge-ganho    { background: #ECFDF5; color: #065F46; }
@@ -128,11 +123,8 @@
   .badge-qualif::before   { background: #D97706; } .badge-qualif   { background: #FEF3C7; color: #92400E; }
   .badge-contato::before  { background: #9BA3AF; } .badge-contato  { background: #F3F4F6; color: #374151; }
   .badge-perda::before    { background: #DC2626; } .badge-perda    { background: #FEF2F2; color: #991B1B; }
-
   .empresa-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
-  .tag-g { background: #EFF6FF; color: var(--accent-g); }
-  .tag-p { background: #F5F3FF; color: var(--accent-p); }
-  .tag-q { background: #FFFBEB; color: var(--accent-q); }
+  .tag-g { background: #EFF6FF; color: var(--accent-g); } .tag-p { background: #F5F3FF; color: var(--accent-p); } .tag-q { background: #FFFBEB; color: var(--accent-q); }
 
   #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 14px; }
   .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
@@ -144,7 +136,8 @@
 
   @media (max-width: 700px) {
     .main { padding: 12px 14px 32px; } header { padding: 0 14px; }
-    th:nth-child(3), td:nth-child(3), th:nth-child(4), td:nth-child(4) { display: none; }
+    .status-bar { flex-wrap: wrap; }
+    th:nth-child(4), td:nth-child(4) { display: none; }
   }
 </style>
 </head>
@@ -171,6 +164,7 @@
   <div id="erro-msg"></div>
   <div id="conteudo" style="display:none">
 
+    <!-- FILTROS EMPRESA + PERÍODO + BUSCA -->
     <div class="filtros-bar">
       <span class="filtro-label">Empresa</span>
       <div class="btn-group" id="grp-empresa">
@@ -205,36 +199,33 @@
       </div>
     </div>
 
-    <div class="cards-grid">
-      <div class="metric-card m-dark">
-        <div class="metric-label">Total de Leads</div>
-        <div class="metric-valor" id="total-leads">—</div>
-        <div class="metric-sub">no filtro atual</div>
-      </div>
-      <div class="metric-card m-blue">
-        <div class="metric-label">Novos (período)</div>
-        <div class="metric-valor" id="leads-novos">—</div>
-        <div class="metric-sub" id="sub-periodo">todos os períodos</div>
-      </div>
-      <div class="metric-card m-gray">
-        <div class="metric-label">Em Negociação</div>
-        <div class="metric-valor" id="em-negociacao">—</div>
-        <div class="metric-sub">propostas ativas</div>
-      </div>
-      <div class="metric-card m-green">
-        <div class="metric-label">Ganhos</div>
-        <div class="metric-valor" id="ganhos">—</div>
-        <div class="metric-sub">clientes fechados</div>
-      </div>
+    <!-- TOGGLE TIPO DE LEAD -->
+    <div class="status-bar">
+      <span class="status-bar-label">Visualizar:</span>
+      <button class="btn-status sel-ativos" id="btn-ativos" onclick="setTipo('ativos')">
+        <span class="dot dot-gray"></span> Leads Ativos
+      </button>
+      <button class="btn-status" id="btn-ganhos" onclick="setTipo('ganhos')">
+        <span class="dot dot-green"></span> Venda Ganha
+      </button>
+      <button class="btn-status" id="btn-perdidos" onclick="setTipo('perdidos')">
+        <span class="dot dot-red"></span> Venda Perdida
+      </button>
     </div>
 
+    <!-- MÉTRICAS -->
+    <div class="cards-grid" id="cards-grid">
+      <!-- preenchido dinamicamente conforme tipo -->
+    </div>
+
+    <!-- ETAPAS -->
     <div class="secao">
-      <div class="secao-titulo">Etapas por Funil</div>
+      <div class="secao-titulo" id="secao-etapas-titulo">Etapas por Funil</div>
       <div class="funis-container" id="funis-container"></div>
     </div>
 
+    <!-- TABELA -->
     <div class="secao">
-      <div class="secao-titulo">Leads</div>
       <div class="tabela-wrap">
         <div class="tabela-header">
           <span class="tabela-titulo">Resultado</span>
@@ -259,10 +250,14 @@ let todosLeads = [];
 let _statusMap = {};
 let _pipeMap   = {};
 let _pipes     = [];
-// IDs fixos dos três funis definitivos — leads de outros funis são ignorados
+
+// IDs fixos dos três funis definitivos
 const PIPE_IDS = { qualificacao: 13512120, gaideski: 13512132, planicon: 13512140 };
 const PIPE_IDS_VALIDOS = new Set([13512120, 13512132, 13512140]);
-let filtro     = { empresa: 'todos', periodo: 'todos' };
+
+// Filtros
+let filtro = { empresa: 'todos', periodo: 'todos', tipo: 'ativos' };
+// tipo: 'ativos' | 'ganhos' | 'perdidos'
 
 function statusOk(t)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=t; }
 function statusErro(t) { document.getElementById('status-dot').className='erro'; document.getElementById('status-txt').textContent=t; }
@@ -294,15 +289,20 @@ async function carregar() {
     ]);
     const leads = ld?._embedded?.leads || [];
     const pipes  = pd?._embedded?.pipelines || [];
-    // Manter apenas os três funis definitivos
-    _pipes = pipes.filter(p => PIPE_IDS_VALIDOS.has(p.id));
-    _statusMap = {}; _pipeMap = {};
 
+    // Apenas os três funis válidos
+    _pipes     = pipes.filter(p => PIPE_IDS_VALIDOS.has(p.id));
+    _statusMap = {}; _pipeMap = {};
     pipes.forEach(p => {
-      (p._embedded?.statuses || []).forEach(s => { _statusMap[s.id] = s.name; _pipeMap[s.id] = p.id; });
+      (p._embedded?.statuses || []).forEach(s => {
+        _statusMap[s.id] = s.name;
+        _pipeMap[s.id]   = p.id;
+      });
     });
 
-    todosLeads = leads;
+    // Apenas leads dos funis válidos
+    todosLeads = leads.filter(l => PIPE_IDS_VALIDOS.has(_pipeMap[l.status_id]));
+
     aplicarFiltros();
     document.getElementById('loading').style.display='none';
     document.getElementById('conteudo').style.display='block';
@@ -312,6 +312,7 @@ async function carregar() {
   } catch(e) { mostrarErro(e.message || 'Erro desconhecido'); }
 }
 
+// ---- CONTROLES ----
 function setEmpresa(btn) {
   document.querySelectorAll('#grp-empresa .btn-filter').forEach(b => b.className = 'btn-filter');
   const val = btn.dataset.val;
@@ -321,12 +322,18 @@ function setEmpresa(btn) {
   aplicarFiltros();
 }
 
+function setTipo(tipo) {
+  filtro.tipo = tipo;
+  document.getElementById('btn-ativos').className   = 'btn-status' + (tipo === 'ativos'   ? ' sel-ativos'   : '');
+  document.getElementById('btn-ganhos').className   = 'btn-status' + (tipo === 'ganhos'   ? ' sel-ganhos'   : '');
+  document.getElementById('btn-perdidos').className = 'btn-status' + (tipo === 'perdidos' ? ' sel-perdidos' : '');
+  aplicarFiltros();
+}
+
 function setPeriodo() {
   const v = document.getElementById('sel-periodo').value;
   filtro.periodo = v;
   document.getElementById('periodo-custom').style.display = v === 'custom' ? 'flex' : 'none';
-  const subs = { todos: 'todos os períodos', hoje: 'hoje', '7': 'últimos 7 dias', '30': 'últimos 30 dias', '90': 'últimos 90 dias', mes: 'este mês', custom: 'período selecionado' };
-  document.getElementById('sub-periodo').textContent = subs[v] || '';
   if (v !== 'custom') aplicarFiltros();
 }
 
@@ -354,46 +361,92 @@ function aplicarFiltros() {
   const pipesAtivos  = getPipesAtivos();
   const busca = (document.getElementById('busca-lead')?.value || '').toLowerCase();
 
+  // Filtrar por tipo (ativos / ganhos / perdidos)
   const leads = todosLeads.filter(l => {
-    if (!PIPE_IDS_VALIDOS.has(_pipeMap[l.status_id])) return false;
-    if (pipesAtivos.length && !pipesAtivos.includes(_pipeMap[l.status_id])) return false;
+    if (!pipesAtivos.includes(_pipeMap[l.status_id])) return false;
     if (l.created_at < ini || l.created_at > fim) return false;
     if (busca && !(l.name || '').toLowerCase().includes(busca)) return false;
+    if (filtro.tipo === 'ativos')   return l.status_id !== 142 && l.status_id !== 143;
+    if (filtro.tipo === 'ganhos')   return l.status_id === 142;
+    if (filtro.tipo === 'perdidos') return l.status_id === 143;
     return true;
   });
 
-  renderMetricas(leads);
+  renderMetricas(leads, pipesAtivos, ini, fim);
   renderFunis(leads, pipesAtivos);
   renderTabela(leads);
 }
 
-function renderMetricas(leads) {
-  const { ini } = getPeriodoBounds();
-  document.getElementById('total-leads').textContent   = leads.length;
-  document.getElementById('leads-novos').textContent   = filtro.periodo === 'todos' ? leads.length : leads.filter(l => l.created_at >= ini).length;
-  document.getElementById('em-negociacao').textContent = leads.filter(l => l.status_id !== 142 && l.status_id !== 143 && !l.closed_at).length;
-  document.getElementById('ganhos').textContent        = leads.filter(l => l.status_id === 142).length;
+// ---- MÉTRICAS ----
+function renderMetricas(leads, pipesAtivos, ini, fim) {
+  const grid = document.getElementById('cards-grid');
+  const t = filtro.tipo;
+
+  // Contadores globais do filtro de empresa + período (independente do tipo)
+  const leadsEmpresa = todosLeads.filter(l =>
+    pipesAtivos.includes(_pipeMap[l.status_id]) &&
+    l.created_at >= ini && l.created_at <= fim
+  );
+  const ativos   = leadsEmpresa.filter(l => l.status_id !== 142 && l.status_id !== 143).length;
+  const ganhos   = leadsEmpresa.filter(l => l.status_id === 142).length;
+  const perdidos = leadsEmpresa.filter(l => l.status_id === 143).length;
+  const novos    = filtro.periodo === 'todos' ? leadsEmpresa.length : leadsEmpresa.filter(l => l.created_at >= ini).length;
+
+  if (t === 'ativos') {
+    grid.innerHTML = `
+      <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
+      <div class="metric-card m-blue"><div class="metric-label">Novos (período)</div><div class="metric-valor">${novos}</div><div class="metric-sub">no período selecionado</div></div>
+      <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
+      <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>`;
+  } else if (t === 'ganhos') {
+    grid.innerHTML = `
+      <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
+      <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
+      <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>
+      <div class="metric-card m-gray"><div class="metric-label">Total geral</div><div class="metric-valor">${ativos+ganhos+perdidos}</div><div class="metric-sub">todos os leads</div></div>`;
+  } else {
+    grid.innerHTML = `
+      <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>
+      <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
+      <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
+      <div class="metric-card m-gray"><div class="metric-label">Total geral</div><div class="metric-valor">${ativos+ganhos+perdidos}</div><div class="metric-sub">todos os leads</div></div>`;
+  }
 }
 
+// ---- FUNIS ----
 function renderFunis(leads, pipesAtivos) {
   const container   = document.getElementById('funis-container');
   const pipesExibir = _pipes.filter(p => pipesAtivos.includes(p.id));
-
   if (!pipesExibir.length) { container.innerHTML = '<div class="sem-dados">Nenhum funil encontrado</div>'; return; }
+
+  const fillColor = filtro.tipo === 'ganhos' ? 'fill-green' : filtro.tipo === 'perdidos' ? 'fill-red' : null;
 
   container.innerHTML = pipesExibir.map(pipe => {
     const pNome  = pipe.name || '';
     const pLower = pNome.toLowerCase();
-    let dotClass = 'funil-dot-q', fillClass = 'fill-q';
-    if (pLower.includes('gaideski'))                              { dotClass = 'funil-dot-g'; fillClass = 'fill-g'; }
-    else if (pLower.includes('planicon') || pLower.includes('planicom')) { dotClass = 'funil-dot-p'; fillClass = 'fill-p'; }
+    let dotClass = 'funil-dot-q', fillClass = fillColor || 'fill-q';
+    if (!fillColor) {
+      if (pLower.includes('gaideski'))                              { dotClass = 'funil-dot-g'; fillClass = 'fill-g'; }
+      else if (pLower.includes('planicon') || pLower.includes('planicom')) { dotClass = 'funil-dot-p'; fillClass = 'fill-p'; }
+    } else {
+      if (pLower.includes('gaideski'))      dotClass = 'funil-dot-g';
+      else if (pLower.includes('planicon')) dotClass = 'funil-dot-p';
+    }
 
-    const statuses  = (pipe._embedded?.statuses || []).filter(s => s.id !== 142 && s.id !== 143);
+    // Para ativos: excluir 142 e 143 das etapas; para ganhos/perdidos: mostrar só essa etapa
+    let statuses;
+    if (filtro.tipo === 'ativos') {
+      statuses = (pipe._embedded?.statuses || []).filter(s => s.id !== 142 && s.id !== 143);
+    } else {
+      const targetId = filtro.tipo === 'ganhos' ? 142 : 143;
+      statuses = (pipe._embedded?.statuses || []).filter(s => s.id === targetId);
+    }
+
     const leadsPipe = leads.filter(l => _pipeMap[l.status_id] === pipe.id);
     const contagem  = {};
     leadsPipe.forEach(l => { contagem[l.status_id] = (contagem[l.status_id] || 0) + 1; });
-    const totalAtivo = Object.values(contagem).reduce((a,b) => a+b, 0);
-    const maxCount   = Math.max(...Object.values(contagem), 1);
+    const totalPipe = Object.values(contagem).reduce((a,b) => a+b, 0);
+    const maxCount  = Math.max(...Object.values(contagem), 1);
 
     const chips = statuses.map(s => {
       const cnt = contagem[s.id] || 0;
@@ -405,23 +458,26 @@ function renderFunis(leads, pipesAtivos) {
       </div>`;
     }).join('');
 
+    const label = filtro.tipo === 'ativos' ? `${totalPipe} ativo${totalPipe!==1?'s':''}` : `${totalPipe} lead${totalPipe!==1?'s':''}`;
+
     return `<div class="funil-bloco">
       <div class="funil-header">
         <div class="funil-dot ${dotClass}"></div>
         <div class="funil-nome">${pNome}</div>
-        <div class="funil-total">${totalAtivo} ativo${totalAtivo!==1?'s':''}</div>
+        <div class="funil-total">${label}</div>
       </div>
-      <div class="etapas-row">${chips || '<div class="sem-dados" style="padding:16px 0">Sem leads ativos</div>'}</div>
+      <div class="etapas-row">${chips || '<div class="sem-dados" style="padding:16px 0">Sem leads nesta visualização</div>'}</div>
     </div>`;
   }).join('');
 }
 
+// ---- TABELA ----
 function badgeClass(nome) {
   const n = (nome || '').toLowerCase();
-  if (n.includes('ganho') || n.includes('onboarding'))                                            return 'badge-ganho';
+  if (n.includes('ganho') || n.includes('onboarding'))                                                        return 'badge-ganho';
   if (n.includes('proposta') || n.includes('contrato') || n.includes('aceita') || n.includes('qualificado')) return 'badge-proposta';
   if (n.includes('qualif') || n.includes('reuniao') || n.includes('reunião') || n.includes('agendada') || n.includes('recebido') || n.includes('contato')) return 'badge-qualif';
-  if (n.includes('perdida') || n.includes('perda') || n.includes('no-show'))                      return 'badge-perda';
+  if (n.includes('perdida') || n.includes('perda') || n.includes('no-show'))                                  return 'badge-perda';
   return 'badge-contato';
 }
 
@@ -440,11 +496,10 @@ function renderTabela(leads) {
   if (!leads.length) { tbody.innerHTML = '<tr><td colspan="6" class="sem-dados">Nenhum lead encontrado</td></tr>'; return; }
   tbody.innerHTML = leads.slice(0, 150).map(l => {
     const etapaNome = _statusMap[l.status_id] || String(l.status_id);
-    const pipeId    = _pipeMap[l.status_id];
     return `<tr>
       <td><div class="lead-nome">${l.name||'—'}</div></td>
       <td><span class="badge ${badgeClass(etapaNome)}">${etapaNome}</span></td>
-      <td>${getEmpresaTag(pipeId)}</td>
+      <td>${getEmpresaTag(_pipeMap[l.status_id])}</td>
       <td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name||'—'}</td>
       <td style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px">${formatData(l.created_at)}</td>
       <td style="color:var(--text-secondary);font-family:'DM Mono',monospace;font-size:12px">${formatValor(l.price)}</td>
