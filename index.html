@@ -448,13 +448,25 @@ function renderFunis(leads, pipesAtivos) {
     const totalPipe = Object.values(contagem).reduce((a,b) => a+b, 0);
     const maxCount  = Math.max(...Object.values(contagem), 1);
 
-    const chips = statuses.map(s => {
-      const cnt = contagem[s.id] || 0;
-      const pct = Math.round(cnt / maxCount * 100);
-      return `<div class="etapa-chip">
-        <div class="etapa-chip-nome" title="${s.name}">${s.name}</div>
-        <div class="etapa-chip-count">${cnt}</div>
-        <div class="etapa-chip-bar"><div class="etapa-chip-fill ${fillClass}" style="width:${pct}%"></div></div>
+    const chips = statuses.map((s, i) => {
+      const cnt  = contagem[s.id] || 0;
+      const pct  = Math.round(cnt / maxCount * 100);
+      let seta   = '';
+      if (i < statuses.length - 1 && filtro.tipo === 'ativos') {
+        const cntNext = contagem[statuses[i+1].id] || 0;
+        const conv    = cnt > 0 ? Math.round(cntNext / cnt * 100) : 0;
+        const corSeta = conv >= 50 ? '#10B981' : conv >= 25 ? '#D97706' : '#9BA3AF';
+        seta = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;flex-shrink:0">
+          <div style="font-size:10px;font-weight:700;color:${corSeta}">${conv}%</div>
+          <div style="font-size:16px;color:${corSeta};line-height:1">›</div>
+        </div>`;
+      }
+      return `<div style="display:flex;align-items:center">
+        <div class="etapa-chip">
+          <div class="etapa-chip-nome" title="${s.name}">${s.name}</div>
+          <div class="etapa-chip-count">${cnt}</div>
+          <div class="etapa-chip-bar"><div class="etapa-chip-fill ${fillClass}" style="width:${pct}%"></div></div>
+        </div>${seta}
       </div>`;
     }).join('');
 
