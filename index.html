@@ -390,12 +390,12 @@ function renderMetricas(leads, pipesAtivos, ini, fim) {
   const ativos   = leadsEmpresa.filter(l => l.status_id !== 142 && l.status_id !== 143).length;
   const ganhos   = leadsEmpresa.filter(l => l.status_id === 142).length;
   const perdidos = leadsEmpresa.filter(l => l.status_id === 143).length;
-  const novos    = filtro.periodo === 'todos' ? leadsEmpresa.length : leadsEmpresa.filter(l => l.created_at >= ini).length;
+  const novos    = leadsEmpresa.filter(l => l.status_id !== 142 && l.status_id !== 143 && l.created_at >= ini).length;
 
   if (t === 'ativos') {
     grid.innerHTML = `
       <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
-      <div class="metric-card m-blue"><div class="metric-label">Novos (período)</div><div class="metric-valor">${novos}</div><div class="metric-sub">no período selecionado</div></div>
+      <div class="metric-card m-blue"><div class="metric-label">Entradas no período</div><div class="metric-valor">${novos}</div><div class="metric-sub">leads criados no filtro</div></div>
       <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
       <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>`;
   } else if (t === 'ganhos') {
