@@ -1,170 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alertas Críticos · Gaideski</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #F4F5F7; --surface: #FFFFFF; --border: #E4E6EA;
-    --text-primary: #0F1117; --text-secondary: #5C6270; --text-muted: #9BA3AF;
-    --accent-red: #DC2626; --accent-yellow: #D97706; --accent-green: #059669;
-    --shadow: 0 4px 12px rgba(0,0,0,0.08 ); --radius: 12px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; }
+  <meta charset="UTF-8">
+  <title>Gestão Operacional</title>
 
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-  .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; color: inherit; }
-  .logo-mark { width: 30px; height: 30px; background: var(--accent-red); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-  .logo-text { font-size: 16px; font-weight: 700; }
-  
-  .nav-links { display: flex; gap: 20px; }
-  .nav-link { text-decoration: none; color: var(--text-secondary); font-size: 14px; font-weight: 500; }
-  .nav-link.active { color: var(--accent-red); font-weight: 700; }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 20px;
+    }
 
-  .main { padding: 30px 28px; max-width: 1200px; margin: 0 auto; }
-  .page-header { margin-bottom: 30px; }
-  .page-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--accent-red); }
-  .page-subtitle { color: var(--text-secondary); font-size: 15px; }
+    h1 {
+      margin-bottom: 20px;
+    }
 
-  .alert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
-  .alert-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-  .alert-card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
-  .alert-icon { font-size: 20px; }
-  .alert-card-title { font-weight: 700; font-size: 16px; }
-  
-  .alert-list { list-style: none; }
-  .alert-item { padding: 16px 20px; border-bottom: 1px solid #F9FAFB; display: flex; flex-direction: column; gap: 6px; }
-  .alert-item:last-child { border-bottom: none; }
-  .alert-item:hover { background: #F9FAFB; }
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 5px solid red;
+    }
 
-  .lead-info { display: flex; justify-content: space-between; align-items: flex-start; }
-  .lead-name { font-weight: 600; font-size: 14px; color: var(--text-primary); }
-  .lead-time { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; }
-  .time-urgent { background: #FEE2E2; color: #991B1B; }
-  .time-warning { background: #FEF3C7; color: #92400E; }
-  
-  .task-text { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
-  .meta-row { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); font-weight: 500; }
-  
-  .empty-state { padding: 40px; text-align: center; color: var(--text-muted); }
-  .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(244, 245, 247, 0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-  
-  .badge-stage { background: #E5E7EB; color: #374151; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
-</style>
+    .ok {
+      border-left: 5px solid green;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 10px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .topo {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #020617;
+      border-radius: 10px;
+    }
+
+    .contador {
+      font-size: 18px;
+      font-weight: bold;
+      color: #f87171;
+    }
+
+  </style>
 </head>
+
 <body>
 
-<header>
-  <a href="/" class="logo">
-    <div class="logo-mark">!</div>
-    <div class="logo-text">Gaideski <span>Operacional</span></div>
-  </a>
-  <div class="nav-links">
-    <a href="/" class="nav-link">Dashboard</a>
-    <a href="/alertas" class="nav-link active">Alertas Críticos</a>
-  </div>
-</header>
-
-<div id="loading" class="loading-overlay">Carregando alertas...</div>
-
-<div class="main">
-  <div class="page-header">
-    <h1 class="page-title">🚨 Central de Alertas</h1>
-    <p class="page-subtitle">Ações necessárias para garantir resposta em menos de 24h.</p>
+  <div class="topo">
+    <h1>🚨 Central de Alertas</h1>
+    <div class="contador" id="contador">Carregando...</div>
   </div>
 
-  <div class="alert-grid">
-    <div class="alert-card">
-      <div class="alert-card-header" style="background: #FFF5F5;">
-        <span class="alert-icon">⏰</span>
-        <span class="alert-card-title" style="color: #C53030;">Tarefas Atrasadas</span>
-      </div>
-      <div id="lista-atrasadas" class="alert-list"></div>
-    </div>
-
-    <div class="alert-card">
-      <div class="alert-card-header" style="background: #FFFBEB;">
-        <span class="alert-icon">🚫</span>
-        <span class="alert-card-title" style="color: #92400E;">Leads sem Próxima Ação</span>
-      </div>
-      <div id="lista-sem-tarefa" class="alert-list"></div>
-    </div>
-
-    <div class="alert-card">
-      <div class="alert-card-header" style="background: #F0FFF4;">
-        <span class="alert-icon">⏳</span>
-        <span class="alert-card-title" style="color: #22543D;">Parados > 24h</span>
-      </div>
-      <div id="lista-parados" class="alert-list"></div>
-    </div>
-  </div>
-</div>
+  <div id="lista"></div>
 
 <script>
-const BASE = '/api/kommo';
 
-async function fetchData(ep) {
-  const r = await fetch(BASE + ep);
-  if (!r.ok) throw new Error('Erro API: ' + r.status);
-  return r.json();
+async function carregarLeads() {
+  const res = await fetch('/api/kommo/leads');
+  const data = await res.json();
+
+  const leads = data._embedded?.leads || [];
+  const agora = new Date();
+
+  let problemas = [];
+
+  leads.forEach(lead => {
+
+    const ultimaAtualizacao = new Date(lead.updated_at * 1000);
+    const diffHoras = (agora - ultimaAtualizacao) / (1000 * 60 * 60);
+
+    const temTarefa = lead.closest_task_at;
+
+    // 🚨 REGRA 1: Sem tarefa
+    if (!temTarefa) {
+      problemas.push({
+        tipo: "SEM PRÓXIMA AÇÃO",
+        lead
+      });
+    }
+
+    // 🚨 REGRA 2: Parado +24h
+    if (diffHoras > 24) {
+      problemas.push({
+        tipo: "PARADO +24H",
+        lead
+      });
+    }
+
+  });
+
+  render(problemas);
 }
 
-function getTimeLabel(seconds) {
-  const diff = Math.floor(Date.now() / 1000) - seconds;
-  const hours = Math.floor(diff / 3600);
-  if (hours < 24) return { text: `${hours}h atrás`, class: 'time-warning' };
-  const days = Math.floor(hours / 24);
-  return { text: `${days}d atrás`, class: 'time-urgent' };
+function render(problemas) {
+  const lista = document.getElementById('lista');
+  const contador = document.getElementById('contador');
+
+  lista.innerHTML = "";
+
+  contador.innerText = `⚠️ ${problemas.length} problemas encontrados`;
+
+  if (problemas.length === 0) {
+    lista.innerHTML = "<div class='card ok'>Tudo certo 🎉 Nenhum problema!</div>";
+    return;
+  }
+
+  problemas.forEach(item => {
+
+    const lead = item.lead;
+
+    const linkKommo = `https://kommogaideskicombr.kommo.com/leads/detail/${lead.id}`;
+
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    div.innerHTML = `
+      <strong>${lead.name}</strong><br>
+      Problema: ${item.tipo}<br>
+
+      <a href="${linkKommo}" target="_blank" class="btn">
+        Abrir no Kommo
+      </a>
+    `;
+
+    lista.appendChild(div);
+  });
 }
 
-async function carregar() {
-  try {
-    const [ld, tk, pd] = await Promise.all([
-      fetchData('/leads?limit=250&order[updated_at]=desc'),
-      fetchData('/tasks?filter[is_completed]=0&limit=250'),
-      fetchData('/leads/pipelines?limit=50')
-    ]);
+carregarLeads();
 
-    const leads = ld?._embedded?.leads || [];
-    const tasks = tk?._embedded?.tasks || [];
-    const pipes = pd?._embedded?.pipelines || [];
-    
-    const statusMap = {};
-    pipes.forEach(p => {
-      (p._embedded?.statuses || []).forEach(s => { statusMap[s.id] = { name: s.name, pipe: p.name }; });
-    });
-
-    const agora = Math.floor(Date.now() / 1000);
-    const umDiaSegundos = 24 * 3600;
-
-    const atrasadas = tasks.filter(t => t.complete_till < agora && t.entity_type === 'leads');
-    document.getElementById('lista-atrasadas').innerHTML = atrasadas.map(t => {
-      const lead = leads.find(l => l.id === t.entity_id) || { name: 'Lead #' + t.entity_id };
-      const time = getTimeLabel(t.complete_till);
-      return `<div class="alert-item"><div class="lead-info"><span class="lead-name">${lead.name}</span><span class="lead-time ${time.class}">${time.text}</span></div><div class="task-text">${t.text}</div></div>`;
-    }).join('') || '<div class="empty-state">Nenhuma tarefa atrasada.</div>';
-
-    const leadsComTarefa = new Set(tasks.map(t => t.entity_id));
-    const semTarefa = leads.filter(l => !leadsComTarefa.has(l.id) && l.status_id !== 142 && l.status_id !== 143);
-    document.getElementById('lista-sem-tarefa').innerHTML = semTarefa.map(l => {
-      const stage = statusMap[l.status_id] || { name: '—' };
-      return `<div class="alert-item"><div class="lead-info"><span class="lead-name">${l.name}</span><span class="lead-time time-urgent">SEM AÇÃO</span></div><div class="meta-row"><span class="badge-stage">${stage.name}</span></div></div>`;
-    }).join('') || '<div class="empty-state">Todos os leads têm ações agendadas.</div>';
-
-    const parados = leads.filter(l => (agora - l.updated_at) > umDiaSegundos && l.status_id !== 142 && l.status_id !== 143);
-    document.getElementById('lista-parados').innerHTML = parados.map(l => {
-      const stage = statusMap[l.status_id] || { name: '—' };
-      const time = getTimeLabel(l.updated_at);
-      return `<div class="alert-item"><div class="lead-info"><span class="lead-name">${l.name}</span><span class="lead-time ${time.class}">${time.text}</span></div><div class="meta-row"><span class="badge-stage">${stage.name}</span></div></div>`;
-    }).join('') || '<div class="empty-state">Nenhum lead parado por muito tempo.</div>';
-
-    document.getElementById('loading').style.display = 'none';
-  } catch(e) { document.getElementById('loading').innerHTML = 'Erro: ' + e.message; }
-}
-carregar();
 </script>
+
 </body>
 </html>
