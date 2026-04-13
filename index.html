@@ -284,7 +284,7 @@ async function carregar() {
   document.getElementById('erro-msg').style.display='none';
   try {
     const [ld, pd] = await Promise.all([
-      kommoFetch('/leads?limit=250&order%5Bcreated_at%5D=desc&filter%5Bpipeline_id%5D%5B0%5D=13512120&filter%5Bpipeline_id%5D%5B1%5D=13512132&filter%5Bpipeline_id%5D%5B2%5D=13512140'),
+      kommoFetch('/leads?limit=250&order[created_at]=desc'),
       kommoFetch('/leads/pipelines?limit=50')
     ]);
     const leads = ld?._embedded?.leads || [];
