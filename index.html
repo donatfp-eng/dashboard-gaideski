@@ -175,9 +175,9 @@
       <span class="filtro-label">Empresa</span>
       <div class="btn-group" id="grp-empresa">
         <button class="btn-filter active"   data-val="todos"        onclick="setEmpresa(this)">Todos</button>
+        <button class="btn-filter"          data-val="qualificacao" onclick="setEmpresa(this)">Qualificação</button>
         <button class="btn-filter"          data-val="gaideski"     onclick="setEmpresa(this)">Gaideski</button>
         <button class="btn-filter"          data-val="planicon"     onclick="setEmpresa(this)">Planicon</button>
-        <button class="btn-filter"          data-val="qualificacao" onclick="setEmpresa(this)">Qualificação</button>
       </div>
 
       <div class="filtro-divider"></div>
@@ -259,7 +259,9 @@ let todosLeads = [];
 let _statusMap = {};
 let _pipeMap   = {};
 let _pipes     = [];
-let PIPE_IDS   = { qualificacao: null, gaideski: null, planicon: null };
+// IDs fixos dos três funis definitivos — leads de outros funis são ignorados
+const PIPE_IDS = { qualificacao: 13512120, gaideski: 13512132, planicon: 13512140 };
+const PIPE_IDS_VALIDOS = new Set([13512120, 13512132, 13512140]);
 let filtro     = { empresa: 'todos', periodo: 'todos' };
 
 function statusOk(t)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=t; }
@@ -292,15 +294,11 @@ async function carregar() {
     ]);
     const leads = ld?._embedded?.leads || [];
     const pipes  = pd?._embedded?.pipelines || [];
-    _pipes = pipes;
+    // Manter apenas os três funis definitivos
+    _pipes = pipes.filter(p => PIPE_IDS_VALIDOS.has(p.id));
     _statusMap = {}; _pipeMap = {};
-    PIPE_IDS   = { qualificacao: null, gaideski: null, planicon: null };
 
     pipes.forEach(p => {
-      const n = (p.name || '').toLowerCase();
-      if      (n.includes('qualific'))                              PIPE_IDS.qualificacao = p.id;
-      else if (n.includes('gaideski'))                              PIPE_IDS.gaideski     = p.id;
-      else if (n.includes('planicon') || n.includes('planicom'))   PIPE_IDS.planicon     = p.id;
       (p._embedded?.statuses || []).forEach(s => { _statusMap[s.id] = s.name; _pipeMap[s.id] = p.id; });
     });
 
@@ -347,9 +345,8 @@ function getPeriodoBounds() {
 }
 
 function getPipesAtivos() {
-  if (filtro.empresa === 'todos') return _pipes.map(p => p.id);
-  const pid = PIPE_IDS[filtro.empresa];
-  return pid ? [pid] : [];
+  if (filtro.empresa === 'todos') return [PIPE_IDS.qualificacao, PIPE_IDS.gaideski, PIPE_IDS.planicon];
+  return [PIPE_IDS[filtro.empresa]];
 }
 
 function aplicarFiltros() {
@@ -358,6 +355,7 @@ function aplicarFiltros() {
   const busca = (document.getElementById('busca-lead')?.value || '').toLowerCase();
 
   const leads = todosLeads.filter(l => {
+    if (!PIPE_IDS_VALIDOS.has(_pipeMap[l.status_id])) return false;
     if (pipesAtivos.length && !pipesAtivos.includes(_pipeMap[l.status_id])) return false;
     if (l.created_at < ini || l.created_at > fim) return false;
     if (busca && !(l.name || '').toLowerCase().includes(busca)) return false;
