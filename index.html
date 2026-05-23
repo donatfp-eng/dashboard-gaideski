@@ -1017,6 +1017,10 @@ function atualizarCamposMeta() {
   document.getElementById('modal-meta-ext-val').value = getMetaValor(ano, mes, 'ext') || '';
 }
 
+function fecharModalMetas() {
+  document.getElementById('modal-metas').classList.remove('open');
+}
+
 function salvarMetas() {
   const mes = parseInt(document.getElementById('modal-sel-mes').value);
   const ano = parseInt(document.getElementById('modal-sel-ano').value);
