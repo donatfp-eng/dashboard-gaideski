@@ -10,7 +10,7 @@
     --bg: #F4F5F7; --surface: #FFFFFF; --border: #E4E6EA; --border-light: #F0F1F3;
     --text-primary: #0F1117; --text-secondary: #5C6270; --text-muted: #9BA3AF;
     --accent-g: #1B4FD8; --accent-p: #7C3AED; --accent-q: #D97706;
-    --accent-green: #059669; --accent-red: #DC2626;
+    --accent-green: #059669; --accent-red: #DC2626; --accent-blue: #0EA5E9;
     --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.08); --radius: 10px;
   }
@@ -27,11 +27,20 @@
   #status-pill { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); background: var(--bg); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
   #status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
   #status-dot.ok { background: var(--accent-green); } #status-dot.erro { background: var(--accent-red); }
-  .btn-atualizar { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
-  .btn-atualizar:hover { background: var(--surface); color: var(--text-primary); }
-  .btn-atualizar svg { width: 12px; height: 12px; }
+  .btn-header { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-secondary); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+  .btn-header:hover { background: var(--surface); color: var(--text-primary); }
+  .btn-header svg { width: 12px; height: 12px; }
+  .btn-metas-header { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .btn-metas-header:hover { background: #1a1f2e; color: #fff; }
+
+  /* TABS */
+  .tabs-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; }
+  .tab-btn { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; padding: 14px 16px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .tab-btn:hover { color: var(--text-primary); }
+  .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
 
   .main { padding: 20px 28px 40px; max-width: 1440px; margin: 0 auto; }
+  .tab-content { display: none; } .tab-content.active { display: block; }
 
   /* FILTROS */
   .filtros-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; }
@@ -44,22 +53,14 @@
   .btn-filter.active-g { background: var(--accent-g);     color: #fff; border-color: var(--accent-g); }
   .btn-filter.active-p { background: var(--accent-p);     color: #fff; border-color: var(--accent-p); }
   .btn-filter.active-q { background: var(--accent-q);     color: #fff; border-color: var(--accent-q); }
-  .btn-filter.active-green { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
-  .btn-filter.active-red   { background: var(--accent-red);   color: #fff; border-color: var(--accent-red); }
-
   .select-filter { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 5px 26px 5px 10px; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text-secondary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; }
-
-  #periodo-custom { display: none; align-items: center; gap: 6px; }
-  .input-date { font-family: 'DM Mono', monospace; font-size: 11px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text-secondary); outline: none; }
-  .periodo-sep { font-size: 11px; color: var(--text-muted); }
-
   .busca-wrap { margin-left: auto; position: relative; }
   .busca-wrap svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; color: var(--text-muted); pointer-events: none; }
   #busca-lead { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px 5px 28px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text-primary); outline: none; width: 200px; transition: all 0.15s; }
   #busca-lead:focus { border-color: #B0B5C0; background: var(--surface); width: 240px; }
   #busca-lead::placeholder { color: var(--text-muted); }
 
-  /* TOGGLE STATUS */
+  /* STATUS BAR */
   .status-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
   .status-bar-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.7px; margin-right: 4px; }
   .btn-status { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow); }
@@ -68,11 +69,9 @@
   .btn-status.sel-ativos   { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
   .btn-status.sel-ganhos   { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
   .btn-status.sel-perdidos { background: var(--accent-red);   color: #fff; border-color: var(--accent-red); }
-  .dot-gray  { background: #9BA3AF; }
-  .dot-green { background: var(--accent-green); }
-  .dot-red   { background: var(--accent-red); }
+  .dot-gray { background: #9BA3AF; } .dot-green { background: var(--accent-green); } .dot-red { background: var(--accent-red); }
 
-  /* MÉTRICAS */
+  /* CARDS */
   .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
   @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
   .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; position: relative; overflow: hidden; box-shadow: var(--shadow); transition: box-shadow 0.2s; }
@@ -83,9 +82,60 @@
   .metric-card.m-gray::before  { background: #9BA3AF; }
   .metric-card.m-green::before { background: var(--accent-green); }
   .metric-card.m-red::before   { background: var(--accent-red); }
+  .metric-card.m-purple::before { background: var(--accent-p); }
+  .metric-card.m-orange::before { background: var(--accent-q); }
   .metric-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; }
-  .metric-valor { font-size: 30px; font-weight: 700; color: var(--text-primary); line-height: 1; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
-  .metric-sub   { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  .metric-valor { font-size: 28px; font-weight: 700; color: var(--text-primary); line-height: 1; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
+  .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  /* METAS */
+  .metas-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 800px) { .metas-grid { grid-template-columns: 1fr; } }
+  .meta-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); }
+  .meta-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .meta-card-titulo { font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+  .meta-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .meta-badge-rec  { background: #EFF6FF; color: var(--accent-g); }
+  .meta-badge-ext  { background: #F5F3FF; color: var(--accent-p); }
+  .meta-valores { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  .meta-atual { font-size: 32px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: -1.5px; color: var(--text-primary); }
+  .meta-sep { font-size: 16px; color: var(--text-muted); }
+  .meta-alvo { font-size: 18px; font-weight: 500; font-family: 'DM Mono', monospace; color: var(--text-muted); }
+  .meta-barra-wrap { background: var(--bg); border-radius: 4px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+  .meta-barra-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+  .meta-barra-fill.rec { background: var(--accent-g); }
+  .meta-barra-fill.ext { background: var(--accent-p); }
+  .meta-barra-fill.ok  { background: var(--accent-green); }
+  .meta-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); }
+  .meta-pct { font-weight: 700; font-family: 'DM Mono', monospace; }
+  .meta-pct.verde { color: var(--accent-green); }
+  .meta-pct.amarelo { color: var(--accent-q); }
+  .meta-pct.vermelho { color: var(--accent-red); }
+  .meta-detalhes { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); display: flex; gap: 16px; flex-wrap: wrap; }
+  .meta-detalhe-item { font-size: 11px; color: var(--text-muted); }
+  .meta-detalhe-item strong { color: var(--text-secondary); font-weight: 600; }
+
+  /* MODAL METAS */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 14px; padding: 28px; width: 540px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  .modal-titulo { font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+  .modal-secao { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; margin-top: 20px; padding-bottom: 6px; border-bottom: 1px solid var(--border-light); }
+  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .modal-field { display: flex; flex-direction: column; gap: 5px; }
+  .modal-field label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+  .modal-field input { font-family: 'DM Mono', monospace; font-size: 13px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text-primary); outline: none; transition: border-color 0.15s; }
+  .modal-field input:focus { border-color: var(--accent-g); background: var(--surface); }
+  .modal-field .field-hint { font-size: 10px; color: var(--text-muted); }
+  .modal-acumulado { background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 12px; color: #1D4ED8; }
+  .modal-acumulado strong { font-weight: 700; }
+  .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 24px; }
+  .btn-modal { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: 7px; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+  .btn-modal.primary { background: var(--text-primary); color: #fff; border-color: var(--text-primary); }
+  .btn-modal.primary:hover { background: #1a1f2e; }
+  .btn-modal.secondary { background: var(--bg); color: var(--text-secondary); }
+  .btn-modal.secondary:hover { background: var(--surface); color: var(--text-primary); }
 
   /* FUNIS */
   .secao { margin-bottom: 20px; }
@@ -93,7 +143,7 @@
   .funis-container { display: flex; flex-direction: column; gap: 14px; }
   .funil-bloco { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
   .funil-header { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
-  .funil-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .funil-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .funil-dot-g { background: var(--accent-g); } .funil-dot-p { background: var(--accent-p); } .funil-dot-q { background: var(--accent-q); }
   .funil-nome  { font-size: 12px; font-weight: 600; color: var(--text-primary); }
   .funil-total { font-size: 11px; color: var(--text-muted); margin-left: auto; font-family: 'DM Mono', monospace; }
@@ -106,6 +156,41 @@
   .fill-g { background: var(--accent-g); } .fill-p { background: var(--accent-p); } .fill-q { background: var(--accent-q); }
   .fill-green { background: var(--accent-green); } .fill-red { background: var(--accent-red); }
 
+  /* RANKING */
+  .ranking-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .ranking-header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
+  .ranking-titulo { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+  .ranking-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-light); }
+  .ranking-item:last-child { border-bottom: none; }
+  .ranking-pos { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .pos-1 { background: #FEF3C7; color: #D97706; }
+  .pos-2 { background: #F3F4F6; color: #6B7280; }
+  .pos-3 { background: #FEF2F2; color: #D97706; }
+  .pos-n { background: var(--bg); color: var(--text-muted); }
+  .ranking-nome { font-size: 13px; font-weight: 500; flex: 1; }
+  .ranking-bar-wrap { flex: 2; background: var(--bg); border-radius: 3px; height: 6px; }
+  .ranking-bar-fill { height: 100%; border-radius: 3px; background: var(--accent-g); transition: width 0.6s ease; }
+  .ranking-nums { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 80px; }
+  .ranking-val { font-size: 12px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--text-primary); }
+  .ranking-sub-val { font-size: 10px; color: var(--text-muted); }
+
+  /* EVOLUÇÃO */
+  .evolucao-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .evolucao-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .evolucao-titulo { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .evolucao-legenda { display: flex; gap: 16px; }
+  .leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+  .leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 180px; padding: 0 4px; }
+  .chart-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+  .chart-bars-stacked { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; height: 160px; justify-content: flex-end; }
+  .chart-bar-seg { width: 100%; border-radius: 3px 3px 0 0; transition: height 0.6s ease; min-height: 0; }
+  .bar-rec { background: var(--accent-g); }
+  .bar-ext { background: var(--accent-p); }
+  .bar-meta { background: rgba(5,150,105,0.15); border: 1px dashed var(--accent-green); border-radius: 3px; }
+  .chart-label { font-size: 9px; color: var(--text-muted); font-weight: 500; white-space: nowrap; }
+  .chart-valor { font-size: 9px; color: var(--text-secondary); font-family: 'DM Mono', monospace; }
+
   /* TABELA */
   .tabela-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
   .tabela-header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: #FAFBFC; }
@@ -115,7 +200,7 @@
   th { padding: 9px 16px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); background: #FAFBFC; border-bottom: 1px solid var(--border-light); }
   td { padding: 10px 16px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
   tr:last-child td { border-bottom: none; } tr:hover td { background: #FAFBFD; }
-  .lead-nome { font-weight: 500; color: var(--text-primary); max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lead-nome { font-weight: 500; color: var(--text-primary); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
   .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
   .badge-ganho::before    { background: #059669; } .badge-ganho    { background: #ECFDF5; color: #065F46; }
@@ -123,6 +208,8 @@
   .badge-qualif::before   { background: #D97706; } .badge-qualif   { background: #FEF3C7; color: #92400E; }
   .badge-contato::before  { background: #9BA3AF; } .badge-contato  { background: #F3F4F6; color: #374151; }
   .badge-perda::before    { background: #DC2626; } .badge-perda    { background: #FEF2F2; color: #991B1B; }
+  .badge-rec  { background: #EFF6FF; color: var(--accent-g); font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
+  .badge-ext  { background: #F5F3FF; color: var(--accent-p); font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; }
   .empresa-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
   .tag-g { background: #EFF6FF; color: var(--accent-g); } .tag-p { background: #F5F3FF; color: var(--accent-p); } .tag-q { background: #FFFBEB; color: var(--accent-q); }
 
@@ -137,7 +224,8 @@
   @media (max-width: 700px) {
     .main { padding: 12px 14px 32px; } header { padding: 0 14px; }
     .status-bar { flex-wrap: wrap; }
-    th:nth-child(4), td:nth-child(4) { display: none; }
+    th:nth-child(4), td:nth-child(4), th:nth-child(7), td:nth-child(7) { display: none; }
+    .metas-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -151,7 +239,11 @@
     <div class="logo-text">Gaideski <span>· Dashboard Comercial</span></div>
   </div>
   <div class="header-right">
-    <button class="btn-atualizar" onclick="carregar()">
+    <button class="btn-header btn-metas-header" onclick="abrirModalMetas()">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 2"/></svg>
+      Definir Metas
+    </button>
+    <button class="btn-header" onclick="carregar()">
       <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 6a5 5 0 1 0 1.2-3.2M1 2v2h2"/></svg>
       Atualizar
     </button>
@@ -159,82 +251,144 @@
   </div>
 </header>
 
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="setTab('visao-geral')">Visão Geral</button>
+  <button class="tab-btn" onclick="setTab('metas')">Metas & Carteira</button>
+  <button class="tab-btn" onclick="setTab('funis')">Funis</button>
+  <button class="tab-btn" onclick="setTab('ranking')">Ranking</button>
+  <button class="tab-btn" onclick="setTab('leads')">Leads</button>
+</div>
+
+<!-- MODAL METAS -->
+<div class="modal-overlay" id="modal-metas">
+  <div class="modal">
+    <div class="modal-titulo">Definir Metas Mensais</div>
+    <div class="modal-sub">Configure as metas de cada mês. A carteira recorrente acumula mês a mês.</div>
+
+    <div class="modal-acumulado" id="modal-info-acumulado">
+      Carregando dados da carteira recorrente...
+    </div>
+
+    <div class="modal-secao">Metas Recorrentes (Honorários) — por mês</div>
+    <div id="modal-metas-rec"></div>
+
+    <div class="modal-secao">Metas Serviços Extras — por mês</div>
+    <div id="modal-metas-ext"></div>
+
+    <div class="modal-footer">
+      <button class="btn-modal secondary" onclick="fecharModalMetas()">Cancelar</button>
+      <button class="btn-modal primary" onclick="salvarMetas()">Salvar Metas</button>
+    </div>
+  </div>
+</div>
+
 <div class="main">
   <div id="loading"><div class="spinner"></div><div class="loading-txt">Carregando dados do Kommo...</div></div>
   <div id="erro-msg"></div>
   <div id="conteudo" style="display:none">
 
-    <!-- FILTROS EMPRESA + PERÍODO + BUSCA -->
-    <div class="filtros-bar">
-      <span class="filtro-label">Empresa</span>
-      <div class="btn-group" id="grp-empresa">
-        <button class="btn-filter active"   data-val="todos"        onclick="setEmpresa(this)">Todos</button>
-        <button class="btn-filter"          data-val="qualificacao" onclick="setEmpresa(this)">Qualificação</button>
-        <button class="btn-filter"          data-val="gaideski"     onclick="setEmpresa(this)">Gaideski</button>
-        <button class="btn-filter"          data-val="planicon"     onclick="setEmpresa(this)">Planicon</button>
+    <!-- TAB: VISÃO GERAL -->
+    <div id="tab-visao-geral" class="tab-content active">
+      <div class="filtros-bar">
+        <span class="filtro-label">Empresa</span>
+        <div class="btn-group" id="grp-empresa">
+          <button class="btn-filter active"   data-val="todos"        onclick="setEmpresa(this)">Todos</button>
+          <button class="btn-filter"          data-val="qualificacao" onclick="setEmpresa(this)">Qualificação</button>
+          <button class="btn-filter"          data-val="gaideski"     onclick="setEmpresa(this)">Gaideski</button>
+          <button class="btn-filter"          data-val="planicon"     onclick="setEmpresa(this)">Planicon</button>
+        </div>
+        <div class="filtro-divider"></div>
+        <span class="filtro-label">Período</span>
+        <select class="select-filter" id="sel-periodo" onchange="setPeriodo()">
+          <option value="todos">Todos</option>
+          <option value="hoje">Hoje</option>
+          <option value="7">Últimos 7 dias</option>
+          <option value="30">Últimos 30 dias</option>
+          <option value="90">Últimos 90 dias</option>
+          <option value="mes">Este mês</option>
+        </select>
+        <div class="busca-wrap">
+          <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l2.5 2.5"/></svg>
+          <input type="text" id="busca-lead" placeholder="Buscar lead..." oninput="aplicarFiltros()">
+        </div>
       </div>
-
-      <div class="filtro-divider"></div>
-
-      <span class="filtro-label">Período</span>
-      <select class="select-filter" id="sel-periodo" onchange="setPeriodo()">
-        <option value="todos">Todos</option>
-        <option value="hoje">Hoje</option>
-        <option value="7">Últimos 7 dias</option>
-        <option value="30">Últimos 30 dias</option>
-        <option value="90">Últimos 90 dias</option>
-        <option value="mes">Este mês</option>
-        <option value="custom">Período personalizado</option>
-      </select>
-      <div id="periodo-custom">
-        <input type="date" class="input-date" id="dt-inicio">
-        <span class="periodo-sep">até</span>
-        <input type="date" class="input-date" id="dt-fim">
-        <button class="btn-filter active" onclick="aplicarFiltros()">Aplicar</button>
+      <div class="status-bar">
+        <span class="status-bar-label">Visualizar:</span>
+        <button class="btn-status sel-ativos" id="btn-ativos" onclick="setTipo('ativos')"><span class="dot dot-gray"></span> Leads Ativos</button>
+        <button class="btn-status" id="btn-ganhos" onclick="setTipo('ganhos')"><span class="dot dot-green"></span> Venda Ganha</button>
+        <button class="btn-status" id="btn-perdidos" onclick="setTipo('perdidos')"><span class="dot dot-red"></span> Venda Perdida</button>
       </div>
-
-      <div class="busca-wrap">
-        <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l2.5 2.5"/></svg>
-        <input type="text" id="busca-lead" placeholder="Buscar lead..." oninput="aplicarFiltros()">
+      <div class="cards-grid" id="cards-grid"></div>
+      <div class="secao">
+        <div class="secao-titulo">Etapas por Funil</div>
+        <div class="funis-container" id="funis-container-geral"></div>
       </div>
     </div>
 
-    <!-- TOGGLE TIPO DE LEAD -->
-    <div class="status-bar">
-      <span class="status-bar-label">Visualizar:</span>
-      <button class="btn-status sel-ativos" id="btn-ativos" onclick="setTipo('ativos')">
-        <span class="dot dot-gray"></span> Leads Ativos
-      </button>
-      <button class="btn-status" id="btn-ganhos" onclick="setTipo('ganhos')">
-        <span class="dot dot-green"></span> Venda Ganha
-      </button>
-      <button class="btn-status" id="btn-perdidos" onclick="setTipo('perdidos')">
-        <span class="dot dot-red"></span> Venda Perdida
-      </button>
+    <!-- TAB: METAS -->
+    <div id="tab-metas" class="tab-content">
+      <div class="metas-grid" id="metas-grid"></div>
+      <div class="evolucao-card">
+        <div class="evolucao-header">
+          <div class="evolucao-titulo">Evolução Mensal de Vendas Ganhas</div>
+          <div class="evolucao-legenda">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--accent-g)"></div> Recorrente</div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--accent-p)"></div> Extra</div>
+          </div>
+        </div>
+        <div class="chart-bars" id="chart-evolucao"></div>
+      </div>
     </div>
 
-    <!-- MÉTRICAS -->
-    <div class="cards-grid" id="cards-grid">
-      <!-- preenchido dinamicamente conforme tipo -->
+    <!-- TAB: FUNIS -->
+    <div id="tab-funis" class="tab-content">
+      <div class="secao">
+        <div class="secao-titulo">Todos os Funis</div>
+        <div class="funis-container" id="funis-container-full"></div>
+      </div>
     </div>
 
-    <!-- ETAPAS -->
-    <div class="secao">
-      <div class="secao-titulo" id="secao-etapas-titulo">Etapas por Funil</div>
-      <div class="funis-container" id="funis-container"></div>
+    <!-- TAB: RANKING -->
+    <div id="tab-ranking" class="tab-content">
+      <div class="cards-grid" id="ranking-cards"></div>
+      <div class="ranking-card">
+        <div class="ranking-header"><span class="ranking-titulo">Ranking por Vendas Ganhas</span></div>
+        <div id="ranking-lista"></div>
+      </div>
     </div>
 
-    <!-- TABELA -->
-    <div class="secao">
+    <!-- TAB: LEADS -->
+    <div id="tab-leads" class="tab-content">
+      <div class="filtros-bar">
+        <span class="filtro-label">Empresa</span>
+        <div class="btn-group" id="grp-empresa2">
+          <button class="btn-filter active" data-val="todos"        onclick="setEmpresa2(this)">Todos</button>
+          <button class="btn-filter"        data-val="qualificacao" onclick="setEmpresa2(this)">Qualificação</button>
+          <button class="btn-filter"        data-val="gaideski"     onclick="setEmpresa2(this)">Gaideski</button>
+          <button class="btn-filter"        data-val="planicon"     onclick="setEmpresa2(this)">Planicon</button>
+        </div>
+        <div class="filtro-divider"></div>
+        <span class="filtro-label">Tipo</span>
+        <div class="btn-group" id="grp-tipo-venda">
+          <button class="btn-filter active" data-val="todos"      onclick="setTipoVenda(this)">Todos</button>
+          <button class="btn-filter"        data-val="recorrente" onclick="setTipoVenda(this)">Recorrente</button>
+          <button class="btn-filter"        data-val="extra"      onclick="setTipoVenda(this)">Extra</button>
+        </div>
+        <div class="busca-wrap">
+          <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l2.5 2.5"/></svg>
+          <input type="text" id="busca-lead2" placeholder="Buscar lead..." oninput="renderTabelaCompleta()">
+        </div>
+      </div>
       <div class="tabela-wrap">
         <div class="tabela-header">
-          <span class="tabela-titulo">Resultado</span>
-          <span class="tabela-count" id="tabela-count">0 leads</span>
+          <span class="tabela-titulo">Todos os Leads</span>
+          <span class="tabela-count" id="tabela-count2">0 leads</span>
         </div>
         <div style="overflow-x:auto">
           <table>
-            <thead><tr><th>Nome</th><th>Etapa</th><th>Empresa</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
-            <tbody id="tabela-leads"></tbody>
+            <thead><tr><th>Nome</th><th>Etapa</th><th>Empresa</th><th>Tipo de Venda</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
+            <tbody id="tabela-leads2"></tbody>
           </table>
         </div>
       </div>
@@ -247,22 +401,58 @@
 <script>
 const BASE = '/api/kommo';
 let todosLeads = [];
-let _statusMap = {};
-let _pipeMap   = {};
-let _pipes     = [];
+let _statusMap = {}, _pipeMap = {}, _pipes = [];
 
-// IDs fixos dos três funis definitivos
 const PIPE_IDS = { qualificacao: 13512120, gaideski: 13512132, planicon: 13512140 };
 const PIPE_IDS_VALIDOS = new Set([13512120, 13512132, 13512140]);
 
-// Filtros
-let filtro = { empresa: 'todos', periodo: 'todos', tipo: 'ativos' };
-// tipo: 'ativos' | 'ganhos' | 'perdidos'
+// Campo Tipo de venda
+const CF_TIPO_VENDA = 2057155;
+const ENUM_RECORRENTE = 1797505;
+const ENUM_EXTRA      = 1797507;
+
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+let filtro = { empresa: 'todos', periodo: 'todos', tipo: 'ativos', empresa2: 'todos', tipoVenda: 'todos' };
+let tabAtiva = 'visao-geral';
+
+// ---- METAS ----
+function getMetas() {
+  try { return JSON.parse(localStorage.getItem('gaideski_metas') || '{}'); } catch { return {}; }
+}
+function setMetas(m) { localStorage.setItem('gaideski_metas', JSON.stringify(m)); }
+function getMetaKey(ano, mes, tipo) { return `${ano}_${mes}_${tipo}`; }
+function getMetaValor(ano, mes, tipo) { return parseFloat(getMetas()[getMetaKey(ano, mes, tipo)] || 0); }
+
+// ---- TABS ----
+function setTab(id) {
+  tabAtiva = id;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const ids = ['visao-geral','metas','funis','ranking','leads'];
+    b.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'metas') renderMetas();
+  if (id === 'ranking') renderRanking();
+  if (id === 'funis') renderFunisCompleto();
+  if (id === 'leads') renderTabelaCompleta();
+}
 
 function statusOk(t)   { document.getElementById('status-dot').className='ok';   document.getElementById('status-txt').textContent=t; }
 function statusErro(t) { document.getElementById('status-dot').className='erro'; document.getElementById('status-txt').textContent=t; }
 function formatData(ts){ if(!ts)return'—'; return new Date(ts*1000).toLocaleDateString('pt-BR'); }
-function formatValor(v){ if(!v||v===0)return'—'; return 'R$\u00A0'+Number(v).toLocaleString('pt-BR'); }
+function formatValorCurto(v){ if(!v||v===0)return'—'; if(v>=1000)return'R$\u00A0'+(v/1000).toFixed(1)+'k'; return'R$\u00A0'+Number(v).toLocaleString('pt-BR'); }
+function formatValor(v){ if(!v||v===0)return'—'; return'R$\u00A0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+
+function getTipoVenda(lead) {
+  const cf = (lead.custom_fields_values || []).find(f => f.field_id === CF_TIPO_VENDA);
+  if (!cf) return null;
+  const val = cf.values?.[0]?.enum_id;
+  if (val === ENUM_RECORRENTE) return 'recorrente';
+  if (val === ENUM_EXTRA) return 'extra';
+  return null;
+}
 
 async function kommoFetch(ep) {
   const r = await fetch(BASE + ep);
@@ -284,14 +474,12 @@ async function carregar() {
   document.getElementById('erro-msg').style.display='none';
   try {
     const [ld, pd] = await Promise.all([
-      kommoFetch('/leads?limit=250&order[created_at]=desc'),
+      kommoFetch('/leads?limit=250&order[created_at]=desc&with=custom_fields'),
       kommoFetch('/leads/pipelines?limit=50')
     ]);
     const leads = ld?._embedded?.leads || [];
     const pipes  = pd?._embedded?.pipelines || [];
-
-    // Apenas os três funis válidos
-    _pipes     = pipes.filter(p => PIPE_IDS_VALIDOS.has(p.id));
+    _pipes = pipes.filter(p => PIPE_IDS_VALIDOS.has(p.id));
     _statusMap = {}; _pipeMap = {};
     pipes.forEach(p => {
       (p._embedded?.statuses || []).forEach(s => {
@@ -299,225 +487,439 @@ async function carregar() {
         _pipeMap[s.id]   = p.id;
       });
     });
-
-    // Apenas leads dos funis válidos
     todosLeads = leads.filter(l => PIPE_IDS_VALIDOS.has(_pipeMap[l.status_id]));
-
     aplicarFiltros();
     document.getElementById('loading').style.display='none';
     document.getElementById('conteudo').style.display='block';
     statusOk('Conectado ao Kommo');
     document.getElementById('atualizado-em').textContent = 'Atualizado em ' + new Date().toLocaleString('pt-BR');
+    if (tabAtiva === 'metas') renderMetas();
+    if (tabAtiva === 'ranking') renderRanking();
     setTimeout(carregar, 5 * 60 * 1000);
   } catch(e) { mostrarErro(e.message || 'Erro desconhecido'); }
 }
 
-// ---- CONTROLES ----
+// ---- FILTROS ----
 function setEmpresa(btn) {
-  document.querySelectorAll('#grp-empresa .btn-filter').forEach(b => b.className = 'btn-filter');
+  document.querySelectorAll('#grp-empresa .btn-filter').forEach(b => b.className='btn-filter');
   const val = btn.dataset.val;
-  const cls = { gaideski: 'active-g', planicon: 'active-p', qualificacao: 'active-q', todos: 'active' };
-  btn.className = 'btn-filter ' + (cls[val] || 'active');
+  const cls = { gaideski:'active-g', planicon:'active-p', qualificacao:'active-q', todos:'active' };
+  btn.className = 'btn-filter ' + (cls[val]||'active');
   filtro.empresa = val;
   aplicarFiltros();
 }
 
+function setEmpresa2(btn) {
+  document.querySelectorAll('#grp-empresa2 .btn-filter').forEach(b => b.className='btn-filter');
+  const val = btn.dataset.val;
+  const cls = { gaideski:'active-g', planicon:'active-p', qualificacao:'active-q', todos:'active' };
+  btn.className = 'btn-filter ' + (cls[val]||'active');
+  filtro.empresa2 = val;
+  renderTabelaCompleta();
+}
+
+function setTipoVenda(btn) {
+  document.querySelectorAll('#grp-tipo-venda .btn-filter').forEach(b => b.className='btn-filter');
+  btn.className = 'btn-filter active';
+  filtro.tipoVenda = btn.dataset.val;
+  renderTabelaCompleta();
+}
+
 function setTipo(tipo) {
   filtro.tipo = tipo;
-  document.getElementById('btn-ativos').className   = 'btn-status' + (tipo === 'ativos'   ? ' sel-ativos'   : '');
-  document.getElementById('btn-ganhos').className   = 'btn-status' + (tipo === 'ganhos'   ? ' sel-ganhos'   : '');
-  document.getElementById('btn-perdidos').className = 'btn-status' + (tipo === 'perdidos' ? ' sel-perdidos' : '');
+  document.getElementById('btn-ativos').className   = 'btn-status'+(tipo==='ativos'?' sel-ativos':'');
+  document.getElementById('btn-ganhos').className   = 'btn-status'+(tipo==='ganhos'?' sel-ganhos':'');
+  document.getElementById('btn-perdidos').className = 'btn-status'+(tipo==='perdidos'?' sel-perdidos':'');
   aplicarFiltros();
 }
 
 function setPeriodo() {
-  const v = document.getElementById('sel-periodo').value;
-  filtro.periodo = v;
-  document.getElementById('periodo-custom').style.display = v === 'custom' ? 'flex' : 'none';
-  if (v !== 'custom') aplicarFiltros();
+  filtro.periodo = document.getElementById('sel-periodo').value;
+  aplicarFiltros();
 }
 
 function getPeriodoBounds() {
-  const agora = Math.floor(Date.now() / 1000);
+  const agora = Math.floor(Date.now()/1000);
   const p = filtro.periodo;
-  if (p === 'todos')  return { ini: 0, fim: agora + 86400 };
-  if (p === 'hoje')   { const d = new Date(); d.setHours(0,0,0,0); return { ini: Math.floor(d/1000), fim: agora + 86400 }; }
-  if (p === 'mes')    { const d = new Date(); d.setDate(1); d.setHours(0,0,0,0); return { ini: Math.floor(d/1000), fim: agora + 86400 }; }
-  if (p === 'custom') {
-    const di = document.getElementById('dt-inicio').value;
-    const df = document.getElementById('dt-fim').value;
-    return { ini: di ? Math.floor(new Date(di)/1000) : 0, fim: df ? Math.floor(new Date(df+'T23:59:59')/1000) : agora + 86400 };
-  }
-  return { ini: agora - parseInt(p) * 86400, fim: agora + 86400 };
+  if (p==='todos') return { ini:0, fim:agora+86400 };
+  if (p==='hoje') { const d=new Date(); d.setHours(0,0,0,0); return { ini:Math.floor(d/1000), fim:agora+86400 }; }
+  if (p==='mes')  { const d=new Date(); d.setDate(1); d.setHours(0,0,0,0); return { ini:Math.floor(d/1000), fim:agora+86400 }; }
+  return { ini:agora-parseInt(p)*86400, fim:agora+86400 };
 }
 
-function getPipesAtivos() {
-  if (filtro.empresa === 'todos') return [PIPE_IDS.qualificacao, PIPE_IDS.gaideski, PIPE_IDS.planicon];
-  return [PIPE_IDS[filtro.empresa]];
+function getPipesAtivos(emp) {
+  const e = emp || filtro.empresa;
+  if (e==='todos') return [PIPE_IDS.qualificacao, PIPE_IDS.gaideski, PIPE_IDS.planicon];
+  return [PIPE_IDS[e]];
 }
 
 function aplicarFiltros() {
   const { ini, fim } = getPeriodoBounds();
-  const pipesAtivos  = getPipesAtivos();
-  const busca = (document.getElementById('busca-lead')?.value || '').toLowerCase();
-
-  // Filtrar por tipo (ativos / ganhos / perdidos)
+  const pipesAtivos = getPipesAtivos();
+  const busca = (document.getElementById('busca-lead')?.value||'').toLowerCase();
   const leads = todosLeads.filter(l => {
     if (!pipesAtivos.includes(_pipeMap[l.status_id])) return false;
     if (l.created_at < ini || l.created_at > fim) return false;
-    if (busca && !(l.name || '').toLowerCase().includes(busca)) return false;
-    if (filtro.tipo === 'ativos')   return l.status_id !== 142 && l.status_id !== 143;
-    if (filtro.tipo === 'ganhos')   return l.status_id === 142;
-    if (filtro.tipo === 'perdidos') return l.status_id === 143;
+    if (busca && !(l.name||'').toLowerCase().includes(busca)) return false;
+    if (filtro.tipo==='ativos')   return l.status_id!==142 && l.status_id!==143;
+    if (filtro.tipo==='ganhos')   return l.status_id===142;
+    if (filtro.tipo==='perdidos') return l.status_id===143;
     return true;
   });
-
   renderMetricas(leads, pipesAtivos, ini, fim);
-  renderFunis(leads, pipesAtivos);
-  renderTabela(leads);
+  renderFunis(leads, pipesAtivos, 'funis-container-geral');
 }
 
 // ---- MÉTRICAS ----
 function renderMetricas(leads, pipesAtivos, ini, fim) {
   const grid = document.getElementById('cards-grid');
   const t = filtro.tipo;
+  const leadsEmpresa = todosLeads.filter(l => pipesAtivos.includes(_pipeMap[l.status_id]) && l.created_at>=ini && l.created_at<=fim);
+  const ativos   = leadsEmpresa.filter(l => l.status_id!==142 && l.status_id!==143).length;
+  const ganhos   = leadsEmpresa.filter(l => l.status_id===142).length;
+  const perdidos = leadsEmpresa.filter(l => l.status_id===143).length;
+  const novos    = leadsEmpresa.filter(l => l.status_id!==142 && l.status_id!==143).length;
+  const valorGanho = leadsEmpresa.filter(l => l.status_id===142).reduce((a,l) => a+(l.price||0), 0);
 
-  // Contadores globais do filtro de empresa + período (independente do tipo)
-  const leadsEmpresa = todosLeads.filter(l =>
-    pipesAtivos.includes(_pipeMap[l.status_id]) &&
-    l.created_at >= ini && l.created_at <= fim
-  );
-  const ativos   = leadsEmpresa.filter(l => l.status_id !== 142 && l.status_id !== 143).length;
-  const ganhos   = leadsEmpresa.filter(l => l.status_id === 142).length;
-  const perdidos = leadsEmpresa.filter(l => l.status_id === 143).length;
-  const novos    = leadsEmpresa.filter(l => l.status_id !== 142 && l.status_id !== 143 && l.created_at >= ini).length;
-
-  if (t === 'ativos') {
+  if (t==='ativos') {
     grid.innerHTML = `
       <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
-      <div class="metric-card m-blue"><div class="metric-label">Novos Leads no Período</div><div class="metric-valor">${novos}</div><div class="metric-sub">leads novos no período</div></div>
+      <div class="metric-card m-blue"><div class="metric-label">Novos no Período</div><div class="metric-valor">${novos}</div><div class="metric-sub">leads novos</div></div>
       <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
       <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>`;
-  } else if (t === 'ganhos') {
+  } else if (t==='ganhos') {
     grid.innerHTML = `
       <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
+      <div class="metric-card m-blue"><div class="metric-label">Receita Total</div><div class="metric-valor" style="font-size:20px">${formatValorCurto(valorGanho)}</div><div class="metric-sub">valor fechado</div></div>
       <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
-      <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>
-      <div class="metric-card m-gray"><div class="metric-label">Total geral</div><div class="metric-valor">${ativos+ganhos+perdidos}</div><div class="metric-sub">todos os leads</div></div>`;
+      <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>`;
   } else {
     grid.innerHTML = `
       <div class="metric-card m-red"><div class="metric-label">Venda Perdida</div><div class="metric-valor">${perdidos}</div><div class="metric-sub">leads perdidos</div></div>
       <div class="metric-card m-dark"><div class="metric-label">Leads Ativos</div><div class="metric-valor">${ativos}</div><div class="metric-sub">em andamento</div></div>
       <div class="metric-card m-green"><div class="metric-label">Venda Ganha</div><div class="metric-valor">${ganhos}</div><div class="metric-sub">clientes fechados</div></div>
-      <div class="metric-card m-gray"><div class="metric-label">Total geral</div><div class="metric-valor">${ativos+ganhos+perdidos}</div><div class="metric-sub">todos os leads</div></div>`;
+      <div class="metric-card m-gray"><div class="metric-label">Total Geral</div><div class="metric-valor">${ativos+ganhos+perdidos}</div><div class="metric-sub">todos os leads</div></div>`;
   }
 }
 
-// ---- FUNIS ----
-function renderFunis(leads, pipesAtivos) {
-  const container   = document.getElementById('funis-container');
-  const pipesExibir = _pipes.filter(p => pipesAtivos.includes(p.id));
-  if (!pipesExibir.length) { container.innerHTML = '<div class="sem-dados">Nenhum funil encontrado</div>'; return; }
+// ---- METAS ----
+function renderMetas() {
+  const agora = new Date();
+  const anoAtual = agora.getFullYear();
+  const mesAtual = agora.getMonth();
 
-  const fillColor = filtro.tipo === 'ganhos' ? 'fill-green' : filtro.tipo === 'perdidos' ? 'fill-red' : null;
+  // Carteira recorrente acumulada = todos os leads ganhos recorrentes de todos os tempos
+  const leadsGanhosRec = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='recorrente');
+  const carteiraAcumulada = leadsGanhosRec.reduce((a,l) => a+(l.price||0), 0);
 
-  container.innerHTML = pipesExibir.map(pipe => {
-    const pNome  = pipe.name || '';
-    const pLower = pNome.toLowerCase();
-    let dotClass = 'funil-dot-q', fillClass = fillColor || 'fill-q';
-    if (!fillColor) {
-      if (pLower.includes('gaideski'))                              { dotClass = 'funil-dot-g'; fillClass = 'fill-g'; }
-      else if (pLower.includes('planicon') || pLower.includes('planicom')) { dotClass = 'funil-dot-p'; fillClass = 'fill-p'; }
-    } else {
-      if (pLower.includes('gaideski'))      dotClass = 'funil-dot-g';
-      else if (pLower.includes('planicon')) dotClass = 'funil-dot-p';
-    }
+  // Extras do mês atual
+  const inicioMes = new Date(anoAtual, mesAtual, 1);
+  const inicioMesTs = Math.floor(inicioMes/1000);
+  const leadsExtrasmes = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='extra' && l.closed_at && l.closed_at>=inicioMesTs);
+  const extrasDoMes = leadsExtrasmes.reduce((a,l) => a+(l.price||0), 0);
 
-    // Para ativos: excluir 142 e 143 das etapas; para ganhos/perdidos: mostrar só essa etapa
-    let statuses;
-    if (filtro.tipo === 'ativos') {
-      statuses = (pipe._embedded?.statuses || []).filter(s => s.id !== 142 && s.id !== 143);
-    } else {
-      const targetId = filtro.tipo === 'ganhos' ? 142 : 143;
-      statuses = (pipe._embedded?.statuses || []).filter(s => s.id === targetId);
-    }
+  const metaRec = getMetaValor(anoAtual, mesAtual, 'rec');
+  const metaExt = getMetaValor(anoAtual, mesAtual, 'ext');
 
-    const leadsPipe = leads.filter(l => _pipeMap[l.status_id] === pipe.id);
-    const contagem  = {};
-    leadsPipe.forEach(l => { contagem[l.status_id] = (contagem[l.status_id] || 0) + 1; });
-    const totalPipe = Object.values(contagem).reduce((a,b) => a+b, 0);
-    const maxCount  = Math.max(...Object.values(contagem), 1);
+  const pctRec = metaRec > 0 ? Math.min(Math.round(carteiraAcumulada/metaRec*100), 999) : 0;
+  const pctExt = metaExt > 0 ? Math.min(Math.round(extrasDoMes/metaExt*100), 999) : 0;
 
-    const chips = statuses.map((s, i) => {
-      const cnt  = contagem[s.id] || 0;
-      const pct  = Math.round(cnt / maxCount * 100);
-      let seta   = '';
-      if (i < statuses.length - 1 && filtro.tipo === 'ativos') {
-        const cntNext = contagem[statuses[i+1].id] || 0;
-        const conv    = cnt > 0 ? Math.round(cntNext / cnt * 100) : 0;
-        const corSeta = conv >= 50 ? '#10B981' : conv >= 25 ? '#D97706' : '#9BA3AF';
-        seta = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;flex-shrink:0">
-          <div style="font-size:10px;font-weight:700;color:${corSeta}">${conv}%</div>
-          <div style="font-size:16px;color:${corSeta};line-height:1">›</div>
-        </div>`;
-      }
-      return `<div style="display:flex;align-items:center">
-        <div class="etapa-chip">
-          <div class="etapa-chip-nome" title="${s.name}">${s.name}</div>
-          <div class="etapa-chip-count">${cnt}</div>
-          <div class="etapa-chip-bar"><div class="etapa-chip-fill ${fillClass}" style="width:${pct}%"></div></div>
-        </div>${seta}
-      </div>`;
-    }).join('');
+  function corPct(p) { if(p>=100) return 'verde'; if(p>=60) return 'amarelo'; return 'vermelho'; }
+  function fillClass(p) { return p>=100 ? 'ok' : ''; }
 
-    const label = filtro.tipo === 'ativos' ? `${totalPipe} ativo${totalPipe!==1?'s':''}` : `${totalPipe} lead${totalPipe!==1?'s':''}`;
+  const qtdRec = leadsGanhosRec.length;
+  const qtdExt = leadsExtrasmes.length;
 
-    return `<div class="funil-bloco">
-      <div class="funil-header">
-        <div class="funil-dot ${dotClass}"></div>
-        <div class="funil-nome">${pNome}</div>
-        <div class="funil-total">${label}</div>
+  document.getElementById('metas-grid').innerHTML = `
+    <div class="meta-card">
+      <div class="meta-card-header">
+        <div class="meta-card-titulo">
+          Carteira Recorrente
+          <span class="meta-badge meta-badge-rec">Honorários</span>
+        </div>
       </div>
-      <div class="etapas-row">${chips || '<div class="sem-dados" style="padding:16px 0">Sem leads nesta visualização</div>'}</div>
+      <div class="meta-valores">
+        <div class="meta-atual">${formatValorCurto(carteiraAcumulada)}</div>
+        <div class="meta-sep">/</div>
+        <div class="meta-alvo">${metaRec>0 ? formatValorCurto(metaRec) : 'Meta não definida'}</div>
+      </div>
+      <div class="meta-barra-wrap">
+        <div class="meta-barra-fill rec ${fillClass(pctRec)}" style="width:${Math.min(pctRec,100)}%"></div>
+      </div>
+      <div class="meta-info">
+        <span>${metaRec>0 ? 'Faltam '+formatValorCurto(Math.max(metaRec-carteiraAcumulada,0)) : 'Configure a meta →'}</span>
+        <span class="meta-pct ${corPct(pctRec)}">${metaRec>0 ? pctRec+'%' : '—'}</span>
+      </div>
+      <div class="meta-detalhes">
+        <div class="meta-detalhe-item"><strong>${qtdRec}</strong> clientes recorrentes</div>
+        <div class="meta-detalhe-item"><strong>Acumula</strong> mês a mês</div>
+        ${metaRec>0 && carteiraAcumulada<metaRec ? `<div class="meta-detalhe-item"><strong>+${formatValorCurto(metaRec-carteiraAcumulada)}</strong> para a meta</div>` : ''}
+      </div>
+    </div>
+
+    <div class="meta-card">
+      <div class="meta-card-header">
+        <div class="meta-card-titulo">
+          Serviços Extras — ${MESES[mesAtual]}/${anoAtual}
+          <span class="meta-badge meta-badge-ext">Extra</span>
+        </div>
+      </div>
+      <div class="meta-valores">
+        <div class="meta-atual">${formatValorCurto(extrasDoMes)}</div>
+        <div class="meta-sep">/</div>
+        <div class="meta-alvo">${metaExt>0 ? formatValorCurto(metaExt) : 'Meta não definida'}</div>
+      </div>
+      <div class="meta-barra-wrap">
+        <div class="meta-barra-fill ext ${fillClass(pctExt)}" style="width:${Math.min(pctExt,100)}%"></div>
+      </div>
+      <div class="meta-info">
+        <span>${metaExt>0 ? 'Faltam '+formatValorCurto(Math.max(metaExt-extrasDoMes,0)) : 'Configure a meta →'}</span>
+        <span class="meta-pct ${corPct(pctExt)}">${metaExt>0 ? pctExt+'%' : '—'}</span>
+      </div>
+      <div class="meta-detalhes">
+        <div class="meta-detalhe-item"><strong>${qtdExt}</strong> extras este mês</div>
+        <div class="meta-detalhe-item"><strong>Renova</strong> todo mês</div>
+      </div>
+    </div>`;
+
+  renderEvolucao();
+}
+
+function renderEvolucao() {
+  const agora = new Date();
+  const meses = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(agora.getFullYear(), agora.getMonth()-i, 1);
+    meses.push({ ano: d.getFullYear(), mes: d.getMonth(), label: MESES[d.getMonth()]+'/'+String(d.getFullYear()).slice(2) });
+  }
+
+  const dados = meses.map(m => {
+    const ini = Math.floor(new Date(m.ano, m.mes, 1)/1000);
+    const fim = Math.floor(new Date(m.ano, m.mes+1, 0, 23, 59, 59)/1000);
+    const leadsGanhosMes = todosLeads.filter(l => l.status_id===142 && l.closed_at>=ini && l.closed_at<=fim);
+    const rec = leadsGanhosMes.filter(l => getTipoVenda(l)==='recorrente').reduce((a,l) => a+(l.price||0), 0);
+    const ext = leadsGanhosMes.filter(l => getTipoVenda(l)==='extra').reduce((a,l) => a+(l.price||0), 0);
+    const metaRec = getMetaValor(m.ano, m.mes, 'rec');
+    const metaExt = getMetaValor(m.ano, m.mes, 'ext');
+    return { ...m, rec, ext, total: rec+ext, meta: metaRec+metaExt };
+  });
+
+  const maxVal = Math.max(...dados.map(d => Math.max(d.total, d.meta)), 1);
+
+  document.getElementById('chart-evolucao').innerHTML = dados.map(d => {
+    const altRec = Math.round(d.rec/maxVal*140);
+    const altExt = Math.round(d.ext/maxVal*140);
+    const altMeta = Math.round(d.meta/maxVal*140);
+    return `<div class="chart-col">
+      <div class="chart-bars-stacked">
+        ${d.meta>0 ? `<div style="position:relative;width:100%;height:${altMeta}px;background:rgba(5,150,105,0.1);border:1px dashed var(--accent-green);border-radius:3px;margin-bottom:2px"></div>` : ''}
+        <div class="chart-bar-seg bar-ext" style="height:${altExt}px"></div>
+        <div class="chart-bar-seg bar-rec" style="height:${altRec}px"></div>
+      </div>
+      <div class="chart-label">${d.label}</div>
+      <div class="chart-valor">${d.total>0 ? formatValorCurto(d.total) : ''}</div>
     </div>`;
   }).join('');
 }
 
-// ---- TABELA ----
-function badgeClass(nome) {
-  const n = (nome || '').toLowerCase();
-  if (n.includes('ganho') || n.includes('onboarding'))                                                        return 'badge-ganho';
-  if (n.includes('proposta') || n.includes('contrato') || n.includes('aceita') || n.includes('qualificado')) return 'badge-proposta';
-  if (n.includes('qualif') || n.includes('reuniao') || n.includes('reunião') || n.includes('agendada') || n.includes('recebido') || n.includes('contato')) return 'badge-qualif';
-  if (n.includes('perdida') || n.includes('perda') || n.includes('no-show'))                                  return 'badge-perda';
-  return 'badge-contato';
+// ---- FUNIS ----
+function renderFunis(leads, pipesAtivos, containerId) {
+  const container = document.getElementById(containerId);
+  const pipesExibir = _pipes.filter(p => pipesAtivos.includes(p.id));
+  if (!pipesExibir.length) { container.innerHTML='<div class="sem-dados">Nenhum funil encontrado</div>'; return; }
+
+  const fillColor = filtro.tipo==='ganhos' ? 'fill-green' : filtro.tipo==='perdidos' ? 'fill-red' : null;
+
+  container.innerHTML = pipesExibir.map(pipe => {
+    const pNome = pipe.name||'';
+    const pLower = pNome.toLowerCase();
+    let dotClass='funil-dot-q', fillClass=fillColor||'fill-q';
+    if (!fillColor) {
+      if (pLower.includes('gaideski'))       { dotClass='funil-dot-g'; fillClass='fill-g'; }
+      else if (pLower.includes('planicon') || pLower.includes('planicom')) { dotClass='funil-dot-p'; fillClass='fill-p'; }
+    } else {
+      if (pLower.includes('gaideski'))      dotClass='funil-dot-g';
+      else if (pLower.includes('planicon')) dotClass='funil-dot-p';
+    }
+    let statuses;
+    if (filtro.tipo==='ativos') statuses=(pipe._embedded?.statuses||[]).filter(s=>s.id!==142&&s.id!==143);
+    else { const tid=filtro.tipo==='ganhos'?142:143; statuses=(pipe._embedded?.statuses||[]).filter(s=>s.id===tid); }
+
+    const leadsPipe = leads.filter(l => _pipeMap[l.status_id]===pipe.id);
+    const contagem = {};
+    leadsPipe.forEach(l => { contagem[l.status_id]=(contagem[l.status_id]||0)+1; });
+    const totalPipe = Object.values(contagem).reduce((a,b)=>a+b,0);
+    const maxCount = Math.max(...Object.values(contagem),1);
+
+    const chips = statuses.map((s,i) => {
+      const cnt = contagem[s.id]||0;
+      const pct = Math.round(cnt/maxCount*100);
+      let seta='';
+      if (i<statuses.length-1 && filtro.tipo==='ativos') {
+        const cntNext = contagem[statuses[i+1].id]||0;
+        const conv = cnt>0 ? Math.round(cntNext/cnt*100) : 0;
+        const corSeta = conv>=50?'#10B981':conv>=25?'#D97706':'#9BA3AF';
+        seta=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;flex-shrink:0"><div style="font-size:10px;font-weight:700;color:${corSeta}">${conv}%</div><div style="font-size:16px;color:${corSeta};line-height:1">›</div></div>`;
+      }
+      return `<div style="display:flex;align-items:center"><div class="etapa-chip"><div class="etapa-chip-nome" title="${s.name}">${s.name}</div><div class="etapa-chip-count">${cnt}</div><div class="etapa-chip-bar"><div class="etapa-chip-fill ${fillClass}" style="width:${pct}%"></div></div></div>${seta}</div>`;
+    }).join('');
+
+    const label = filtro.tipo==='ativos' ? `${totalPipe} ativo${totalPipe!==1?'s':''}` : `${totalPipe} lead${totalPipe!==1?'s':''}`;
+    return `<div class="funil-bloco"><div class="funil-header"><div class="funil-dot ${dotClass}"></div><div class="funil-nome">${pNome}</div><div class="funil-total">${label}</div></div><div class="etapas-row">${chips||'<div class="sem-dados" style="padding:16px 0">Sem leads</div>'}</div></div>`;
+  }).join('');
 }
 
-function getEmpresaTag(pipeId) {
-  const pipe = _pipes.find(p => p.id === pipeId);
-  if (!pipe) return '—';
-  const n = (pipe.name || '').toLowerCase();
-  if (n.includes('gaideski'))                              return '<span class="empresa-tag tag-g">Gaideski</span>';
-  if (n.includes('planicon') || n.includes('planicom'))   return '<span class="empresa-tag tag-p">Planicon</span>';
-  return '<span class="empresa-tag tag-q">Qualif.</span>';
+function renderFunisCompleto() {
+  const allPipes = [PIPE_IDS.qualificacao, PIPE_IDS.gaideski, PIPE_IDS.planicon];
+  const leads = todosLeads.filter(l => l.status_id!==142 && l.status_id!==143);
+  renderFunis(leads, allPipes, 'funis-container-full');
 }
 
-function renderTabela(leads) {
-  const tbody = document.getElementById('tabela-leads');
-  document.getElementById('tabela-count').textContent = leads.length + ' lead' + (leads.length !== 1 ? 's' : '');
-  if (!leads.length) { tbody.innerHTML = '<tr><td colspan="6" class="sem-dados">Nenhum lead encontrado</td></tr>'; return; }
-  tbody.innerHTML = leads.slice(0, 150).map(l => {
-    const etapaNome = _statusMap[l.status_id] || String(l.status_id);
+// ---- RANKING ----
+function renderRanking() {
+  const ganhos = todosLeads.filter(l => l.status_id===142);
+  const porResp = {};
+  ganhos.forEach(l => {
+    const nome = l._embedded?.responsible_user?.name||'Sem responsável';
+    if (!porResp[nome]) porResp[nome] = { qtd:0, valor:0, rec:0, ext:0 };
+    porResp[nome].qtd++;
+    porResp[nome].valor += l.price||0;
+    const tv = getTipoVenda(l);
+    if (tv==='recorrente') porResp[nome].rec += l.price||0;
+    if (tv==='extra')      porResp[nome].ext += l.price||0;
+  });
+
+  const lista = Object.entries(porResp).sort((a,b) => b[1].qtd-a[1].qtd);
+  const maxQtd = lista[0]?.[1]?.qtd||1;
+
+  // Cards resumo
+  document.getElementById('ranking-cards').innerHTML = `
+    <div class="metric-card m-green"><div class="metric-label">Total Ganhos</div><div class="metric-valor">${ganhos.length}</div><div class="metric-sub">vendas fechadas</div></div>
+    <div class="metric-card m-blue"><div class="metric-label">Receita Total</div><div class="metric-valor" style="font-size:20px">${formatValorCurto(ganhos.reduce((a,l)=>a+(l.price||0),0))}</div><div class="metric-sub">valor total fechado</div></div>
+    <div class="metric-card m-purple"><div class="metric-label">Recorrente Total</div><div class="metric-valor" style="font-size:20px">${formatValorCurto(ganhos.filter(l=>getTipoVenda(l)==='recorrente').reduce((a,l)=>a+(l.price||0),0))}</div><div class="metric-sub">honorários acumulados</div></div>
+    <div class="metric-card m-orange"><div class="metric-label">Extras Total</div><div class="metric-valor" style="font-size:20px">${formatValorCurto(ganhos.filter(l=>getTipoVenda(l)==='extra').reduce((a,l)=>a+(l.price||0),0))}</div><div class="metric-sub">serviços extras</div></div>`;
+
+  const posClasses = ['pos-1','pos-2','pos-3'];
+  document.getElementById('ranking-lista').innerHTML = lista.map(([nome, d], i) => `
+    <div class="ranking-item">
+      <div class="ranking-pos ${posClasses[i]||'pos-n'}">${i+1}</div>
+      <div class="ranking-nome">${nome}</div>
+      <div class="ranking-bar-wrap"><div class="ranking-bar-fill" style="width:${Math.round(d.qtd/maxQtd*100)}%"></div></div>
+      <div class="ranking-nums">
+        <div class="ranking-val">${d.qtd} venda${d.qtd!==1?'s':''}</div>
+        <div class="ranking-sub-val">${formatValorCurto(d.valor)}</div>
+      </div>
+    </div>`).join('') || '<div class="sem-dados">Nenhuma venda registrada</div>';
+}
+
+// ---- TABELA COMPLETA ----
+function renderTabelaCompleta() {
+  const pipesAtivos = getPipesAtivos(filtro.empresa2);
+  const busca = (document.getElementById('busca-lead2')?.value||'').toLowerCase();
+  const leads = todosLeads.filter(l => {
+    if (!pipesAtivos.includes(_pipeMap[l.status_id])) return false;
+    if (busca && !(l.name||'').toLowerCase().includes(busca)) return false;
+    if (filtro.tipoVenda!=='todos') {
+      const tv = getTipoVenda(l);
+      if (filtro.tipoVenda==='recorrente' && tv!=='recorrente') return false;
+      if (filtro.tipoVenda==='extra' && tv!=='extra') return false;
+    }
+    return true;
+  });
+
+  document.getElementById('tabela-count2').textContent = leads.length+' lead'+(leads.length!==1?'s':'');
+  const tbody = document.getElementById('tabela-leads2');
+  if (!leads.length) { tbody.innerHTML='<tr><td colspan="7" class="sem-dados">Nenhum lead encontrado</td></tr>'; return; }
+
+  tbody.innerHTML = leads.slice(0,200).map(l => {
+    const etapaNome = _statusMap[l.status_id]||String(l.status_id);
+    const tv = getTipoVenda(l);
+    const tvBadge = tv==='recorrente' ? '<span class="badge-rec">Recorrente</span>' : tv==='extra' ? '<span class="badge-ext">Extra</span>' : '<span style="color:var(--text-muted);font-size:11px">—</span>';
     return `<tr>
       <td><div class="lead-nome">${l.name||'—'}</div></td>
       <td><span class="badge ${badgeClass(etapaNome)}">${etapaNome}</span></td>
       <td>${getEmpresaTag(_pipeMap[l.status_id])}</td>
+      <td>${tvBadge}</td>
       <td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name||'—'}</td>
       <td style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px">${formatData(l.created_at)}</td>
       <td style="color:var(--text-secondary);font-family:'DM Mono',monospace;font-size:12px">${formatValor(l.price)}</td>
     </tr>`;
   }).join('');
 }
+
+function badgeClass(nome) {
+  const n=(nome||'').toLowerCase();
+  if (n.includes('ganho')||n.includes('onboarding')) return 'badge-ganho';
+  if (n.includes('proposta')||n.includes('contrato')||n.includes('aceita')||n.includes('qualificado')) return 'badge-proposta';
+  if (n.includes('qualif')||n.includes('reuniao')||n.includes('reunião')||n.includes('agendada')||n.includes('recebido')||n.includes('contato')) return 'badge-qualif';
+  if (n.includes('perdida')||n.includes('perda')||n.includes('no-show')) return 'badge-perda';
+  return 'badge-contato';
+}
+
+function getEmpresaTag(pipeId) {
+  const pipe = _pipes.find(p => p.id===pipeId);
+  if (!pipe) return '—';
+  const n=(pipe.name||'').toLowerCase();
+  if (n.includes('gaideski')) return '<span class="empresa-tag tag-g">Gaideski</span>';
+  if (n.includes('planicon')||n.includes('planicom')) return '<span class="empresa-tag tag-p">Planicon</span>';
+  return '<span class="empresa-tag tag-q">Qualif.</span>';
+}
+
+// ---- MODAL METAS ----
+function abrirModalMetas() {
+  const agora = new Date();
+  const anoAtual = agora.getFullYear();
+  const mesAtual = agora.getMonth();
+
+  // Info carteira acumulada
+  const carteiraAcumulada = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='recorrente').reduce((a,l) => a+(l.price||0), 0);
+  document.getElementById('modal-info-acumulado').innerHTML =
+    `<strong>Carteira Recorrente Atual:</strong> ${formatValor(carteiraAcumulada)} — este valor acumula automaticamente com cada novo cliente recorrente fechado.`;
+
+  // Gerar campos para 12 meses (mês atual + 11 anteriores)
+  let htmlRec = '', htmlExt = '';
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(anoAtual, mesAtual-i, 1);
+    const ano = d.getFullYear(), mes = d.getMonth();
+    const label = MESES[mes]+'/'+ano;
+    const isAtual = i===0;
+    const vRec = getMetaValor(ano, mes, 'rec');
+    const vExt = getMetaValor(ano, mes, 'ext');
+    if (i % 2 === 0) { htmlRec += '<div class="modal-row">'; htmlExt += '<div class="modal-row">'; }
+    htmlRec += `<div class="modal-field"><label>${label}${isAtual?' (atual)':''}</label><input type="number" id="meta-rec-${ano}-${mes}" value="${vRec||''}" placeholder="0" min="0" step="100"><span class="field-hint">Meta honorários</span></div>`;
+    htmlExt += `<div class="modal-field"><label>${label}${isAtual?' (atual)':''}</label><input type="number" id="meta-ext-${ano}-${mes}" value="${vExt||''}" placeholder="0" min="0" step="100"><span class="field-hint">Meta extras</span></div>`;
+    if (i % 2 === 1 || i === 11) { htmlRec += '</div>'; htmlExt += '</div>'; }
+  }
+  document.getElementById('modal-metas-rec').innerHTML = htmlRec;
+  document.getElementById('modal-metas-ext').innerHTML = htmlExt;
+  document.getElementById('modal-metas').classList.add('open');
+}
+
+function fecharModalMetas() {
+  document.getElementById('modal-metas').classList.remove('open');
+}
+
+function salvarMetas() {
+  const agora = new Date();
+  const anoAtual = agora.getFullYear(), mesAtual = agora.getMonth();
+  const metas = getMetas();
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(anoAtual, mesAtual-i, 1);
+    const ano = d.getFullYear(), mes = d.getMonth();
+    const vRec = parseFloat(document.getElementById(`meta-rec-${ano}-${mes}`)?.value||0);
+    const vExt = parseFloat(document.getElementById(`meta-ext-${ano}-${mes}`)?.value||0);
+    metas[getMetaKey(ano,mes,'rec')] = vRec;
+    metas[getMetaKey(ano,mes,'ext')] = vExt;
+  }
+  setMetas(metas);
+  fecharModalMetas();
+  if (tabAtiva==='metas') renderMetas();
+}
+
+// Fechar modal clicando fora
+document.getElementById('modal-metas').addEventListener('click', function(e) {
+  if (e.target === this) fecharModalMetas();
+});
 
 carregar();
 </script>
