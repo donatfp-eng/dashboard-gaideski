@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Comercial · Gaideski</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F5F7; --surface: #fff; --border: #E4E6EA;
+    --text-primary: #0F1117; --text-secondary: #5C6270; --text-muted: #9BA3AF;
+    --accent-g: #1B4FD8; --accent-p: #7C3AED; --accent-q: #D97706;
+    --accent-green: #059669; --accent-red: #DC2626;
+    --radius: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text-primary); font-size:14px; }
+
+  /* TELA DE CONFIGURAÇÃO */
+  .config-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 20px; }
+  .config-card { background:var(--surface); border-radius:16px; padding:40px; width:560px; max-width:100%; box-shadow:0 8px 40px rgba(0,0,0,0.1); }
+  .config-logo { display:flex; align-items:center; gap:10px; margin-bottom:32px; }
+  .config-logo-mark { width:36px; height:36px; background:var(--text-primary); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .config-logo-mark svg { width:18px; height:18px; fill:white; }
+  .config-titulo { font-size:20px; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
+  .config-sub { font-size:13px; color:var(--text-muted); margin-bottom:28px; }
+  .config-secao { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); margin-bottom:10px; margin-top:20px; }
+  .config-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+  .config-field { display:flex; flex-direction:column; gap:5px; }
+  .config-field label { font-size:12px; font-weight:600; color:var(--text-secondary); }
+  .config-field select, .config-field input {
+    font-family:'DM Sans',sans-serif; font-size:13px; padding:9px 12px;
+    border:1px solid var(--border); border-radius:7px; background:var(--bg);
+    color:var(--text-primary); outline:none; transition:border-color 0.15s;
+  }
+  .config-field select:focus, .config-field input:focus { border-color:var(--accent-g); background:var(--surface); }
+  .config-checkboxes { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .config-check { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); cursor:pointer; }
+  .config-check input { width:15px; height:15px; cursor:pointer; accent-color:var(--accent-g); }
+  .btn-gerar { width:100%; padding:13px; background:var(--text-primary); color:#fff; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:background 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:8px; }
+  .btn-gerar:hover { background:#1a1f2e; }
+  .btn-gerar svg { width:16px; height:16px; }
+  #loading-rel { display:none; text-align:center; padding:20px 0; color:var(--text-muted); font-size:13px; }
+  .spinner { width:20px; height:20px; border:2px solid var(--border); border-top-color:var(--text-primary); border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; margin-right:8px; vertical-align:middle; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* RELATÓRIO */
+  #relatorio { display:none; }
+
+  @media screen {
+    .rel-wrap { max-width:800px; margin:0 auto; padding:40px 20px; }
+    .btn-imprimir { position:fixed; bottom:24px; right:24px; background:var(--text-primary); color:#fff; border:none; border-radius:50px; padding:12px 24px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.2); display:flex; align-items:center; gap:8px; z-index:100; transition:all 0.15s; }
+    .btn-imprimir:hover { background:#1a1f2e; transform:translateY(-1px); }
+    .btn-voltar { position:fixed; bottom:24px; left:24px; background:var(--surface); color:var(--text-secondary); border:1px solid var(--border); border-radius:50px; padding:12px 24px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.08); display:flex; align-items:center; gap:6px; z-index:100; }
+    .btn-voltar:hover { color:var(--text-primary); }
+  }
+
+  @media print {
+    body { background:#fff; }
+    .btn-imprimir, .btn-voltar, .config-screen { display:none !important; }
+    #relatorio { display:block !important; }
+    .rel-wrap { padding:0; max-width:100%; }
+    .pagina { page-break-after:always; }
+    .pagina:last-child { page-break-after:auto; }
+    @page { margin:15mm 15mm 15mm 15mm; size:A4; }
+  }
+
+  /* CAPA */
+  .capa { background:var(--text-primary); color:#fff; border-radius:14px; padding:56px 52px; margin-bottom:24px; position:relative; overflow:hidden; }
+  .capa::before { content:''; position:absolute; top:-60px; right:-60px; width:300px; height:300px; border-radius:50%; background:rgba(255,255,255,0.03); }
+  .capa::after  { content:''; position:absolute; bottom:-40px; right:80px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.04); }
+  .capa-logo { display:flex; align-items:center; gap:10px; margin-bottom:48px; }
+  .capa-logo-mark { width:36px; height:36px; background:rgba(255,255,255,0.15); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .capa-logo-mark svg { width:18px; height:18px; fill:white; }
+  .capa-logo-txt { font-size:15px; font-weight:600; color:rgba(255,255,255,0.9); }
+  .capa-tipo { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.45); margin-bottom:12px; }
+  .capa-titulo { font-size:36px; font-weight:700; color:#fff; line-height:1.15; letter-spacing:-1px; margin-bottom:10px; }
+  .capa-periodo { font-size:18px; font-weight:400; color:rgba(255,255,255,0.6); margin-bottom:48px; }
+  .capa-meta-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .capa-kpi { background:rgba(255,255,255,0.07); border-radius:10px; padding:16px 20px; border:1px solid rgba(255,255,255,0.08); }
+  .capa-kpi-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.8px; color:rgba(255,255,255,0.45); margin-bottom:6px; }
+  .capa-kpi-val { font-size:26px; font-weight:700; font-family:'DM Mono',monospace; color:#fff; letter-spacing:-1px; }
+  .capa-kpi-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:3px; }
+  .capa-rodape { margin-top:48px; display:flex; justify-content:space-between; align-items:flex-end; }
+  .capa-data { font-size:12px; color:rgba(255,255,255,0.35); font-family:'DM Mono',monospace; }
+
+  /* SEÇÕES DO RELATÓRIO */
+  .rel-secao { margin-bottom:24px; }
+  .rel-secao-titulo { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+
+  /* CARDS RESUMO */
+  .rel-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+  .rel-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; position:relative; overflow:hidden; }
+  .rel-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; }
+  .rel-card.c-dark::before  { background:var(--text-primary); }
+  .rel-card.c-blue::before  { background:var(--accent-g); }
+  .rel-card.c-green::before { background:var(--accent-green); }
+  .rel-card.c-red::before   { background:var(--accent-red); }
+  .rel-card.c-purple::before { background:var(--accent-p); }
+  .rel-card.c-orange::before { background:var(--accent-q); }
+  .rel-card-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); margin-bottom:6px; }
+  .rel-card-val { font-size:24px; font-weight:700; font-family:'DM Mono',monospace; color:var(--text-primary); letter-spacing:-0.8px; line-height:1; }
+  .rel-card-sub { font-size:10px; color:var(--text-muted); margin-top:4px; }
+
+  /* METAS */
+  .meta-rel-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
+  .meta-rel-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px 20px; }
+  .meta-rel-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .meta-rel-titulo { font-size:12px; font-weight:600; color:var(--text-primary); }
+  .meta-rel-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; }
+  .badge-rec { background:#EFF6FF; color:var(--accent-g); }
+  .badge-ext { background:#F5F3FF; color:var(--accent-p); }
+  .meta-rel-valores { display:flex; align-items:baseline; gap:6px; margin-bottom:10px; }
+  .meta-rel-atual { font-size:26px; font-weight:700; font-family:'DM Mono',monospace; letter-spacing:-1px; }
+  .meta-rel-sep { font-size:14px; color:var(--text-muted); }
+  .meta-rel-alvo { font-size:16px; font-weight:500; font-family:'DM Mono',monospace; color:var(--text-muted); }
+  .meta-rel-barra { background:var(--bg); border-radius:4px; height:7px; overflow:hidden; margin-bottom:7px; }
+  .meta-rel-fill { height:100%; border-radius:4px; transition:width 0.8s; }
+  .fill-rec { background:var(--accent-g); } .fill-ext { background:var(--accent-p); } .fill-ok { background:var(--accent-green); }
+  .meta-rel-info { display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); }
+  .meta-pct { font-weight:700; font-family:'DM Mono',monospace; }
+  .pct-verde { color:var(--accent-green); } .pct-amarelo { color:var(--accent-q); } .pct-vermelho { color:var(--accent-red); }
+
+  /* GRÁFICO EVOLUÇÃO */
+  .grafico-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px 22px; margin-bottom:16px; }
+  .grafico-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .grafico-titulo { font-size:12px; font-weight:600; color:var(--text-primary); }
+  .grafico-legenda { display:flex; gap:14px; }
+  .leg { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-muted); }
+  .leg-dot { width:7px; height:7px; border-radius:50%; }
+  .chart-area { display:flex; align-items:flex-end; gap:6px; height:160px; }
+  .chart-col { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; }
+  .chart-stack { display:flex; flex-direction:column; align-items:center; gap:2px; width:100%; justify-content:flex-end; height:138px; }
+  .bar-seg { width:100%; border-radius:3px 3px 0 0; min-height:0; }
+  .bar-r { background:var(--accent-g); } .bar-e { background:var(--accent-p); }
+  .chart-col-label { font-size:9px; color:var(--text-muted); font-weight:500; white-space:nowrap; }
+  .chart-col-val { font-size:9px; color:var(--text-secondary); font-family:'DM Mono',monospace; }
+
+  /* FUNIL */
+  .funil-rel { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:12px; }
+  .funil-rel-header { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#FAFBFC; border-bottom:1px solid var(--border); }
+  .funil-rel-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .funil-rel-nome { font-size:12px; font-weight:600; color:var(--text-primary); }
+  .funil-rel-total { font-size:11px; color:var(--text-muted); margin-left:auto; font-family:'DM Mono',monospace; }
+  .funil-rel-etapas { display:flex; padding:10px 14px; gap:6px; overflow-x:auto; }
+  .funil-etapa { flex:0 0 auto; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:9px 12px; min-width:110px; }
+  .funil-etapa-nome { font-size:9px; color:var(--text-muted); font-weight:600; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px; }
+  .funil-etapa-count { font-size:18px; font-weight:700; color:var(--text-primary); font-family:'DM Mono',monospace; line-height:1; }
+  .funil-etapa-barra { height:2px; background:var(--border); border-radius:2px; margin-top:6px; }
+  .funil-etapa-fill { height:100%; border-radius:2px; }
+
+  /* RANKING */
+  .ranking-rel { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:16px; }
+  .ranking-rel-row { display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid var(--border); }
+  .ranking-rel-row:last-child { border-bottom:none; }
+  .rank-pos { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .rp1 { background:#FEF3C7; color:#D97706; } .rp2 { background:#F3F4F6; color:#6B7280; } .rp3 { background:#FEF2F2; color:#B45309; } .rpn { background:var(--bg); color:var(--text-muted); }
+  .rank-nome { font-size:13px; font-weight:500; flex:1; }
+  .rank-barra-wrap { flex:2; background:var(--bg); border-radius:3px; height:5px; }
+  .rank-barra { height:100%; border-radius:3px; background:var(--accent-g); }
+  .rank-nums { text-align:right; min-width:90px; }
+  .rank-val { font-size:12px; font-weight:600; font-family:'DM Mono',monospace; }
+  .rank-sub { font-size:10px; color:var(--text-muted); }
+
+  /* TABELA CLIENTES */
+  .tabela-rel { width:100%; border-collapse:collapse; font-size:12px; }
+  .tabela-rel th { padding:8px 12px; text-align:left; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-muted); background:#FAFBFC; border-bottom:1px solid var(--border); }
+  .tabela-rel td { padding:9px 12px; border-bottom:1px solid var(--border); }
+  .tabela-rel tr:last-child td { border-bottom:none; }
+  .tabela-rel tr:nth-child(even) td { background:#FAFBFC; }
+  .tab-nome { font-weight:500; color:var(--text-primary); max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tab-badge { display:inline-block; font-size:9px; font-weight:700; padding:2px 7px; border-radius:3px; }
+  .tb-g { background:#EFF6FF; color:var(--accent-g); } .tb-p { background:#F5F3FF; color:var(--accent-p); } .tb-q { background:#FFFBEB; color:var(--accent-q); }
+  .tb-rec { background:#EFF6FF; color:var(--accent-g); } .tb-ext { background:#F5F3FF; color:var(--accent-p); }
+
+  /* RODAPÉ */
+  .rodape-rel { margin-top:32px; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .rodape-txt { font-size:11px; color:var(--text-muted); }
+  .rodape-pag { font-size:11px; color:var(--text-muted); font-family:'DM Mono',monospace; }
+
+  /* OBSERVAÇÕES */
+  .obs-card { background:#FFFBEB; border:1px solid #FDE68A; border-radius:10px; padding:16px 18px; margin-bottom:16px; }
+  .obs-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#D97706; margin-bottom:6px; }
+  .obs-texto { font-size:13px; color:#92400E; line-height:1.6; }
+
+  /* ANÁLISE */
+  .analise-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .analise-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .analise-titulo { font-size:11px; font-weight:700; color:var(--text-secondary); margin-bottom:8px; }
+  .analise-val { font-size:22px; font-weight:700; font-family:'DM Mono',monospace; color:var(--text-primary); }
+  .analise-detalhe { font-size:11px; color:var(--text-muted); margin-top:4px; }
+</style>
+</head>
+<body>
+
+<!-- TELA DE CONFIGURAÇÃO -->
+<div class="config-screen" id="tela-config">
+  <div class="config-card">
+    <div class="config-logo">
+      <div class="config-logo-mark">
+        <svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity="0.4"/></svg>
+      </div>
+      <span style="font-size:14px;font-weight:600">Gaideski <span style="color:var(--text-muted);font-weight:400">· Relatórios</span></span>
+    </div>
+
+    <div class="config-titulo">Gerar Relatório Comercial</div>
+    <div class="config-sub">Configure o período e os dados que deseja incluir no relatório.</div>
+
+    <div class="config-secao">Período do relatório</div>
+    <div class="config-row">
+      <div class="config-field">
+        <label>Tipo de período</label>
+        <select id="cfg-tipo-periodo" onchange="togglePeriodo()">
+          <option value="mes">Mês específico</option>
+          <option value="trimestre">Trimestre atual</option>
+          <option value="semestre">Semestre atual</option>
+          <option value="ano">Ano completo</option>
+          <option value="custom">Personalizado</option>
+        </select>
+      </div>
+      <div class="config-field" id="cfg-campo-ano">
+        <label>Ano</label>
+        <select id="cfg-ano"></select>
+      </div>
+    </div>
+    <div class="config-row" id="cfg-linha-mes">
+      <div class="config-field">
+        <label>Mês</label>
+        <select id="cfg-mes">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+          <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+          <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+          <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+      </div>
+      <div class="config-field">
+        <label>Empresa</label>
+        <select id="cfg-empresa">
+          <option value="todos">Todas as empresas</option>
+          <option value="gaideski">Gaideski</option>
+          <option value="planicon">Planicon</option>
+          <option value="qualificacao">Qualificação</option>
+        </select>
+      </div>
+    </div>
+    <div id="cfg-custom" style="display:none">
+      <div class="config-row">
+        <div class="config-field">
+          <label>Data início</label>
+          <input type="date" id="cfg-dt-ini">
+        </div>
+        <div class="config-field">
+          <label>Data fim</label>
+          <input type="date" id="cfg-dt-fim">
+        </div>
+      </div>
+    </div>
+
+    <div class="config-secao" style="margin-top:24px">Seções do relatório</div>
+    <div class="config-checkboxes">
+      <label class="config-check"><input type="checkbox" id="sec-resumo" checked> Resumo executivo (KPIs principais)</label>
+      <label class="config-check"><input type="checkbox" id="sec-metas" checked> Metas vs realizado</label>
+      <label class="config-check"><input type="checkbox" id="sec-evolucao" checked> Evolução mensal (últimos 6 meses)</label>
+      <label class="config-check"><input type="checkbox" id="sec-funis" checked> Funil de vendas por empresa</label>
+      <label class="config-check"><input type="checkbox" id="sec-ranking" checked> Ranking de vendedores</label>
+      <label class="config-check"><input type="checkbox" id="sec-clientes" checked> Lista de clientes fechados</label>
+      <label class="config-check"><input type="checkbox" id="sec-analise" checked> Análise e indicadores</label>
+    </div>
+
+    <div class="config-field" style="margin-bottom:16px">
+      <label>Observações (opcional)</label>
+      <input type="text" id="cfg-obs" placeholder="Ex: Apresentação reunião mensal — Maio 2026">
+    </div>
+
+    <div id="loading-rel"><div class="spinner"></div> Carregando dados do Kommo...</div>
+    <button class="btn-gerar" id="btn-gerar" onclick="gerarRelatorio()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 12h10M8 2v8M5 7l3 3 3-3"/></svg>
+      Gerar Relatório PDF
+    </button>
+  </div>
+</div>
+
+<!-- RELATÓRIO -->
+<div id="relatorio">
+  <div class="rel-wrap" id="rel-conteudo"></div>
+  <button class="btn-imprimir" onclick="window.print()">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="6" width="10" height="7" rx="1"/><path d="M5 6V3h6v3M5 13h6"/></svg>
+    Imprimir / Salvar PDF
+  </button>
+  <button class="btn-voltar" onclick="voltarConfig()">← Voltar</button>
+</div>
+
+<script>
+const BASE = '/api/kommo';
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const MESES_CURTO = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const PIPE_IDS = { qualificacao:13512120, gaideski:13512132, planicon:13512140 };
+const PIPE_IDS_VALIDOS = new Set([13512120,13512132,13512140]);
+const CF_TIPO_VENDA = 2057155;
+const ENUM_RECORRENTE = 1797505;
+const ENUM_EXTRA = 1797507;
+
+let todosLeads=[], _statusMap={}, _pipeMap={}, _pipes=[];
+
+// Init selects
+(function() {
+  const agora = new Date();
+  const selAno = document.getElementById('cfg-ano');
+  for (let a = agora.getFullYear()+1; a >= agora.getFullYear()-3; a--) {
+    const opt = document.createElement('option');
+    opt.value=a; opt.textContent=a;
+    if (a===agora.getFullYear()) opt.selected=true;
+    selAno.appendChild(opt);
+  }
+  document.getElementById('cfg-mes').value = agora.getMonth();
+})();
+
+function togglePeriodo() {
+  const t = document.getElementById('cfg-tipo-periodo').value;
+  document.getElementById('cfg-linha-mes').style.display = t==='mes' ? '' : 'none';
+  document.getElementById('cfg-custom').style.display = t==='custom' ? '' : 'none';
+  document.getElementById('cfg-campo-ano').style.display = ['mes','ano'].includes(t) ? '' : 'none';
+}
+
+function getMetas() { try { return JSON.parse(localStorage.getItem('gaideski_metas')||'{}'); } catch { return {}; } }
+function getMetaValor(ano,mes,tipo) { return parseFloat(getMetas()[`${ano}_${mes}_${tipo}`]||0); }
+function formatValor(v) { if(!v||v===0) return 'R$ 0'; return 'R$\u00A0'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function formatValorCurto(v) { if(!v||v===0) return 'R$ 0'; if(v>=1000) return 'R$\u00A0'+(v/1000).toFixed(1)+'k'; return 'R$\u00A0'+Number(v).toLocaleString('pt-BR'); }
+function formatData(ts) { if(!ts) return '—'; return new Date(ts*1000).toLocaleDateString('pt-BR'); }
+function getTipoVenda(l) {
+  const cf=(l.custom_fields_values||[]).find(f=>f.field_id===CF_TIPO_VENDA);
+  if(!cf) return null;
+  const v=cf.values?.[0]?.enum_id;
+  if(v===ENUM_RECORRENTE) return 'recorrente';
+  if(v===ENUM_EXTRA) return 'extra';
+  return null;
+}
+
+function getBounds() {
+  const agora = new Date();
+  const t = document.getElementById('cfg-tipo-periodo').value;
+  const mes = parseInt(document.getElementById('cfg-mes').value);
+  const ano = parseInt(document.getElementById('cfg-ano').value);
+  const emp = document.getElementById('cfg-empresa').value;
+  if (t==='mes') {
+    return { ini:new Date(ano,mes,1), fim:new Date(ano,mes+1,0,23,59,59), label:`${MESES[mes]} ${ano}`, ano, mes, emp };
+  }
+  if (t==='trimestre') {
+    const trim=Math.floor(agora.getMonth()/3);
+    const ini=new Date(agora.getFullYear(),trim*3,1);
+    const fim=new Date(agora.getFullYear(),trim*3+3,0,23,59,59);
+    return { ini, fim, label:`${Math.floor(trim)+1}º Trimestre ${agora.getFullYear()}`, ano:agora.getFullYear(), mes:ini.getMonth(), emp };
+  }
+  if (t==='semestre') {
+    const sem=agora.getMonth()<6?0:6;
+    const ini=new Date(agora.getFullYear(),sem,1);
+    const fim=new Date(agora.getFullYear(),sem+6,0,23,59,59);
+    return { ini, fim, label:`${sem===0?'1º':'2º'} Semestre ${agora.getFullYear()}`, ano:agora.getFullYear(), mes:ini.getMonth(), emp };
+  }
+  if (t==='ano') {
+    return { ini:new Date(ano,0,1), fim:new Date(ano,11,31,23,59,59), label:`Ano ${ano}`, ano, mes:0, emp };
+  }
+  if (t==='custom') {
+    const di=document.getElementById('cfg-dt-ini').value;
+    const df=document.getElementById('cfg-dt-fim').value;
+    return { ini:di?new Date(di):new Date(agora.getFullYear(),0,1), fim:df?new Date(df+'T23:59:59'):agora, label:`${di||'início'} a ${df||'hoje'}`, ano:agora.getFullYear(), mes:agora.getMonth(), emp };
+  }
+}
+
+async function gerarRelatorio() {
+  document.getElementById('loading-rel').style.display='block';
+  document.getElementById('btn-gerar').style.display='none';
+  try {
+    const [ld,pd] = await Promise.all([
+      fetch(BASE+'/leads?limit=250&order[created_at]=desc&with=custom_fields').then(r=>r.json()),
+      fetch(BASE+'/leads/pipelines?limit=50').then(r=>r.json())
+    ]);
+    const leads=ld?._embedded?.leads||[];
+    const pipes=pd?._embedded?.pipelines||[];
+    _pipes=pipes.filter(p=>PIPE_IDS_VALIDOS.has(p.id));
+    _statusMap={}; _pipeMap={};
+    pipes.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{ _statusMap[s.id]=s.name; _pipeMap[s.id]=p.id; });});
+    todosLeads=leads.filter(l=>PIPE_IDS_VALIDOS.has(_pipeMap[l.status_id]));
+    construirRelatorio();
+  } catch(e) {
+    document.getElementById('loading-rel').style.display='none';
+    document.getElementById('btn-gerar').style.display='flex';
+    alert('Erro ao carregar dados: '+e.message);
+  }
+}
+
+function getPipesEmp(emp) {
+  if(!emp||emp==='todos') return [PIPE_IDS.qualificacao,PIPE_IDS.gaideski,PIPE_IDS.planicon];
+  return [PIPE_IDS[emp]];
+}
+
+function construirRelatorio() {
+  const bounds = getBounds();
+  const iniTs = Math.floor(bounds.ini/1000);
+  const fimTs = Math.floor(bounds.fim/1000);
+  const pipesAtivos = getPipesEmp(bounds.emp);
+  const obs = document.getElementById('cfg-obs').value;
+
+  // Leads do período
+  const leadsPeríodo = todosLeads.filter(l => pipesAtivos.includes(_pipeMap[l.status_id]) && l.created_at>=iniTs && l.created_at<=fimTs);
+  const leadsGanhos  = leadsPeríodo.filter(l => l.status_id===142);
+  const leadsAtivos  = leadsPeríodo.filter(l => l.status_id!==142 && l.status_id!==143);
+  const leadsPerdidos= leadsPeríodo.filter(l => l.status_id===143);
+
+  const totalReceita = leadsGanhos.reduce((a,l)=>a+(l.price||0),0);
+  const recorrentes  = leadsGanhos.filter(l=>getTipoVenda(l)==='recorrente');
+  const extras       = leadsGanhos.filter(l=>getTipoVenda(l)==='extra');
+  const receitaRec   = recorrentes.reduce((a,l)=>a+(l.price||0),0);
+  const receitaExt   = extras.reduce((a,l)=>a+(l.price||0),0);
+  const txConversao  = leadsPeríodo.length>0 ? Math.round(leadsGanhos.length/leadsPeríodo.length*100) : 0;
+
+  // Carteira acumulada (todos os tempos até fim do período)
+  const carteiraAcum = todosLeads.filter(l=>l.status_id===142&&getTipoVenda(l)==='recorrente'&&(l.closed_at||l.updated_at)<=fimTs).reduce((a,l)=>a+(l.price||0),0);
+
+  const metaRec = getMetaValor(bounds.ano, bounds.mes, 'rec');
+  const metaExt = getMetaValor(bounds.ano, bounds.mes, 'ext');
+  const pctRec  = metaRec>0 ? Math.min(Math.round(carteiraAcum/metaRec*100),999) : 0;
+  const pctExt  = metaExt>0 ? Math.min(Math.round(receitaExt/metaExt*100),999) : 0;
+
+  let html = '';
+
+  // === CAPA ===
+  html += `<div class="pagina">
+  <div class="capa">
+    <div class="capa-logo">
+      <div class="capa-logo-mark"><svg viewBox="0 0 14 14" fill="white"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity="0.4"/></svg></div>
+      <span class="capa-logo-txt">Gaideski Contabilidade</span>
+    </div>
+    <div class="capa-tipo">Relatório Comercial</div>
+    <div class="capa-titulo">Desempenho<br>de Vendas</div>
+    <div class="capa-periodo">${bounds.label}${bounds.emp!=='todos'?' · '+bounds.emp.charAt(0).toUpperCase()+bounds.emp.slice(1):''}</div>
+    <div class="capa-meta-grid">
+      <div class="capa-kpi"><div class="capa-kpi-label">Vendas Ganhas</div><div class="capa-kpi-val">${leadsGanhos.length}</div><div class="capa-kpi-sub">clientes fechados</div></div>
+      <div class="capa-kpi"><div class="capa-kpi-label">Receita Total</div><div class="capa-kpi-val">${formatValorCurto(totalReceita)}</div><div class="capa-kpi-sub">no período</div></div>
+      <div class="capa-kpi"><div class="capa-kpi-label">Taxa de Conversão</div><div class="capa-kpi-val">${txConversao}%</div><div class="capa-kpi-sub">leads → clientes</div></div>
+    </div>
+    <div class="capa-rodape">
+      <div class="capa-data">Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</div>
+      <div class="capa-data">Confidencial · Uso interno</div>
+    </div>
+  </div>`;
+
+  if (obs) html += `<div class="obs-card"><div class="obs-label">Observações</div><div class="obs-texto">${obs}</div></div>`;
+
+  // === RESUMO EXECUTIVO ===
+  if (document.getElementById('sec-resumo').checked) {
+    html += `<div class="rel-secao">
+      <div class="rel-secao-titulo">Resumo Executivo</div>
+      <div class="rel-cards">
+        <div class="rel-card c-dark"><div class="rel-card-label">Leads Ativos</div><div class="rel-card-val">${leadsAtivos.length}</div><div class="rel-card-sub">em andamento</div></div>
+        <div class="rel-card c-green"><div class="rel-card-label">Vendas Ganhas</div><div class="rel-card-val">${leadsGanhos.length}</div><div class="rel-card-sub">clientes fechados</div></div>
+        <div class="rel-card c-red"><div class="rel-card-label">Perdas</div><div class="rel-card-val">${leadsPerdidos.length}</div><div class="rel-card-sub">leads perdidos</div></div>
+        <div class="rel-card c-blue"><div class="rel-card-label">Conversão</div><div class="rel-card-val">${txConversao}%</div><div class="rel-card-sub">taxa geral</div></div>
+      </div>
+      <div class="rel-cards">
+        <div class="rel-card c-blue"><div class="rel-card-label">Receita Total</div><div class="rel-card-val" style="font-size:18px">${formatValorCurto(totalReceita)}</div><div class="rel-card-sub">período</div></div>
+        <div class="rel-card c-blue"><div class="rel-card-label">Carteira Recorrente</div><div class="rel-card-val" style="font-size:18px">${formatValorCurto(carteiraAcum)}</div><div class="rel-card-sub">acumulada</div></div>
+        <div class="rel-card c-purple"><div class="rel-card-label">Honorários</div><div class="rel-card-val" style="font-size:18px">${formatValorCurto(receitaRec)}</div><div class="rel-card-sub">${recorrentes.length} clientes</div></div>
+        <div class="rel-card c-orange"><div class="rel-card-label">Extras</div><div class="rel-card-val" style="font-size:18px">${formatValorCurto(receitaExt)}</div><div class="rel-card-sub">${extras.length} serviços</div></div>
+      </div>
+    </div>`;
+  }
+  html += '</div>'; // fim pagina 1
+
+  // === METAS ===
+  if (document.getElementById('sec-metas').checked) {
+    html += `<div class="pagina"><div class="rel-secao">
+      <div class="rel-secao-titulo">Metas vs Realizado — ${bounds.label}</div>
+      <div class="meta-rel-grid">
+        <div class="meta-rel-card">
+          <div class="meta-rel-header"><div class="meta-rel-titulo">Carteira Recorrente</div><span class="meta-rel-badge badge-rec">Honorários</span></div>
+          <div class="meta-rel-valores"><div class="meta-rel-atual" style="color:${pctRec>=100?'var(--accent-green)':pctRec>=60?'var(--accent-q)':'var(--text-primary)'}">${formatValorCurto(carteiraAcum)}</div><div class="meta-rel-sep">/</div><div class="meta-rel-alvo">${metaRec>0?formatValorCurto(metaRec):'Não definida'}</div></div>
+          <div class="meta-rel-barra"><div class="meta-rel-fill ${pctRec>=100?'fill-ok':'fill-rec'}" style="width:${Math.min(pctRec,100)}%"></div></div>
+          <div class="meta-rel-info"><span>${metaRec>0?'Faltam '+formatValorCurto(Math.max(metaRec-carteiraAcum,0)):'Configure a meta no dashboard'}</span><span class="meta-pct ${pctRec>=100?'pct-verde':pctRec>=60?'pct-amarelo':'pct-vermelho'}">${metaRec>0?pctRec+'%':'—'}</span></div>
+        </div>
+        <div class="meta-rel-card">
+          <div class="meta-rel-header"><div class="meta-rel-titulo">Serviços Extras</div><span class="meta-rel-badge badge-ext">Extra</span></div>
+          <div class="meta-rel-valores"><div class="meta-rel-atual" style="color:${pctExt>=100?'var(--accent-green)':pctExt>=60?'var(--accent-q)':'var(--text-primary)'}">${formatValorCurto(receitaExt)}</div><div class="meta-rel-sep">/</div><div class="meta-rel-alvo">${metaExt>0?formatValorCurto(metaExt):'Não definida'}</div></div>
+          <div class="meta-rel-barra"><div class="meta-rel-fill ${pctExt>=100?'fill-ok':'fill-ext'}" style="width:${Math.min(pctExt,100)}%"></div></div>
+          <div class="meta-rel-info"><span>${metaExt>0?'Faltam '+formatValorCurto(Math.max(metaExt-receitaExt,0)):'Configure a meta no dashboard'}</span><span class="meta-pct ${pctExt>=100?'pct-verde':pctExt>=60?'pct-amarelo':'pct-vermelho'}">${metaExt>0?pctExt+'%':'—'}</span></div>
+        </div>
+      </div>`;
+
+    // === ANÁLISE ===
+    if (document.getElementById('sec-analise').checked) {
+      const ticketMedio = leadsGanhos.length>0 ? totalReceita/leadsGanhos.length : 0;
+      const leadsAtivosAll = todosLeads.filter(l=>pipesAtivos.includes(_pipeMap[l.status_id])&&l.status_id!==142&&l.status_id!==143);
+      const potencial = leadsAtivosAll.reduce((a,l)=>a+(l.price||0),0);
+      html += `<div class="rel-secao">
+        <div class="rel-secao-titulo">Indicadores de Desempenho</div>
+        <div class="analise-grid">
+          <div class="analise-item"><div class="analise-titulo">Ticket médio (período)</div><div class="analise-val">${formatValorCurto(ticketMedio)}</div><div class="analise-detalhe">por venda fechada</div></div>
+          <div class="analise-item"><div class="analise-titulo">Potencial em pipeline</div><div class="analise-val">${formatValorCurto(potencial)}</div><div class="analise-detalhe">${leadsAtivosAll.length} leads ativos</div></div>
+          <div class="analise-item"><div class="analise-titulo">Mix recorrente/extra</div><div class="analise-val">${totalReceita>0?Math.round(receitaRec/totalReceita*100):0}% / ${totalReceita>0?Math.round(receitaExt/totalReceita*100):0}%</div><div class="analise-detalhe">rec. vs extras</div></div>
+          <div class="analise-item"><div class="analise-titulo">Total leads no período</div><div class="analise-val">${leadsPeríodo.length}</div><div class="analise-detalhe">${leadsGanhos.length} ganhos · ${leadsPerdidos.length} perdidos · ${leadsAtivos.length} ativos</div></div>
+        </div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
+  // === EVOLUÇÃO ===
+  if (document.getElementById('sec-evolucao').checked) {
+    const agora = new Date();
+    const meses6 = [];
+    for (let i=5;i>=0;i--) { const d=new Date(agora.getFullYear(),agora.getMonth()-i,1); meses6.push({ano:d.getFullYear(),mes:d.getMonth(),label:MESES_CURTO[d.getMonth()]+'/'+String(d.getFullYear()).slice(2)}); }
+    const dados6 = meses6.map(m=>{
+      const ini=Math.floor(new Date(m.ano,m.mes,1)/1000);
+      const fim=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
+      const gl=todosLeads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=ini&&(l.closed_at||l.updated_at)<=fim&&pipesAtivos.includes(_pipeMap[l.status_id]));
+      const r=gl.filter(l=>getTipoVenda(l)==='recorrente').reduce((a,l)=>a+(l.price||0),0);
+      const e=gl.filter(l=>getTipoVenda(l)==='extra').reduce((a,l)=>a+(l.price||0),0);
+      return {...m,rec:r,ext:e,total:r+e,qtd:gl.length};
+    });
+    const maxV=Math.max(...dados6.map(d=>d.total),1);
+
+    html += `<div class="pagina"><div class="rel-secao">
+      <div class="rel-secao-titulo">Evolução Mensal — Últimos 6 Meses</div>
+      <div class="grafico-card">
+        <div class="grafico-header">
+          <div class="grafico-titulo">Receita por mês (vendas ganhas)</div>
+          <div class="grafico-legenda">
+            <div class="leg"><div class="leg-dot" style="background:var(--accent-g)"></div> Recorrente</div>
+            <div class="leg"><div class="leg-dot" style="background:var(--accent-p)"></div> Extra</div>
+          </div>
+        </div>
+        <div class="chart-area">${dados6.map(d=>{
+          const hr=Math.round(d.rec/maxV*130);
+          const he=Math.round(d.ext/maxV*130);
+          return `<div class="chart-col"><div class="chart-stack"><div class="bar-seg bar-e" style="height:${he}px"></div><div class="bar-seg bar-r" style="height:${hr}px"></div></div><div class="chart-col-label">${d.label}</div><div class="chart-col-val">${d.total>0?formatValorCurto(d.total):''}</div></div>`;
+        }).join('')}</div>
+      </div>
+      <div class="rel-cards" style="grid-template-columns:repeat(6,1fr)">
+        ${dados6.map(d=>`<div class="rel-card c-blue"><div class="rel-card-label">${d.label}</div><div class="rel-card-val" style="font-size:16px">${d.qtd}</div><div class="rel-card-sub">${formatValorCurto(d.total)}</div></div>`).join('')}
+      </div>
+    </div></div>`;
+  }
+
+  // === FUNIS ===
+  if (document.getElementById('sec-funis').checked) {
+    const leadsAtivosF = todosLeads.filter(l=>pipesAtivos.includes(_pipeMap[l.status_id])&&l.status_id!==142&&l.status_id!==143);
+    const pipesExibir = _pipes.filter(p=>pipesAtivos.includes(p.id));
+    html += `<div class="pagina"><div class="rel-secao">
+      <div class="rel-secao-titulo">Funil de Vendas por Empresa</div>
+      ${pipesExibir.map(pipe=>{
+        const pNome=pipe.name||'';
+        const pL=pNome.toLowerCase();
+        const dotColor=pL.includes('gaideski')?'var(--accent-g)':pL.includes('planicon')||pL.includes('planicom')?'var(--accent-p)':'var(--accent-q)';
+        const fillColor=pL.includes('gaideski')?'var(--accent-g)':pL.includes('planicon')||pL.includes('planicom')?'var(--accent-p)':'var(--accent-q)';
+        const statuses=(pipe._embedded?.statuses||[]).filter(s=>s.id!==142&&s.id!==143);
+        const lp=leadsAtivosF.filter(l=>_pipeMap[l.status_id]===pipe.id);
+        const cont={};lp.forEach(l=>{cont[l.status_id]=(cont[l.status_id]||0)+1;});
+        const maxC=Math.max(...Object.values(cont),1);
+        return `<div class="funil-rel">
+          <div class="funil-rel-header"><div class="funil-rel-dot" style="background:${dotColor}"></div><div class="funil-rel-nome">${pNome}</div><div class="funil-rel-total">${lp.length} ativo${lp.length!==1?'s':''}</div></div>
+          <div class="funil-rel-etapas">${statuses.map(s=>{
+            const c=cont[s.id]||0;const p=Math.round(c/maxC*100);
+            return `<div class="funil-etapa"><div class="funil-etapa-nome" title="${s.name}">${s.name}</div><div class="funil-etapa-count">${c}</div><div class="funil-etapa-barra"><div class="funil-etapa-fill" style="width:${p}%;background:${fillColor};height:100%;border-radius:2px"></div></div></div>`;
+          }).join('')}</div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+  }
+
+  // === RANKING ===
+  if (document.getElementById('sec-ranking').checked) {
+    const ganhosR = todosLeads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=Math.floor(bounds.ini/1000)&&(l.closed_at||l.updated_at)<=Math.floor(bounds.fim/1000)&&pipesAtivos.includes(_pipeMap[l.status_id]));
+    const porResp={};
+    ganhosR.forEach(l=>{const n=l._embedded?.responsible_user?.name||'Sem responsável';if(!porResp[n])porResp[n]={qtd:0,valor:0,rec:0,ext:0};porResp[n].qtd++;porResp[n].valor+=l.price||0;const tv=getTipoVenda(l);if(tv==='recorrente')porResp[n].rec+=l.price||0;if(tv==='extra')porResp[n].ext+=l.price||0;});
+    const lista=Object.entries(porResp).sort((a,b)=>b[1].qtd-a[1].qtd);
+    const maxQ=lista[0]?.[1]?.qtd||1;
+    const posC=['rp1','rp2','rp3'];
+    html += `<div class="pagina"><div class="rel-secao">
+      <div class="rel-secao-titulo">Ranking de Vendedores — ${bounds.label}</div>
+      <div class="ranking-rel">
+        ${lista.length ? lista.map(([nome,d],i)=>`<div class="ranking-rel-row"><div class="rank-pos ${posC[i]||'rpn'}">${i+1}</div><div class="rank-nome">${nome}</div><div class="rank-barra-wrap"><div class="rank-barra" style="width:${Math.round(d.qtd/maxQ*100)}%"></div></div><div class="rank-nums"><div class="rank-val">${d.qtd} venda${d.qtd!==1?'s':''}</div><div class="rank-sub">${formatValorCurto(d.valor)}</div></div></div>`).join('') : '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">Nenhuma venda no período</div>'}
+      </div>
+    </div></div>`;
+  }
+
+  // === CLIENTES ===
+  if (document.getElementById('sec-clientes').checked) {
+    const ganhosC = todosLeads.filter(l=>l.status_id===142&&pipesAtivos.includes(_pipeMap[l.status_id]));
+    html += `<div class="pagina"><div class="rel-secao">
+      <div class="rel-secao-titulo">Clientes Fechados — Todos (${ganhosC.length})</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <table class="tabela-rel">
+          <thead><tr><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
+          <tbody>${ganhosC.slice(0,80).map(l=>{
+            const pipe=_pipes.find(p=>p.id===_pipeMap[l.status_id]);
+            const pNome=(pipe?.name||'').toLowerCase();
+            const empTag=pNome.includes('gaideski')?'<span class="tab-badge tb-g">Gaideski</span>':pNome.includes('planicon')||pNome.includes('planicom')?'<span class="tab-badge tb-p">Planicon</span>':'<span class="tab-badge tb-q">Qualif.</span>';
+            const tv=getTipoVenda(l);
+            const tvTag=tv==='recorrente'?'<span class="tab-badge tb-rec">Recorrente</span>':tv==='extra'?'<span class="tab-badge tb-ext">Extra</span>':'—';
+            return `<tr><td><div class="tab-nome">${l.name||'—'}</div></td><td>${empTag}</td><td>${tvTag}</td><td style="color:var(--text-muted);font-size:11px">${l._embedded?.responsible_user?.name||'—'}</td><td style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">${formatData(l.closed_at||l.created_at)}</td><td style="font-size:11px;font-family:'DM Mono',monospace">${formatValor(l.price)}</td></tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+    html += `<div class="rodape-rel"><div class="rodape-txt">Gaideski Contabilidade e Associados Ltda · Relatório Confidencial</div><div class="rodape-pag">Gerado em ${new Date().toLocaleDateString('pt-BR')}</div></div></div>`;
+  }
+
+  document.getElementById('rel-conteudo').innerHTML = html;
+  document.getElementById('tela-config').style.display = 'none';
+  document.getElementById('relatorio').style.display = 'block';
+}
+
+function voltarConfig() {
+  document.getElementById('relatorio').style.display='none';
+  document.getElementById('tela-config').style.display='flex';
+  document.getElementById('loading-rel').style.display='none';
+  document.getElementById('btn-gerar').style.display='flex';
+}
+</script>
+</body>
+</html>
