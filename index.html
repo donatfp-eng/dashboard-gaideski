@@ -270,11 +270,30 @@
       Carregando dados da carteira recorrente...
     </div>
 
-    <div class="modal-secao">Metas Recorrentes (Honorários) — por mês</div>
-    <div id="modal-metas-rec"></div>
+    <div class="modal-secao">Selecione o mês</div>
+    <div style="display:flex;gap:10px;margin-bottom:20px">
+      <select class="select-filter" id="modal-sel-mes" onchange="atualizarCamposMeta()" style="flex:1;padding:8px 12px;font-size:13px">
+        <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+        <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+        <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+        <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+      </select>
+      <select class="select-filter" id="modal-sel-ano" onchange="atualizarCamposMeta()" style="flex:1;padding:8px 12px;font-size:13px"></select>
+    </div>
 
-    <div class="modal-secao">Metas Serviços Extras — por mês</div>
-    <div id="modal-metas-ext"></div>
+    <div class="modal-secao">Metas do mês selecionado</div>
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>Meta Honorários (Recorrente)</label>
+        <input type="number" id="modal-meta-rec-val" placeholder="0" min="0" step="100">
+        <span class="field-hint">Carteira que acumula mês a mês</span>
+      </div>
+      <div class="modal-field">
+        <label>Meta Serviços Extras</label>
+        <input type="number" id="modal-meta-ext-val" placeholder="0" min="0" step="100">
+        <span class="field-hint">Renova todo mês</span>
+      </div>
+    </div>
 
     <div class="modal-footer">
       <button class="btn-modal secondary" onclick="fecharModalMetas()">Cancelar</button>
@@ -328,6 +347,34 @@
 
     <!-- TAB: METAS -->
     <div id="tab-metas" class="tab-content">
+      <!-- FILTRO DE DATAS -->
+      <div class="filtros-bar" style="margin-bottom:20px">
+        <span class="filtro-label">Período</span>
+        <div class="btn-group" id="grp-periodo-meta">
+          <button class="btn-filter active" data-val="mes-atual" onclick="setPeriodoMeta(this)">Este mês</button>
+          <button class="btn-filter" data-val="mes-anterior" onclick="setPeriodoMeta(this)">Mês anterior</button>
+          <button class="btn-filter" data-val="trimestre" onclick="setPeriodoMeta(this)">Trimestre</button>
+          <button class="btn-filter" data-val="semestre" onclick="setPeriodoMeta(this)">Semestre</button>
+          <button class="btn-filter" data-val="ano" onclick="setPeriodoMeta(this)">Este ano</button>
+          <button class="btn-filter" data-val="custom" onclick="setPeriodoMeta(this)">Personalizado</button>
+        </div>
+        <div class="filtro-divider"></div>
+        <span class="filtro-label">Mês</span>
+        <select class="select-filter" id="sel-mes-meta" onchange="setMesMeta()">
+          <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
+          <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
+          <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
+          <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
+        </select>
+        <select class="select-filter" id="sel-ano-meta" onchange="setMesMeta()"></select>
+        <div id="periodo-custom-meta" style="display:none;align-items:center;gap:6px">
+          <input type="date" class="input-date" id="dt-meta-ini" style="font-family:'DM Mono',monospace;font-size:11px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text-secondary);outline:none">
+          <span style="font-size:11px;color:var(--text-muted)">até</span>
+          <input type="date" class="input-date" id="dt-meta-fim" style="font-family:'DM Mono',monospace;font-size:11px;padding:5px 8px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text-secondary);outline:none">
+          <button class="btn-filter active" onclick="renderMetas()">Aplicar</button>
+        </div>
+        <div style="margin-left:auto;font-size:12px;color:var(--text-muted)" id="periodo-meta-label"></div>
+      </div>
       <div class="metas-grid" id="metas-grid"></div>
       <div class="evolucao-card">
         <div class="evolucao-header">
@@ -415,6 +462,79 @@ const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'
 
 let filtro = { empresa: 'todos', periodo: 'todos', tipo: 'ativos', empresa2: 'todos', tipoVenda: 'todos' };
 let tabAtiva = 'visao-geral';
+
+// ---- FILTRO DATAS METAS ----
+let filtroMeta = { tipo: 'mes-atual', mes: new Date().getMonth(), ano: new Date().getFullYear() };
+
+function initFiltroMeta() {
+  const agora = new Date();
+  const selMes = document.getElementById('sel-mes-meta');
+  const selAno = document.getElementById('sel-ano-meta');
+  selMes.value = agora.getMonth();
+  // Preencher anos: ano atual -3 até +1
+  for (let a = agora.getFullYear()+1; a >= agora.getFullYear()-3; a--) {
+    const opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    if (a === agora.getFullYear()) opt.selected = true;
+    selAno.appendChild(opt);
+  }
+}
+
+function setPeriodoMeta(btn) {
+  document.querySelectorAll('#grp-periodo-meta .btn-filter').forEach(b => b.className='btn-filter');
+  btn.className = 'btn-filter active';
+  filtroMeta.tipo = btn.dataset.val;
+  const isCustom = filtroMeta.tipo === 'custom';
+  document.getElementById('periodo-custom-meta').style.display = isCustom ? 'flex' : 'none';
+  document.getElementById('sel-mes-meta').style.display = ['mes-atual','mes-anterior'].includes(filtroMeta.tipo) ? '' : 'none';
+  document.getElementById('sel-ano-meta').style.display = ['mes-atual','mes-anterior','ano'].includes(filtroMeta.tipo) ? '' : 'none';
+  if (!isCustom) renderMetas();
+}
+
+function setMesMeta() {
+  filtroMeta.mes = parseInt(document.getElementById('sel-mes-meta').value);
+  filtroMeta.ano = parseInt(document.getElementById('sel-ano-meta').value);
+  renderMetas();
+}
+
+function getBoundsMeta() {
+  const agora = new Date();
+  const t = filtroMeta.tipo;
+  const mes = filtroMeta.mes ?? agora.getMonth();
+  const ano = filtroMeta.ano ?? agora.getFullYear();
+
+  if (t === 'mes-atual') {
+    return { ini: new Date(ano, mes, 1), fim: new Date(ano, mes+1, 0, 23, 59, 59), label: MESES[mes]+'/'+ano };
+  }
+  if (t === 'mes-anterior') {
+    const d = new Date(ano, mes-1, 1);
+    return { ini: d, fim: new Date(d.getFullYear(), d.getMonth()+1, 0, 23, 59, 59), label: MESES[d.getMonth()]+'/'+d.getFullYear() };
+  }
+  if (t === 'trimestre') {
+    const trim = Math.floor(agora.getMonth()/3);
+    const ini = new Date(agora.getFullYear(), trim*3, 1);
+    const fim = new Date(agora.getFullYear(), trim*3+3, 0, 23, 59, 59);
+    return { ini, fim, label: `${MESES[ini.getMonth()]} – ${MESES[fim.getMonth()]}/${agora.getFullYear()}` };
+  }
+  if (t === 'semestre') {
+    const sem = agora.getMonth() < 6 ? 0 : 6;
+    const ini = new Date(agora.getFullYear(), sem, 1);
+    const fim = new Date(agora.getFullYear(), sem+6, 0, 23, 59, 59);
+    return { ini, fim, label: `${sem===0?'1º':'2º'} semestre ${agora.getFullYear()}` };
+  }
+  if (t === 'ano') {
+    const a = ano;
+    return { ini: new Date(a, 0, 1), fim: new Date(a, 11, 31, 23, 59, 59), label: String(a) };
+  }
+  if (t === 'custom') {
+    const di = document.getElementById('dt-meta-ini').value;
+    const df = document.getElementById('dt-meta-fim').value;
+    const ini = di ? new Date(di) : new Date(agora.getFullYear(), 0, 1);
+    const fim = df ? new Date(df+'T23:59:59') : agora;
+    return { ini, fim, label: (di||'início')+' → '+(df||'hoje') };
+  }
+  return { ini: new Date(agora.getFullYear(), agora.getMonth(), 1), fim: agora, label: '' };
+}
 
 // ---- METAS ----
 function getMetas() {
@@ -605,27 +725,33 @@ function renderMetricas(leads, pipesAtivos, ini, fim) {
 // ---- METAS ----
 function renderMetas() {
   const agora = new Date();
-  const anoAtual = agora.getFullYear();
-  const mesAtual = agora.getMonth();
+  const bounds = getBoundsMeta();
+  const iniTs = Math.floor(bounds.ini/1000);
+  const fimTs = Math.floor(bounds.fim/1000);
 
-  // Carteira recorrente acumulada = todos os leads ganhos recorrentes de todos os tempos
-  const leadsGanhosRec = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='recorrente');
+  // Atualizar label
+  const labelEl = document.getElementById('periodo-meta-label');
+  if (labelEl) labelEl.textContent = bounds.label;
+
+  // Carteira recorrente acumulada = TODOS os leads ganhos recorrentes ATÉ o fim do período
+  const leadsGanhosRec = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='recorrente' && (l.closed_at||l.updated_at)<=fimTs);
   const carteiraAcumulada = leadsGanhosRec.reduce((a,l) => a+(l.price||0), 0);
 
-  // Extras do mês atual
-  const inicioMes = new Date(anoAtual, mesAtual, 1);
-  const inicioMesTs = Math.floor(inicioMes/1000);
-  const leadsExtrasmes = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='extra' && l.closed_at && l.closed_at>=inicioMesTs);
+  // Extras dentro do período selecionado
+  const leadsExtrasmes = todosLeads.filter(l => l.status_id===142 && getTipoVenda(l)==='extra' && (l.closed_at||l.updated_at)>=iniTs && (l.closed_at||l.updated_at)<=fimTs);
   const extrasDoMes = leadsExtrasmes.reduce((a,l) => a+(l.price||0), 0);
 
-  const metaRec = getMetaValor(anoAtual, mesAtual, 'rec');
-  const metaExt = getMetaValor(anoAtual, mesAtual, 'ext');
+  // Meta do mês exibido (usa mês/ano do início do período)
+  const anoMeta = bounds.ini.getFullYear();
+  const mesMeta = bounds.ini.getMonth();
+  const metaRec = getMetaValor(anoMeta, mesMeta, 'rec');
+  const metaExt = getMetaValor(anoMeta, mesMeta, 'ext');
 
   const pctRec = metaRec > 0 ? Math.min(Math.round(carteiraAcumulada/metaRec*100), 999) : 0;
   const pctExt = metaExt > 0 ? Math.min(Math.round(extrasDoMes/metaExt*100), 999) : 0;
 
   function corPct(p) { if(p>=100) return 'verde'; if(p>=60) return 'amarelo'; return 'vermelho'; }
-  function fillClass(p) { return p>=100 ? 'ok' : ''; }
+  function fillCls(p) { return p>=100 ? 'ok' : ''; }
 
   const qtdRec = leadsGanhosRec.length;
   const qtdExt = leadsExtrasmes.length;
@@ -633,19 +759,14 @@ function renderMetas() {
   document.getElementById('metas-grid').innerHTML = `
     <div class="meta-card">
       <div class="meta-card-header">
-        <div class="meta-card-titulo">
-          Carteira Recorrente
-          <span class="meta-badge meta-badge-rec">Honorários</span>
-        </div>
+        <div class="meta-card-titulo">Carteira Recorrente <span class="meta-badge meta-badge-rec">Honorários</span></div>
       </div>
       <div class="meta-valores">
         <div class="meta-atual">${formatValorCurto(carteiraAcumulada)}</div>
         <div class="meta-sep">/</div>
         <div class="meta-alvo">${metaRec>0 ? formatValorCurto(metaRec) : 'Meta não definida'}</div>
       </div>
-      <div class="meta-barra-wrap">
-        <div class="meta-barra-fill rec ${fillClass(pctRec)}" style="width:${Math.min(pctRec,100)}%"></div>
-      </div>
+      <div class="meta-barra-wrap"><div class="meta-barra-fill rec ${fillCls(pctRec)}" style="width:${Math.min(pctRec,100)}%"></div></div>
       <div class="meta-info">
         <span>${metaRec>0 ? 'Faltam '+formatValorCurto(Math.max(metaRec-carteiraAcumulada,0)) : 'Configure a meta →'}</span>
         <span class="meta-pct ${corPct(pctRec)}">${metaRec>0 ? pctRec+'%' : '—'}</span>
@@ -656,28 +777,22 @@ function renderMetas() {
         ${metaRec>0 && carteiraAcumulada<metaRec ? `<div class="meta-detalhe-item"><strong>+${formatValorCurto(metaRec-carteiraAcumulada)}</strong> para a meta</div>` : ''}
       </div>
     </div>
-
     <div class="meta-card">
       <div class="meta-card-header">
-        <div class="meta-card-titulo">
-          Serviços Extras — ${MESES[mesAtual]}/${anoAtual}
-          <span class="meta-badge meta-badge-ext">Extra</span>
-        </div>
+        <div class="meta-card-titulo">Serviços Extras — ${bounds.label} <span class="meta-badge meta-badge-ext">Extra</span></div>
       </div>
       <div class="meta-valores">
         <div class="meta-atual">${formatValorCurto(extrasDoMes)}</div>
         <div class="meta-sep">/</div>
         <div class="meta-alvo">${metaExt>0 ? formatValorCurto(metaExt) : 'Meta não definida'}</div>
       </div>
-      <div class="meta-barra-wrap">
-        <div class="meta-barra-fill ext ${fillClass(pctExt)}" style="width:${Math.min(pctExt,100)}%"></div>
-      </div>
+      <div class="meta-barra-wrap"><div class="meta-barra-fill ext ${fillCls(pctExt)}" style="width:${Math.min(pctExt,100)}%"></div></div>
       <div class="meta-info">
         <span>${metaExt>0 ? 'Faltam '+formatValorCurto(Math.max(metaExt-extrasDoMes,0)) : 'Configure a meta →'}</span>
         <span class="meta-pct ${corPct(pctExt)}">${metaExt>0 ? pctExt+'%' : '—'}</span>
       </div>
       <div class="meta-detalhes">
-        <div class="meta-detalhe-item"><strong>${qtdExt}</strong> extras este mês</div>
+        <div class="meta-detalhe-item"><strong>${qtdExt}</strong> extras no período</div>
         <div class="meta-detalhe-item"><strong>Renova</strong> todo mês</div>
       </div>
     </div>`;
@@ -876,41 +991,34 @@ function abrirModalMetas() {
   document.getElementById('modal-info-acumulado').innerHTML =
     `<strong>Carteira Recorrente Atual:</strong> ${formatValor(carteiraAcumulada)} — este valor acumula automaticamente com cada novo cliente recorrente fechado.`;
 
-  // Gerar campos para 12 meses (mês atual + 11 anteriores)
-  let htmlRec = '', htmlExt = '';
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(anoAtual, mesAtual-i, 1);
-    const ano = d.getFullYear(), mes = d.getMonth();
-    const label = MESES[mes]+'/'+ano;
-    const isAtual = i===0;
-    const vRec = getMetaValor(ano, mes, 'rec');
-    const vExt = getMetaValor(ano, mes, 'ext');
-    if (i % 2 === 0) { htmlRec += '<div class="modal-row">'; htmlExt += '<div class="modal-row">'; }
-    htmlRec += `<div class="modal-field"><label>${label}${isAtual?' (atual)':''}</label><input type="number" id="meta-rec-${ano}-${mes}" value="${vRec||''}" placeholder="0" min="0" step="100"><span class="field-hint">Meta honorários</span></div>`;
-    htmlExt += `<div class="modal-field"><label>${label}${isAtual?' (atual)':''}</label><input type="number" id="meta-ext-${ano}-${mes}" value="${vExt||''}" placeholder="0" min="0" step="100"><span class="field-hint">Meta extras</span></div>`;
-    if (i % 2 === 1 || i === 11) { htmlRec += '</div>'; htmlExt += '</div>'; }
+  // Preencher select de anos
+  const selAno = document.getElementById('modal-sel-ano');
+  selAno.innerHTML = '';
+  for (let a = anoAtual+2; a >= anoAtual-3; a--) {
+    const opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    if (a === anoAtual) opt.selected = true;
+    selAno.appendChild(opt);
   }
-  document.getElementById('modal-metas-rec').innerHTML = htmlRec;
-  document.getElementById('modal-metas-ext').innerHTML = htmlExt;
+  document.getElementById('modal-sel-mes').value = mesAtual;
+
+  atualizarCamposMeta();
   document.getElementById('modal-metas').classList.add('open');
 }
 
-function fecharModalMetas() {
-  document.getElementById('modal-metas').classList.remove('open');
+function atualizarCamposMeta() {
+  const mes = parseInt(document.getElementById('modal-sel-mes').value);
+  const ano = parseInt(document.getElementById('modal-sel-ano').value);
+  document.getElementById('modal-meta-rec-val').value = getMetaValor(ano, mes, 'rec') || '';
+  document.getElementById('modal-meta-ext-val').value = getMetaValor(ano, mes, 'ext') || '';
 }
 
 function salvarMetas() {
-  const agora = new Date();
-  const anoAtual = agora.getFullYear(), mesAtual = agora.getMonth();
+  const mes = parseInt(document.getElementById('modal-sel-mes').value);
+  const ano = parseInt(document.getElementById('modal-sel-ano').value);
   const metas = getMetas();
-  for (let i = 0; i < 12; i++) {
-    const d = new Date(anoAtual, mesAtual-i, 1);
-    const ano = d.getFullYear(), mes = d.getMonth();
-    const vRec = parseFloat(document.getElementById(`meta-rec-${ano}-${mes}`)?.value||0);
-    const vExt = parseFloat(document.getElementById(`meta-ext-${ano}-${mes}`)?.value||0);
-    metas[getMetaKey(ano,mes,'rec')] = vRec;
-    metas[getMetaKey(ano,mes,'ext')] = vExt;
-  }
+  metas[getMetaKey(ano, mes, 'rec')] = parseFloat(document.getElementById('modal-meta-rec-val').value || 0);
+  metas[getMetaKey(ano, mes, 'ext')] = parseFloat(document.getElementById('modal-meta-ext-val').value || 0);
   setMetas(metas);
   fecharModalMetas();
   if (tabAtiva==='metas') renderMetas();
@@ -921,6 +1029,10 @@ document.getElementById('modal-metas').addEventListener('click', function(e) {
   if (e.target === this) fecharModalMetas();
 });
 
+initFiltroMeta();
+// Esconder seletores de mês/ano inicialmente para períodos que não precisam
+document.getElementById('sel-mes-meta').style.display = '';
+document.getElementById('sel-ano-meta').style.display = '';
 carregar();
 </script>
 </body>
