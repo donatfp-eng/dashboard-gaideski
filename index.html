@@ -728,7 +728,8 @@ tbody tr:hover td{background:#F4F6FA}
 
     <!-- METAS -->
     <div id="tab-mt" class="tab-content">
-      <div class="filter-bar">
+      <!-- barra de período -->
+      <div class="filter-bar" style="margin-bottom:14px">
         <span class="filter-label">Período</span>
         <div class="btn-group" id="grp-pm">
           <button class="btn-filter active" data-v="mes">Este mês</button>
@@ -745,19 +746,10 @@ tbody tr:hover td{background:#F4F6FA}
           <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
         </select>
         <select class="sf" id="pm-ano"></select>
-        <span style="margin-left:auto;font-size:11px;color:var(--text3);font-family:var(--mono)" id="pm-lbl"></span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text3)" id="pm-lbl"></span>
       </div>
-      <div class="meta-grid" id="meta-cards"></div>
-      <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title">Evolução Mensal — Últimos 6 Meses</div>
-          <div class="chart-legend">
-            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Recorrente</div>
-            <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Extra</div>
-          </div>
-        </div>
-        <div class="chart-bars" id="chart-evol"></div>
-      </div>
+      <!-- conteúdo renderizado pelo JS -->
+      <div id="mt-dashboard"></div>
     </div>
 
     <!-- FUNIS -->
@@ -1263,139 +1255,199 @@ function renderMetas(){
   const mEG=gmv(b.ano,b.mes,"ext-g")||0;
   const mEP=gmv(b.ano,b.mes,"ext-p")||0;
 
-  // ── Percentuais ──
-  const pR=mR>0?Math.min(Math.round(cart/mR*100),999):null;
-  const pE=mE>0?Math.min(Math.round(ext/mE*100),999):null;
-  const pRG=mRG>0?Math.min(Math.round(cartG/mRG*100),999):null;
-  const pRP=mRP>0?Math.min(Math.round(cartP/mRP*100),999):null;
-  const pEG=mEG>0?Math.min(Math.round(extG/mEG*100),999):null;
-  const pEP=mEP>0?Math.min(Math.round(extP/mEP*100),999):null;
+  // ── Helpers ──
+  function pct(real,meta){return meta>0?Math.min(Math.round(real/meta*100),999):null}
+  function pctColor(p){return p===null?"var(--text3)":p>=100?"var(--green)":p>=60?"var(--amber)":"var(--red)"}
+  function barW(p){return p===null?0:Math.min(p,100)}
+  function pctLabel(p,meta){
+    if(p===null)return'<span style="font-size:11px;color:var(--text3)">sem meta — <button onclick="abrirModal()" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;font-family:var(--font);font-weight:600;padding:0">Definir →</button></span>';
+    const col=pctColor(p);
+    return`<span style="font-size:28px;font-weight:800;color:${col};letter-spacing:-.5px">${p}%</span>`;
+  }
+  function barHoriz(real,meta,color){
+    const p=meta>0?Math.min(real/meta*100,100):0;
+    const col=p>=100?"var(--green)":p>=60?"var(--amber)":color;
+    return`<div style="background:var(--bg);border-radius:4px;height:8px;overflow:hidden;border:1px solid var(--border-light);margin-top:5px">
+      <div style="height:100%;border-radius:4px;background:${col};width:${p}%;transition:width .8s"></div>
+    </div>`;
+  }
 
-  function cp(p){if(p===null)return"pct-low";return p>=100?"pct-ok":p>=60?"pct-mid":"pct-low"}
-  function pctTxt(p){return p===null?"—":p+"%"}
-  function progColor(p){return p===null?"var(--border)":p>=100?"var(--green)":p>=60?"var(--amber)":"var(--accent)"}
-  function progW(p){return p===null?0:Math.min(p,100)}
+  // ── Evolução 6 meses (para o mini gráfico) ──
+  const ag=new Date();
+  const evolMeses=[];
+  for(let i=5;i>=0;i--){
+    const d=new Date(ag.getFullYear(),ag.getMonth()-i,1);
+    const ini2=Math.floor(d/1000),fim2=Math.floor(new Date(d.getFullYear(),d.getMonth()+1,0,23,59,59)/1000);
+    const gl=leads.filter(l=>isWin(l)&&gdt(l)>=ini2&&gdt(l)<=fim2);
+    const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
+    const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
+    evolMeses.push({lbl:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2),r,e,tot:r+e});
+  }
+  const maxEvol=Math.max(...evolMeses.map(m=>m.tot),1);
 
-  const el=document.getElementById("meta-cards");
+  const pRG=pct(cartG,mRG), pRP=pct(cartP,mRP);
+  const pEG=pct(extG,mEG), pEP=pct(extP,mEP);
+  const pRtot=pct(cart,mR), pEtot=pct(ext,mE);
+  const pTot=pct(cart+ext,mR+mE);
 
+  const el=document.getElementById("mt-dashboard");
   el.innerHTML=`
-  <!-- ── SCORECARD TOP ── -->
-  <div class="mt-scorecard" style="grid-column:span 2">
-    <div class="mt-sc sc-blue">
-      <div class="mt-sc-l">Carteira Recorrente</div>
-      <div class="mt-sc-v">${fvc(cart)}</div>
-      <div class="mt-sc-s">${lRec.length} clientes · acumula mês a mês</div>
-      ${mR>0?`<div class="mt-sc-pct ${cp(pR)}">${pctTxt(pR)} da meta ${fvc(mR)}</div>`:'<div class="mt-sc-pct" style="color:var(--text3);font-size:11px">Meta não definida</div>'}
+  <!-- ROW 1: KPIs grandes -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)"></div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:5px">Carteira Recorrente</div>
+      <div style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1">${fvc(cart)}</div>
+      <div style="font-size:10px;color:var(--text3);margin:3px 0 8px">${lRec.length} clientes · acumula</div>
+      ${barHoriz(cart,mR,"var(--accent)")}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+        <span style="font-size:10px;color:var(--text3)">${mR>0?"meta: "+fvc(mR):"sem meta"}</span>
+        ${pctLabel(pRtot,mR)}
+      </div>
     </div>
-    <div class="mt-sc sc-purple">
-      <div class="mt-sc-l">Serviços Extras</div>
-      <div class="mt-sc-v">${fvc(ext)}</div>
-      <div class="mt-sc-s">${lExt.length} serviços · renova todo mês</div>
-      ${mE>0?`<div class="mt-sc-pct ${cp(pE)}">${pctTxt(pE)} da meta ${fvc(mE)}</div>`:'<div class="mt-sc-pct" style="color:var(--text3);font-size:11px">Meta não definida</div>'}
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--purple)"></div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:5px">Serviços Extras</div>
+      <div style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1">${fvc(ext)}</div>
+      <div style="font-size:10px;color:var(--text3);margin:3px 0 8px">${lExt.length} serviços · renova</div>
+      ${barHoriz(ext,mE,"var(--purple)")}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+        <span style="font-size:10px;color:var(--text3)">${mE>0?"meta: "+fvc(mE):"sem meta"}</span>
+        ${pctLabel(pEtot,mE)}
+      </div>
     </div>
-    <div class="mt-sc sc-green">
-      <div class="mt-sc-l">Receita Total do Mês</div>
-      <div class="mt-sc-v">${fvc(cart+ext)}</div>
-      <div class="mt-sc-s">recorrente + extras</div>
-      ${(mR+mE)>0?`<div class="mt-sc-pct ${cp(Math.round((cart+ext)/(mR+mE)*100))}">${Math.round((cart+ext)/(mR+mE)*100)}% da meta total</div>`:'<div class="mt-sc-pct" style="color:var(--text3);font-size:11px">—</div>'}
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--green)"></div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:5px">Receita Total</div>
+      <div style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1">${fvc(cart+ext)}</div>
+      <div style="font-size:10px;color:var(--text3);margin:3px 0 8px">recorrente + extras</div>
+      ${barHoriz(cart+ext,mR+mE,"var(--green)")}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+        <span style="font-size:10px;color:var(--text3)">${(mR+mE)>0?"meta: "+fvc(mR+mE):"sem meta"}</span>
+        ${pctLabel(pTot,mR+mE)}
+      </div>
     </div>
-    <div class="mt-sc sc-amber">
-      <div class="mt-sc-l">Ticket Médio</div>
-      <div class="mt-sc-v">${lRec.length>0?fvc(Math.round(cart/lRec.length)):"—"}</div>
-      <div class="mt-sc-s">por cliente recorrente</div>
-      <div class="mt-sc-pct" style="font-size:11px;color:var(--text3)">${lRec.length} clientes ativos</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--amber)"></div>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:5px">Ticket Médio</div>
+      <div style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1">${lRec.length>0?fvc(Math.round(cart/lRec.length)):"—"}</div>
+      <div style="font-size:10px;color:var(--text3);margin:3px 0 8px">por cliente recorrente</div>
+      <div style="margin-top:12px;font-size:11px;color:var(--text3)">${lRec.length} clientes ativos</div>
+      <div style="font-size:11px;color:var(--text3)">Gaideski: ${lRecG.length} · Planicon: ${lRecP.length}</div>
     </div>
   </div>
 
-  <!-- ── EMPRESA CARDS ── -->
-  <div class="mt-emp-row" style="grid-column:span 2">
+  <!-- ROW 2: Empresa cards + Gráfico evolução -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-bottom:14px">
+
     <!-- GAIDESKI -->
-    <div class="mt-emp-card">
-      <div class="mt-emp-header">
-        <div class="mt-emp-name">
-          <span class="mt-emp-dot" style="background:var(--accent)"></span>
-          Gaideski
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--accent);display:inline-block"></span>
+          <span style="font-size:13px;font-weight:700">Gaideski</span>
         </div>
-        <button onclick="abrirModalEmpresa('gaideski')" style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-pale);border:1px solid var(--accent);border-radius:3px;padding:3px 10px;cursor:pointer;font-family:var(--font)">✏ Definir metas</button>
+        <button onclick="abrirModalEmpresa('gaideski')" style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-pale);border:1px solid var(--accent);border-radius:3px;padding:3px 10px;cursor:pointer;font-family:var(--font)">✏ Metas</button>
       </div>
-
-      <div class="mt-metric-row">
-        <div class="mt-metric-label">Honorários Recorrentes</div>
-        <div class="mt-metric-vals">
-          <span class="mt-metric-real">${fvc(cartG)}</span>
-          <span class="mt-metric-sep">/</span>
-          <span class="mt-metric-goal">${mRG>0?fvc(mRG):"sem meta"}</span>
-          ${pRG!==null?`<span class="meta-pct ${cp(pRG)}" style="font-size:20px;margin-left:auto">${pRG}%</span>`:'<span style="font-size:11px;color:var(--text3);margin-left:auto">—</span>'}
+      <!-- Honorários -->
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Honorários Recorrentes</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div>
+            <span style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.4px">${fvc(cartG)}</span>
+            <span style="font-size:12px;color:var(--text3);margin-left:4px">/ ${mRG>0?fvc(mRG):"sem meta"}</span>
+          </div>
+          <span style="font-size:22px;font-weight:800;color:${pctColor(pRG)}">${pRG!==null?pRG+"%":"—"}</span>
         </div>
-        <div class="mt-metric-sub">${lRecG.length} clientes · ${mRG>0&&cartG<mRG?'faltam '+fvc(mRG-cartG):'acumulado'}</div>
-        <div class="mt-prog"><div class="mt-prog-fill" style="width:${progW(pRG)}%;background:${progColor(pRG)}"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">${lRecG.length} clientes${mRG>0&&cartG<mRG?" · faltam "+fvc(mRG-cartG):""}</div>
+        ${barHoriz(cartG,mRG,"var(--accent)")}
       </div>
-
-      <div class="mt-metric-row" style="padding-top:10px;border-top:1px solid var(--border-light)">
-        <div class="mt-metric-label">Serviços Extras</div>
-        <div class="mt-metric-vals">
-          <span class="mt-metric-real" style="font-size:18px">${fvc(extG)}</span>
-          <span class="mt-metric-sep">/</span>
-          <span class="mt-metric-goal">${mEG>0?fvc(mEG):"sem meta"}</span>
-          ${pEG!==null?`<span class="meta-pct ${cp(pEG)}" style="font-size:18px;margin-left:auto">${pEG}%</span>`:'<span style="font-size:11px;color:var(--text3);margin-left:auto">—</span>'}
+      <!-- Extras -->
+      <div style="padding-top:10px;border-top:1px solid var(--border-light)">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Serviços Extras</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div>
+            <span style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.4px">${fvc(extG)}</span>
+            <span style="font-size:12px;color:var(--text3);margin-left:4px">/ ${mEG>0?fvc(mEG):"sem meta"}</span>
+          </div>
+          <span style="font-size:20px;font-weight:800;color:${pctColor(pEG)}">${pEG!==null?pEG+"%":"—"}</span>
         </div>
-        <div class="mt-metric-sub">${lExtG.length} serviços este mês</div>
-        <div class="mt-prog"><div class="mt-prog-fill" style="width:${progW(pEG)}%;background:var(--purple)"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">${lExtG.length} serviços</div>
+        ${barHoriz(extG,mEG,"var(--purple)")}
       </div>
     </div>
 
     <!-- PLANICON -->
-    <div class="mt-emp-card">
-      <div class="mt-emp-header">
-        <div class="mt-emp-name">
-          <span class="mt-emp-dot" style="background:var(--purple)"></span>
-          Planicon
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="width:10px;height:10px;border-radius:3px;background:var(--purple);display:inline-block"></span>
+          <span style="font-size:13px;font-weight:700">Planicon</span>
         </div>
-        <button onclick="abrirModalEmpresa('planicon')" style="font-size:10px;font-weight:600;color:var(--purple);background:var(--purple-pale);border:1px solid var(--purple);border-radius:3px;padding:3px 10px;cursor:pointer;font-family:var(--font)">✏ Definir metas</button>
+        <button onclick="abrirModalEmpresa('planicon')" style="font-size:10px;font-weight:600;color:var(--purple);background:var(--purple-pale);border:1px solid var(--purple);border-radius:3px;padding:3px 10px;cursor:pointer;font-family:var(--font)">✏ Metas</button>
       </div>
-
-      <div class="mt-metric-row">
-        <div class="mt-metric-label">Honorários Recorrentes</div>
-        <div class="mt-metric-vals">
-          <span class="mt-metric-real">${fvc(cartP)}</span>
-          <span class="mt-metric-sep">/</span>
-          <span class="mt-metric-goal">${mRP>0?fvc(mRP):"sem meta"}</span>
-          ${pRP!==null?`<span class="meta-pct ${cp(pRP)}" style="font-size:20px;margin-left:auto">${pRP}%</span>`:'<span style="font-size:11px;color:var(--text3);margin-left:auto">—</span>'}
+      <div style="margin-bottom:12px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Honorários Recorrentes</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div>
+            <span style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.4px">${fvc(cartP)}</span>
+            <span style="font-size:12px;color:var(--text3);margin-left:4px">/ ${mRP>0?fvc(mRP):"sem meta"}</span>
+          </div>
+          <span style="font-size:22px;font-weight:800;color:${pctColor(pRP)}">${pRP!==null?pRP+"%":"—"}</span>
         </div>
-        <div class="mt-metric-sub">${lRecP.length} clientes · ${mRP>0&&cartP<mRP?'faltam '+fvc(mRP-cartP):'acumulado'}</div>
-        <div class="mt-prog"><div class="mt-prog-fill" style="width:${progW(pRP)}%;background:var(--purple)"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">${lRecP.length} clientes${mRP>0&&cartP<mRP?" · faltam "+fvc(mRP-cartP):""}</div>
+        ${barHoriz(cartP,mRP,"var(--purple)")}
       </div>
-
-      <div class="mt-metric-row" style="padding-top:10px;border-top:1px solid var(--border-light)">
-        <div class="mt-metric-label">Serviços Extras</div>
-        <div class="mt-metric-vals">
-          <span class="mt-metric-real" style="font-size:18px">${fvc(extP)}</span>
-          <span class="mt-metric-sep">/</span>
-          <span class="mt-metric-goal">${mEP>0?fvc(mEP):"sem meta"}</span>
-          ${pEP!==null?`<span class="meta-pct ${cp(pEP)}" style="font-size:18px;margin-left:auto">${pEP}%</span>`:'<span style="font-size:11px;color:var(--text3);margin-left:auto">—</span>'}
+      <div style="padding-top:10px;border-top:1px solid var(--border-light)">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Serviços Extras</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <div>
+            <span style="font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.4px">${fvc(extP)}</span>
+            <span style="font-size:12px;color:var(--text3);margin-left:4px">/ ${mEP>0?fvc(mEP):"sem meta"}</span>
+          </div>
+          <span style="font-size:20px;font-weight:800;color:${pctColor(pEP)}">${pEP!==null?pEP+"%":"—"}</span>
         </div>
-        <div class="mt-metric-sub">${lExtP.length} serviços este mês</div>
-        <div class="mt-prog"><div class="mt-prog-fill" style="width:${progW(pEP)}%;background:var(--purple)"></div></div>
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">${lExtP.length} serviços</div>
+        ${barHoriz(extP,mEP,"var(--purple)")}
       </div>
     </div>
-  </div>`;
 
-  // Fix grid: meta-cards needs to not be a 2-col grid for these new elements
-  const mc=document.getElementById("meta-cards");
-  mc.style.display="block";
+    <!-- GRÁFICO EVOLUÇÃO -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <span style="font-size:12px;font-weight:700">Evolução — Últimos 6 Meses</span>
+        <div style="display:flex;gap:10px">
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent)"></div>Rec.</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3)"><div style="width:8px;height:8px;border-radius:50%;background:var(--purple)"></div>Extra</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:0 2px">
+        ${evolMeses.map(m=>{
+          const hr=maxEvol>0?Math.max(Math.round(m.r/maxEvol*110),m.r>0?4:0):0;
+          const he=maxEvol>0?Math.max(Math.round(m.e/maxEvol*110),m.e>0?4:0):0;
+          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="font-size:9px;font-weight:600;color:var(--text2)">${m.tot>0?fvc(m.tot):""}</div>
+            <div style="display:flex;gap:1px;align-items:flex-end;width:100%;justify-content:center">
+              <div style="width:45%;height:${hr}px;background:var(--accent);border-radius:2px 2px 0 0;min-height:${m.r>0?2:0}px"></div>
+              <div style="width:45%;height:${he}px;background:var(--purple);border-radius:2px 2px 0 0;min-height:${m.e>0?2:0}px"></div>
+            </div>
+            <div style="font-size:9px;color:var(--text3);font-weight:600">${m.lbl}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  </div>
+  `;
 
-  renderEvol();
   renderProjecao(cart);
 }
 
-// Modal rápido por empresa
 function abrirModalEmpresa(emp){
   const b=getMetaBounds();
   document.getElementById("msel-mes").value=b.mes;
   document.getElementById("msel-ano").value=b.ano;
   carregaModal();
   document.getElementById("ov-metas").classList.add("open");
-  // Foca no campo correto
   setTimeout(()=>{
     const field=emp==="gaideski"?document.getElementById("mrec-g"):document.getElementById("mrec-p");
     if(field){field.focus();field.select();}
