@@ -1181,7 +1181,7 @@ function renderLeads(){
     const en=sm[l.status_id]||String(l.status_id);
     const tv=gtv(l);
     const tvb=tv==="recorrente"?'<span class="tag-rec">Recorrente</span>':tv==="extra"?'<span class="tag-ext">Extra</span>':"<span class=\"td-muted\">—</span>";
-    return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td><span class="badge ${bc(en)}">${en}</span></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
+    return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td><span class="badge ${bc(en)}">${en}</span></td><td>${etg(getLeadPipe(l))}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
   }).join("");
 }
 
@@ -1263,8 +1263,8 @@ function renderRelatorio(){
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
   // Separação por empresa (Gaideski vs Planicon)
-  const isGaideski=l=>pm[l.status_id]===PID.gaideski;
-  const isPlanicon=l=>pm[l.status_id]===PID.planicon;
+  const isGaideski=l=>getLeadPipe(l)===PID.gaideski;
+  const isPlanicon=l=>getLeadPipe(l)===PID.planicon;
 
   const lRecG=lRec.filter(isGaideski); const vRecG=lRecG.reduce((a,l)=>a+(l.price||0),0);
   const lRecP=lRec.filter(isPlanicon); const vRecP=lRecP.reduce((a,l)=>a+(l.price||0),0);
@@ -1391,11 +1391,11 @@ function renderRelatorio(){
       </div>
       <div class="resumo-cell" style="background:var(--surface2)">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--text2);display:inline-block;margin-right:3px"></span>Qualificação</div>
-        <div class="resumo-cell-value" style="font-size:17px">${fvc(lRec.filter(l=>pm[l.status_id]===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
-        <div class="resumo-cell-sub">${lRec.filter(l=>pm[l.status_id]===PID.qualificacao).length} cliente${lRec.filter(l=>pm[l.status_id]===PID.qualificacao).length!==1?'s':''}</div>
+        <div class="resumo-cell-value" style="font-size:17px">${fvc(lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
+        <div class="resumo-cell-sub">${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length} cliente${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length!==1?'s':''}</div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
-          <div class="resumo-cell-value" style="font-size:17px">${fvc(lExt.filter(l=>pm[l.status_id]===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
-          <div class="resumo-cell-sub">${lExt.filter(l=>pm[l.status_id]===PID.qualificacao).length} serviço${lExt.filter(l=>pm[l.status_id]===PID.qualificacao).length!==1?'s':''}</div>
+          <div class="resumo-cell-value" style="font-size:17px">${fvc(lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
+          <div class="resumo-cell-sub">${lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).length} serviço${lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).length!==1?'s':''}</div>
         </div>
       </div>
       <div class="resumo-cell highlight">
@@ -1476,7 +1476,7 @@ function renderRelatorio(){
     <thead><tr><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
     <tbody>${gnAll.length?gnAll.slice(0,50).map(l=>{
       const tv=gtv(l);const tvb=tv==="recorrente"?'<span class="tag-rec">Recorrente</span>':tv==="extra"?'<span class="tag-ext">Extra</span>':"—";
-      return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.closed_at||l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
+      return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td>${etg(getLeadPipe(l))}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.closed_at||l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
     }).join(""):'<tr><td colspan="6" class="empty">Nenhum cliente fechado neste período</td></tr>'}
     </tbody>
   </table></div></div>
