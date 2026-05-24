@@ -919,20 +919,29 @@ function salvarMetas(){
   const mes=parseInt(document.getElementById("msel-mes").value);
   const ano=parseInt(document.getElementById("msel-ano").value);
   const m=gm();
-  const recG=parseFloat(document.getElementById("mrec-g").value||0);
-  const extG=parseFloat(document.getElementById("mext-g").value||0);
-  const recP=parseFloat(document.getElementById("mrec-p").value||0);
-  const extP=parseFloat(document.getElementById("mext-p").value||0);
+  const recG=parseFloat(document.getElementById("mrec-g").value)||0;
+  const extG=parseFloat(document.getElementById("mext-g").value)||0;
+  const recP=parseFloat(document.getElementById("mrec-p").value)||0;
+  const extP=parseFloat(document.getElementById("mext-p").value)||0;
   m[ano+"_"+mes+"_rec-g"]=recG;
   m[ano+"_"+mes+"_ext-g"]=extG;
   m[ano+"_"+mes+"_rec-p"]=recP;
   m[ano+"_"+mes+"_ext-p"]=extP;
-  // Total: usa campo manual se preenchido, senão soma automaticamente
-  const recTot=parseFloat(document.getElementById("mrec").value||0)||(recG+recP);
-  const extTot=parseFloat(document.getElementById("mext").value||0)||(extG+extP);
+  // Total: se campo manual preenchido usa ele, senão soma empresas
+  const mrecVal=document.getElementById("mrec").value.trim();
+  const mextVal=document.getElementById("mext").value.trim();
+  const recTot=mrecVal!=""?parseFloat(mrecVal)||0:recG+recP;
+  const extTot=mextVal!=""?parseFloat(mextVal)||0:extG+extP;
   m[ano+"_"+mes+"_rec"]=recTot;
   m[ano+"_"+mes+"_ext"]=extTot;
-  sm2(m);fecharModal();
+  sm2(m);
+  // Feedback visual
+  const btn=document.getElementById("btn-save-m");
+  const orig=btn.textContent;
+  btn.textContent="✓ Salvo!";
+  btn.style.background="var(--green)";
+  setTimeout(()=>{btn.textContent=orig;btn.style.background="";},1200);
+  fecharModal();
   if(tab==="mt")renderMetas();
   if(tab==="rl")renderRelatorio();
 }
@@ -1243,9 +1252,8 @@ function renderProjecao(cartAtual){
   for(let m=0;m<12;m++){
     const isPast=m<mesAtual;
     const isCurrent=m===mesAtual;
-    // Para meses passados, pega valor real
+    // Para meses passados, pega valor real acumulado até o fim daquele mês
     if(isPast){
-      const d=new Date(anoAtual,m,1);
       const fim=Math.floor(new Date(anoAtual,m+1,0,23,59,59)/1000);
       const val=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fim).reduce((a,l)=>a+(l.price||0),0);
       meses.push({m,lbl:MC[m],val,proj:false,current:false});
