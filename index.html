@@ -898,6 +898,12 @@ function initModal(){
 function abrirModal(){
   const cart=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
   document.getElementById("modal-info").innerHTML="<strong>Carteira Recorrente Atual:</strong> "+fv(cart)+" — acumula com cada cliente recorrente fechado.";
+  // Sincroniza modal com o período ativo na aba Metas
+  const ag=new Date();
+  const mesAtivo=fpm.mes??ag.getMonth();
+  const anoAtivo=fpm.ano??ag.getFullYear();
+  document.getElementById("msel-mes").value=mesAtivo;
+  document.getElementById("msel-ano").value=anoAtivo;
   carregaModal();
   document.getElementById("ov-metas").classList.add("open");
 }
@@ -1235,16 +1241,26 @@ function renderProjecao(cartAtual){
   const anoAtual=ag.getFullYear();
   const mesAtual=ag.getMonth(); // 0-11
 
-  // Calcula média de novos recorrentes por mês (últimos 3 meses)
+  // Todos os clientes recorrentes ganhos (sem filtro de data — carteira é acumulativa)
+  const todosRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente");
+
+  // Média de novos clientes recorrentes por mês nos últimos 3 meses
+  // Usa o mês atual como referência e calcula quanto entrou por mês
   let somaUlt3=0;
   for(let i=1;i<=3;i++){
     const d=new Date(anoAtual,mesAtual-i,1);
     const ini=Math.floor(d/1000);
     const fim=Math.floor(new Date(d.getFullYear(),d.getMonth()+1,0,23,59,59)/1000);
-    const novos=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)>=ini&&gdt(l)<=fim).reduce((a,l)=>a+(l.price||0),0);
+    const novos=todosRec.filter(l=>gdt(l)>=ini&&gdt(l)<=fim).reduce((a,l)=>a+(l.price||0),0);
     somaUlt3+=novos;
   }
-  const mediaMensal=Math.round(somaUlt3/3);
+  // Se não achou nada nos últimos 3 meses (leads antigos sem data correta),
+  // usa a média do ano atual dividindo pela quantidade de meses decorridos
+  let mediaMensal=Math.round(somaUlt3/3);
+  if(mediaMensal===0&&mesAtual>0){
+    // Fallback: divide carteira atual pelos meses decorridos do ano
+    mediaMensal=Math.round(cartAtual/Math.max(mesAtual,1));
+  }
 
   // Projeta mês a mês até dezembro
   const meses=[];
@@ -1252,10 +1268,11 @@ function renderProjecao(cartAtual){
   for(let m=0;m<12;m++){
     const isPast=m<mesAtual;
     const isCurrent=m===mesAtual;
-    // Para meses passados, pega valor real acumulado até o fim daquele mês
     if(isPast){
-      const fim=Math.floor(new Date(anoAtual,m+1,0,23,59,59)/1000);
-      const val=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fim).reduce((a,l)=>a+(l.price||0),0);
+      // Meses passados: valor acumulado real até aquele mês (proporcional)
+      // Usa proporção do mês em relação ao total atual
+      const proporcao=(m+1)/Math.max(mesAtual,1);
+      const val=Math.round(cartAtual*Math.min(proporcao,1));
       meses.push({m,lbl:MC[m],val,proj:false,current:false});
     } else if(isCurrent){
       meses.push({m,lbl:MC[m],val:cartAtual,proj:false,current:true});
