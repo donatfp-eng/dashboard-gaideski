@@ -228,6 +228,13 @@ select.sf{
 .proj-leg-dot{width:8px;height:8px;border-radius:50%}
 /* grid de meses — cada mês é uma coluna */
 .proj-grid{display:grid;grid-template-columns:repeat(12,1fr);border-bottom:1px solid var(--border-light)}
+.proj-quarters{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border-light)}
+.proj-quarter{border-right:1px solid var(--border);overflow:hidden}
+.proj-quarter:last-child{border-right:none}
+.proj-quarter-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);padding:5px 12px;background:var(--surface2);border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.proj-quarter-months{display:grid;grid-template-columns:repeat(3,1fr)}
+.proj-quarter-months .proj-month{border-right:1px solid var(--border-light)}
+.proj-quarter-months .proj-month:last-child{border-right:none}
 .proj-month{
   border-right:1px solid var(--border-light);cursor:pointer;
   transition:background .15s;
@@ -1325,9 +1332,8 @@ function renderProjecao(cartAtual){
     // Real acumulado (recorrente é sempre acumulativo)
     let realRecG, realRecP, realRecTot;
     if(isPast){
-      const prop=(m+1)/Math.max(mesAtual,1);
-      realRecG=Math.round(cartG*Math.min(prop,1));
-      realRecP=Math.round(cartP*Math.min(prop,1));
+      // Meses antes do início: R$ 0 (não havia dados)
+      realRecG=0; realRecP=0;
     } else if(isCurrent){
       realRecG=cartG; realRecP=cartP;
     } else {
@@ -1392,8 +1398,23 @@ function renderProjecao(cartAtual){
     </div>
     <!-- mini popup de edição -->
     <div id="pm-popup" class="pm-inline-edit"></div>
-    <div class="proj-grid">
-      ${meses.map(d=>{
+    <div class="proj-quarters">
+      ${[0,1,2,3].map(q=>{
+        const qMeses=meses.slice(q*3,q*3+3);
+        const qLabels=["1º Trimestre","2º Trimestre","3º Trimestre","4º Trimestre"];
+        const qSomaMeta=qMeses.reduce((a,d)=>a+(d.mRecTot||0)+(d.mExtTot||0),0);
+        const qSomaReal=qMeses.reduce((a,d)=>{
+          if(d.isPast)return a;
+          if(d.isCurrent)return a+cartAtual;
+          return a+(d.mRecTot||0);
+        },0);
+        return`<div class="proj-quarter">
+          <div class="proj-quarter-label">
+            <span>${qLabels[q]}</span>
+            <span style="font-weight:700;color:var(--accent);font-size:10px">${qSomaMeta>0?fvc(qSomaMeta):'sem meta'}</span>
+          </div>
+          <div class="proj-quarter-months">
+          ${qMeses.map(d=>{
         const hR=maxVal>0?Math.max(Math.round(d.realRecTot/maxVal*48),2):2;
         const hM=maxVal>0&&d.metaRecTot>0?Math.max(Math.round(d.metaRecTot/maxVal*48),2):0;
         const cls=d.isCurrent?"pm-current":d.isFuture?"pm-future":"pm-past";
@@ -1439,6 +1460,10 @@ function renderProjecao(cartAtual){
             </div>`:''}
           </div>
         </div>`;
+
+          }).join("")}
+          </div>
+        </div>`;
       }).join("")}
     </div>
     <div class="proj-footer">
@@ -1448,7 +1473,17 @@ function renderProjecao(cartAtual){
       <div class="proj-stat"><span class="proj-stat-l">Projeção Dez/${anoAtual}</span><span class="proj-stat-v psv-accent">${fvc(projDez)}</span></div>
       <div class="proj-stat"><span class="proj-stat-l">Meta Dez/${anoAtual}</span><span class="proj-stat-v psv-meta">${metaDez>0?fvc(metaDez):'—'}</span></div>
       <div class="proj-stat"><span class="proj-stat-l">Crescimento</span><span class="proj-stat-v psv-green">+${fvc(projDez-cartAtual)}</span></div>
-      <div class="proj-stat"><span class="proj-stat-l">Receita anual</span><span class="proj-stat-v">${fvc(projDez*12)}</span></div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Receita total projetada ${anoAtual}</span>
+        <span class="proj-stat-v" style="font-size:13px">${fvc(meses.reduce((a,d)=>{
+          // Cada mês: o que entra de novo naquele mês (meta do mês, acumulativa)
+          // Para meses passados = 0, para atual = cartAtual, para futuros = meta do mês
+          if(d.isPast) return a;
+          if(d.isCurrent) return a+cartAtual;
+          return a+(d.mRecTot||0);
+        },0))}</span>
+        <span style="font-size:9px;color:var(--text3)">soma Mai–Dez</span>
+      </div>
     </div>`;
 
   const chartCard=document.querySelector("#tab-mt .chart-card");
