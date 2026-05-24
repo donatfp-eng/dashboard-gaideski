@@ -810,7 +810,21 @@ async function carregar(){
     pipes=pp.filter(p=>PSET.has(p.id));
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
-    leads=ll.filter(l=>PSET.has(pm[l.status_id]));
+    
+    // CORREÇÃO CRÍTICA: leads ganhos/perdidos têm status_id especial que não está no mapa pm
+    // Usamos pipeline_id do próprio lead como fallback
+    leads=ll.filter(l=>{
+      // Tenta pelo mapa normal
+      if(pm[l.status_id]&&PSET.has(pm[l.status_id]))return true;
+      // Fallback: usa pipeline_id embutido no lead (Kommo inclui isso)
+      const pid=l.pipeline_id||l._embedded?.pipeline?.id;
+      if(pid&&PSET.has(pid)){
+        pm[l.status_id]=pid; // registra no mapa para uso posterior
+        return true;
+      }
+      return false;
+    });
+    console.log("[DEBUG] Leads após filtro PSET:",leads.length,"(antes eram",ll.length,")");
     detectStatusIds();
     // DEBUG: mostra leads ganhos no console
     const dbgGanhos=leads.filter(l=>isWin(l));
