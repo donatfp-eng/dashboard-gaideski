@@ -4,222 +4,410 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Comercial · Gaideski</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F4F5F7;--surface:#FFF;--border:#E4E6EA;--border-light:#F0F1F3;--text-primary:#0F1117;--text-secondary:#5C6270;--text-muted:#9BA3AF;--g:#1B4FD8;--p:#7C3AED;--q:#D97706;--green:#059669;--red:#DC2626;--sh:0 1px 3px rgba(0,0,0,.06);--shm:0 4px 12px rgba(0,0,0,.08);--r:10px}
+:root{
+  --green-dark:#1B5E20;
+  --green:#2E7D32;
+  --green-mid:#388E3C;
+  --green-light:#4CAF50;
+  --green-pale:#E8F5E9;
+  --green-pale2:#F1F8F2;
+  --bg:#F5F6F8;
+  --surface:#FFFFFF;
+  --surface2:#FAFBFC;
+  --border:#E2E5E9;
+  --border-light:#EEF0F3;
+  --text:#1A1D23;
+  --text2:#4A5568;
+  --text3:#8A95A3;
+  --blue:#1565C0;
+  --blue-pale:#E3F2FD;
+  --red:#C62828;
+  --red-pale:#FFEBEE;
+  --amber:#E65100;
+  --amber-pale:#FFF3E0;
+  --purple:#4527A0;
+  --purple-pale:#EDE7F6;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shm:0 4px 16px rgba(0,0,0,.10);
+  --r:6px;
+  --font:"Inter",system-ui,sans-serif;
+  --mono:"JetBrains Mono",monospace;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;font-size:14px}
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:10px}
-.lmark{width:28px;height:28px;background:var(--text-primary);border-radius:7px;display:flex;align-items:center;justify-content:center}
-.lmark svg{width:14px;height:14px;fill:white}
-.ltxt{font-size:14px;font-weight:600;letter-spacing:-.3px}
-.ltxt span{color:var(--text-muted);font-weight:400}
-.hright{display:flex;align-items:center;gap:10px}
-#spill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);background:var(--bg);padding:4px 10px;border-radius:20px;border:1px solid var(--border)}
-#sdot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .3s}
-#sdot.ok{background:var(--green)}#sdot.err{background:var(--red)}
-.bh{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;color:var(--text-secondary);background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
-.bh:hover{background:var(--surface);color:var(--text-primary)}
-.bh svg{width:12px;height:12px}
-.bh-dark{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
-.bh-dark:hover{background:#1a1f2e;color:#fff}
-.tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex}
-.tb{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px 16px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.tb:hover{color:var(--text-primary)}
-.tb.on{color:var(--text-primary);border-bottom-color:var(--text-primary)}
-.main{padding:20px 28px 40px;max-width:1440px;margin:0 auto}
-.tc{display:none}.tc.on{display:block}
-.fbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 16px}
-.fl{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
-.fdiv{width:1px;height:20px;background:var(--border);margin:0 4px}
-.bg{display:flex;gap:4px}
-.bf{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;padding:5px 14px;border-radius:5px;border:1px solid var(--border);background:var(--bg);color:var(--text-secondary);cursor:pointer;transition:all .15s;white-space:nowrap}
-.bf:hover{border-color:#B0B5C0;color:var(--text-primary)}
-.bf.a{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
-.bf.ag{background:var(--g);color:#fff;border-color:var(--g)}
-.bf.ap{background:var(--p);color:#fff;border-color:var(--p)}
-.bf.aq{background:var(--q);color:#fff;border-color:var(--q)}
-.sf{font-family:"DM Sans",sans-serif;font-size:12px;padding:5px 26px 5px 10px;border-radius:5px;border:1px solid var(--border);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239BA3AF' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--text-secondary);cursor:pointer;outline:none;appearance:none}
-.bw{margin-left:auto;position:relative}
-.bw svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:var(--text-muted);pointer-events:none}
-.bi{font-family:"DM Sans",sans-serif;font-size:12px;padding:5px 12px 5px 28px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text-primary);outline:none;width:200px;transition:all .15s}
-.bi:focus{border-color:#B0B5C0;background:var(--surface);width:240px}
-.sbar{display:flex;align-items:center;gap:8px;margin-bottom:20px}
-.slbl{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.7px;margin-right:4px}
-.bs{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;box-shadow:var(--sh)}
-.bs:hover{border-color:#B0B5C0}
-.bs .dot{width:7px;height:7px;border-radius:50%}
-.bs.sa{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
-.bs.sg{background:var(--green);color:#fff;border-color:var(--green)}
-.bs.sp{background:var(--red);color:#fff;border-color:var(--red)}
-.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-@media(max-width:900px){.cg{grid-template-columns:repeat(2,1fr)}}
-.mc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;box-shadow:var(--sh);transition:box-shadow .2s}
-.mc:hover{box-shadow:var(--shm)}
-.mc::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%}
-.mc.dk::before{background:var(--text-primary)}.mc.bl::before{background:var(--g)}.mc.gr::before{background:#9BA3AF}.mc.gn::before{background:var(--green)}.mc.rd::before{background:var(--red)}.mc.pu::before{background:var(--p)}.mc.or::before{background:var(--q)}
-.mcl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:8px}
-.mcv{font-size:28px;font-weight:700;color:var(--text-primary);line-height:1;font-family:"DM Mono",monospace;letter-spacing:-1px}
-.mcs{font-size:11px;color:var(--text-muted);margin-top:5px}
-.mg{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:20px}
-@media(max-width:800px){.mg{grid-template-columns:1fr}}
-.mcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh)}
-.mctit{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:16px}
-.mbdg{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px}
-.mbr{background:#EFF6FF;color:var(--g)}.mbe{background:#F5F3FF;color:var(--p)}
-.mvls{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
-.mva{font-size:32px;font-weight:700;font-family:"DM Mono",monospace;letter-spacing:-1.5px}
-.mvs{font-size:16px;color:var(--text-muted)}
-.mvt{font-size:18px;font-weight:500;font-family:"DM Mono",monospace;color:var(--text-muted)}
-.mbar{background:var(--bg);border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px}
-.mfill{height:100%;border-radius:4px;transition:width .8s}
-.mfr{background:var(--g)}.mfe{background:var(--p)}.mfok{background:var(--green)}
-.minf{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted)}
-.mpct{font-weight:700;font-family:"DM Mono",monospace}
-.mpv{color:var(--green)}.mpa{color:var(--q)}.mpr{color:var(--red)}
-.mdet{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-light);font-size:11px;color:var(--text-muted)}
-.mdet strong{color:var(--text-secondary);font-weight:600}
-/* MODAL */
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;align-items:center;justify-content:center}
-.ov.on{display:flex}
-.modal{background:var(--surface);border-radius:14px;padding:28px;width:480px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
-.mtit{font-size:16px;font-weight:700;margin-bottom:4px}
-.msub{font-size:12px;color:var(--text-muted);margin-bottom:20px}
-.msec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border-light)}
-.mrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.mfld{display:flex;flex-direction:column;gap:5px}
-.mfld label{font-size:11px;font-weight:600;color:var(--text-secondary)}
-.mfld input,.mfld select{font-family:"DM Sans",sans-serif;font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text-primary);outline:none}
-.mfld input:focus,.mfld select:focus{border-color:var(--g)}
-.mhnt{font-size:10px;color:var(--text-muted)}
-.minf2{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#1D4ED8}
-.mftr{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
-.bm{font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;padding:8px 20px;border-radius:7px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
-.bm.pri{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
-.bm.sec{background:var(--bg);color:var(--text-secondary)}
-/* FUNIS */
-.sec{margin-bottom:20px}
-.stit{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
-.fc{display:flex;flex-direction:column;gap:14px}
-.funil{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
-.fh{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border-light);background:#FAFBFC}
-.fd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.fdg{background:var(--g)}.fdp{background:var(--p)}.fdq{background:var(--q)}
-.fn{font-size:12px;font-weight:600}
-.ft{font-size:11px;color:var(--text-muted);margin-left:auto;font-family:"DM Mono",monospace}
-.er{display:flex;padding:12px 14px;gap:8px;overflow-x:auto}
-.et{flex:0 0 auto;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:10px 14px;min-width:120px}
-.en{font-size:10px;color:var(--text-muted);font-weight:500;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
-.ec{font-size:20px;font-weight:700;font-family:"DM Mono",monospace;line-height:1}
-.eb{height:2px;background:var(--border);border-radius:2px;margin-top:7px}
-.ef{height:100%;border-radius:2px;transition:width .6s}
-.efg{background:var(--g)}.efp{background:var(--p)}.efq{background:var(--q)}.efgn{background:var(--green)}.efrd{background:var(--red)}
-/* RANKING */
-.rcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:20px}
-.rh{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border-light);background:#FAFBFC;font-size:12px;font-weight:600}
-.ri{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-light)}
-.ri:last-child{border-bottom:none}
-.rpos{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.rp1{background:#FEF3C7;color:#D97706}.rp2{background:#F3F4F6;color:#6B7280}.rp3{background:#FEF2F2;color:#B45309}.rpn{background:var(--bg);color:var(--text-muted)}
-.rnm{font-size:13px;font-weight:500;flex:1}
-.rbw{flex:2;background:var(--bg);border-radius:3px;height:6px}
-.rbf{height:100%;border-radius:3px;background:var(--g);transition:width .6s}
-.rns{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:80px}
-.rv{font-size:12px;font-weight:600;font-family:"DM Mono",monospace}
-.rsb{font-size:10px;color:var(--text-muted)}
-/* EVOLUÇÃO */
-.ecard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh);margin-bottom:20px}
-.eh{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.etitle{font-size:13px;font-weight:600}
-.eleg{display:flex;gap:16px}
-.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-muted)}
-.ld{width:8px;height:8px;border-radius:50%}
-.cb{display:flex;align-items:flex-end;gap:8px;height:180px;padding:0 4px}
-.cc{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;min-width:0}
-.cs{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;height:160px;justify-content:flex-end}
-.bs2{width:100%;border-radius:3px 3px 0 0;min-height:0}
-.br{background:var(--g)}.be{background:var(--p)}
-.cl{font-size:9px;color:var(--text-muted);font-weight:500;white-space:nowrap}
-.cv{font-size:9px;color:var(--text-secondary);font-family:"DM Mono",monospace}
-/* TABELA */
-.tw{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
-.th2{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border-light);background:#FAFBFC}
-.tt{font-size:12px;font-weight:600}
-.tc2{font-size:11px;color:var(--text-muted);margin-left:6px;font-family:"DM Mono",monospace}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:13px;line-height:1.5}
+
+/* ── HEADER ── */
+header{
+  background:var(--green-dark);
+  height:52px;display:flex;align-items:center;
+  padding:0 24px;gap:0;
+  position:sticky;top:0;z-index:200;
+  border-bottom:1px solid rgba(0,0,0,.2);
+}
+.logo{display:flex;align-items:center;gap:10px;color:#fff}
+.logo-mark{
+  width:30px;height:30px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.logo-mark svg{width:14px;height:14px;fill:white}
+.logo-name{font-size:14px;font-weight:700;letter-spacing:-.2px;color:#fff}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.2);margin:0 16px}
+.logo-sub{font-size:11px;font-weight:500;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px}
+.header-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+.btn-header{
+  font-family:var(--font);font-size:12px;font-weight:500;
+  padding:5px 14px;border-radius:5px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);
+  cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;
+}
+.btn-header:hover{background:rgba(255,255,255,.15);color:#fff}
+.btn-header svg{width:12px;height:12px;flex-shrink:0}
+.btn-header-solid{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);color:#fff;font-weight:600}
+.btn-header-solid:hover{background:rgba(255,255,255,.28)}
+.status-pill{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:rgba(255,255,255,.6);
+  background:rgba(0,0,0,.2);
+  padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.1);
+}
+#sdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .3s;flex-shrink:0}
+#sdot.ok{background:#69F0AE;box-shadow:0 0 6px #69F0AE80}
+#sdot.err{background:#FF5252}
+
+/* ── TABS ── */
+.tabs-bar{
+  background:var(--green-dark);
+  border-bottom:2px solid rgba(0,0,0,.25);
+  padding:0 24px;display:flex;gap:2px;
+}
+.tab-btn{
+  font-family:var(--font);font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.5);background:none;border:none;
+  border-bottom:2px solid transparent;margin-bottom:-2px;
+  padding:10px 16px;cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.tab-btn:hover{color:rgba(255,255,255,.8)}
+.tab-btn.active{color:#fff;border-bottom-color:#69F0AE;font-weight:600}
+
+/* ── MAIN ── */
+.main{padding:20px 24px 48px;max-width:1440px;margin:0 auto}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* ── FILTER BAR ── */
+.filter-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 14px;margin-bottom:16px;
+}
+.filter-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
+.filter-div{width:1px;height:18px;background:var(--border);margin:0 4px}
+.btn-group{display:flex;gap:3px}
+.btn-filter{
+  font-family:var(--font);font-size:11px;font-weight:500;
+  padding:4px 12px;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.btn-filter:hover{border-color:#B0BAC8;color:var(--text)}
+.btn-filter.active{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-filter.active-g{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-filter.active-b{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-filter.active-a{background:var(--amber);color:#fff;border-color:var(--amber)}
+select.sf{
+  font-family:var(--font);font-size:11px;font-weight:500;
+  padding:4px 24px 4px 10px;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238A95A3' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 8px center;
+  color:var(--text2);cursor:pointer;outline:none;appearance:none;
+}
+.search-wrap{margin-left:auto;position:relative}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--text3);pointer-events:none}
+.search-input{
+  font-family:var(--font);font-size:11px;
+  padding:4px 10px 4px 27px;border:1px solid var(--border);border-radius:4px;
+  background:var(--bg);color:var(--text);outline:none;width:190px;transition:all .15s;
+}
+.search-input:focus{border-color:var(--green);background:var(--surface);width:230px}
+
+/* ── DATE RANGE ── */
+.date-range-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 14px;margin-bottom:16px;
+}
+.date-range-bar .filter-label{color:var(--green-dark)}
+.date-input{
+  font-family:var(--font);font-size:11px;font-weight:500;
+  padding:4px 10px;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text);outline:none;cursor:pointer;
+}
+.date-input:focus{border-color:var(--green)}
+.date-sep{font-size:11px;color:var(--text3)}
+.btn-date-quick{
+  font-family:var(--font);font-size:11px;font-weight:500;
+  padding:4px 12px;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg);color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.btn-date-quick:hover{border-color:var(--green);color:var(--green)}
+.btn-date-quick.active{background:var(--green-pale);color:var(--green-dark);border-color:var(--green)}
+#rel-period-display{
+  font-size:11px;font-weight:600;color:var(--green-dark);
+  background:var(--green-pale);padding:3px 10px;border-radius:4px;
+  border:1px solid #C8E6C9;white-space:nowrap;
+}
+
+/* ── SECTION TITLE ── */
+.sec-title{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text3);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-title::after{content:"";flex:1;height:1px;background:var(--border-light)}
+
+/* ── CARDS GRID ── */
+.cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:900px){.cards-grid{grid-template-columns:repeat(2,1fr)}}
+
+.kpi-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:16px 18px;
+  position:relative;overflow:hidden;box-shadow:var(--sh);
+  transition:box-shadow .2s,transform .15s;
+}
+.kpi-card:hover{box-shadow:var(--shm);transform:translateY(-1px)}
+.kpi-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.kpi-card.c-green::before{background:var(--green)}
+.kpi-card.c-blue::before{background:var(--blue)}
+.kpi-card.c-red::before{background:var(--red)}
+.kpi-card.c-amber::before{background:var(--amber)}
+.kpi-card.c-purple::before{background:var(--purple)}
+.kpi-card.c-gray::before{background:#9BA3AF}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:6px}
+.kpi-value{font-size:26px;font-weight:700;color:var(--text);line-height:1;font-family:var(--mono);letter-spacing:-1px}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* ── META CARD ── */
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:800px){.meta-grid{grid-template-columns:1fr}}
+.meta-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh);
+}
+.meta-card-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.tag{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px}
+.tag-green{background:var(--green-pale);color:var(--green-dark)}
+.tag-blue{background:var(--blue-pale);color:var(--blue)}
+.tag-purple{background:var(--purple-pale);color:var(--purple)}
+.meta-vals{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.meta-val-a{font-size:28px;font-weight:700;font-family:var(--mono);letter-spacing:-1px;color:var(--text)}
+.meta-val-sep{font-size:15px;color:var(--text3)}
+.meta-val-t{font-size:16px;font-weight:500;font-family:var(--mono);color:var(--text3)}
+.progress-bar{background:var(--bg);border-radius:3px;height:7px;overflow:hidden;margin-bottom:6px;border:1px solid var(--border-light)}
+.progress-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.fill-green{background:var(--green)}.fill-blue{background:var(--blue)}.fill-ok{background:#2E7D32}
+.meta-info{display:flex;justify-content:space-between;font-size:11px;color:var(--text3)}
+.meta-pct{font-weight:700;font-family:var(--mono)}
+.pct-ok{color:var(--green)}.pct-mid{color:var(--amber)}.pct-low{color:var(--red)}
+.meta-detail{margin-top:10px;padding-top:10px;border-top:1px solid var(--border-light);font-size:11px;color:var(--text3)}
+.meta-detail strong{color:var(--text2)}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.table-header{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border-light);background:var(--surface2)}
+.table-title{font-size:12px;font-weight:600}
+.table-count{font-size:11px;color:var(--text3);margin-left:6px;font-family:var(--mono);background:var(--bg);padding:1px 7px;border-radius:10px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse}
-th{padding:9px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);background:#FAFBFC;border-bottom:1px solid var(--border-light)}
-td{padding:10px 16px;border-bottom:1px solid var(--border-light);font-size:13px}
-tr:last-child td{border-bottom:none}tr:hover td{background:#FAFBFD}
-.ln{font-weight:500;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500;white-space:nowrap}
-.badge::before{content:"";width:5px;height:5px;border-radius:50%}
-.bgn::before{background:#059669}.bgn{background:#ECFDF5;color:#065F46}
-.bpr::before{background:#3B82F6}.bpr{background:#EFF6FF;color:#1D4ED8}
-.bql::before{background:#D97706}.bql{background:#FEF3C7;color:#92400E}
-.bct::before{background:#9BA3AF}.bct{background:#F3F4F6;color:#374151}
-.bpd::before{background:#DC2626}.bpd{background:#FEF2F2;color:#991B1B}
-.trec{background:#EFF6FF;color:var(--g);font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600}
-.text{background:#F5F3FF;color:var(--p);font-size:10px;padding:2px 7px;border-radius:3px;font-weight:600}
-.etg{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:3px}
-.etg-g{background:#EFF6FF;color:var(--g)}.etg-p{background:#F5F3FF;color:var(--p)}.etg-q{background:#FFFBEB;color:var(--q)}
-/* RELATÓRIO AO VIVO */
-.rel-live{padding:0}
-.rel-print-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.rel-print-bar h2{font-size:16px;font-weight:700;color:var(--text-primary)}
-.bprint{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;padding:7px 16px;background:var(--bg);color:var(--text-secondary);border:1px solid var(--border);border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s}
-.bprint:hover{background:var(--surface);color:var(--text-primary)}
-/* CAPA RELATÓRIO */
-.rcapa{background:var(--text-primary);color:#fff;border-radius:14px;padding:40px 44px;margin-bottom:20px;position:relative;overflow:hidden}
-.rcapa::before{content:"";position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.03)}
-.rcapa-logo{display:flex;align-items:center;gap:8px;margin-bottom:32px}
-.rcapa-lm{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.rcapa-lm svg{width:16px;height:16px;fill:white}
-.rcapa-tipo{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.4);margin-bottom:8px}
-.rcapa-titulo{font-size:30px;font-weight:700;color:#fff;line-height:1.15;letter-spacing:-1px;margin-bottom:6px}
-.rcapa-sub{font-size:15px;color:rgba(255,255,255,.5);margin-bottom:32px}
-.rcapa-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media(max-width:700px){.rcapa-kpis{grid-template-columns:repeat(2,1fr)}}
-.rk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:14px 16px}
-.rk-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:5px}
-.rk-v{font-size:22px;font-weight:700;font-family:"DM Mono",monospace;color:#fff;letter-spacing:-1px}
-.rk-s{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
-.rcapa-footer{margin-top:28px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.3);font-family:"DM Mono",monospace}
-/* SEÇÕES RELATÓRIO */
-.rsec{margin-bottom:24px}
-.rstit{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.rcg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+thead th{
+  padding:8px 14px;text-align:left;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text3);background:var(--surface2);border-bottom:1px solid var(--border-light);
+}
+tbody td{padding:9px 14px;border-bottom:1px solid var(--border-light);font-size:12px;color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#F8FAF8}
+.td-name{font-weight:500;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-mono{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.td-muted{color:var(--text3);font-size:11px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:600;white-space:nowrap}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.b-green::before{background:var(--green)}.b-green{background:var(--green-pale);color:var(--green-dark)}
+.b-blue::before{background:var(--blue)}.b-blue{background:var(--blue-pale);color:var(--blue)}
+.b-amber::before{background:var(--amber)}.b-amber{background:var(--amber-pale);color:var(--amber)}
+.b-gray::before{background:#9BA3AF}.b-gray{background:#F3F4F6;color:#4B5563}
+.b-red::before{background:var(--red)}.b-red{background:var(--red-pale);color:var(--red)}
+.tag-rec{background:var(--blue-pale);color:var(--blue);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px}
+.tag-ext{background:var(--purple-pale);color:var(--purple);font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px}
+.etag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px}
+.etag-g{background:var(--green-pale);color:var(--green-dark)}
+.etag-p{background:var(--blue-pale);color:var(--blue)}
+.etag-q{background:var(--amber-pale);color:var(--amber)}
+
+/* ── FUNIL ── */
+.funnel-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.funnel-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.funnel-header{
+  display:flex;align-items:center;gap:8px;padding:9px 14px;
+  border-bottom:1px solid var(--border-light);background:var(--surface2);
+}
+.funnel-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fd-green{background:var(--green)}.fd-blue{background:var(--blue)}.fd-amber{background:var(--amber)}
+.funnel-name{font-size:12px;font-weight:600}
+.funnel-count{font-size:11px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
+.funnel-stages{display:flex;padding:10px 12px;gap:6px;overflow-x:auto}
+.stage-item{flex:0 0 auto;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:8px 12px;min-width:100px}
+.stage-name{font-size:9px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
+.stage-count{font-size:20px;font-weight:700;font-family:var(--mono);line-height:1;color:var(--text)}
+.stage-bar{background:var(--border);border-radius:2px;height:3px;overflow:hidden;margin-top:6px}
+.stage-fill{height:100%;border-radius:2px;transition:width .6s}
+.sfill-green{background:var(--green)}.sfill-blue{background:var(--blue)}.sfill-amber{background:var(--amber)}
+.sfill-ok{background:#2E7D32}.sfill-red{background:var(--red)}
+.stage-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;flex-shrink:0}
+.stage-arrow span{font-size:9px;font-weight:700;color:var(--text3);line-height:1}
+.stage-arrow svg{width:14px;height:14px;color:var(--text3)}
+
+/* ── EVOLUÇÃO CHART ── */
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh);margin-bottom:16px}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.chart-title{font-size:12px;font-weight:600}
+.chart-legend{display:flex;gap:14px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:160px;padding:0 4px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0}
+.bar-stack{display:flex;flex-direction:column;align-items:center;gap:1px;width:100%;height:140px;justify-content:flex-end}
+.bar-seg{width:100%;border-radius:3px 3px 0 0;min-height:0;transition:height .6s}
+.bar-seg-g{background:var(--green)}.bar-seg-p{background:var(--purple)}
+.bar-label{font-size:9px;color:var(--text3);font-weight:500;white-space:nowrap}
+.bar-value{font-size:9px;color:var(--text2);font-family:var(--mono)}
+
+/* ── RANKING ── */
+.rank-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.rank-header{padding:10px 14px;border-bottom:1px solid var(--border-light);background:var(--surface2);font-size:12px;font-weight:600}
+.rank-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border-light)}
+.rank-row:last-child{border-bottom:none}
+.rank-pos{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.rp-1{background:#FEF3C7;color:#D97706}.rp-2{background:#F3F4F6;color:#6B7280}.rp-3{background:#FEF2F2;color:#B45309}.rp-n{background:var(--bg);color:var(--text3)}
+.rank-name{font-size:12px;font-weight:500;flex:1}
+.rank-bar-wrap{flex:2;background:var(--bg);border-radius:3px;height:5px;border:1px solid var(--border)}
+.rank-bar-fill{height:100%;border-radius:3px;background:var(--green);transition:width .6s}
+.rank-stats{display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:80px}
+.rank-val{font-size:12px;font-weight:600;font-family:var(--mono)}
+.rank-sub{font-size:10px;color:var(--text3)}
+
+/* ── INDICADORES ── */
+.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+@media(max-width:900px){.ind-grid{grid-template-columns:1fr 1fr}}
+.ind-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;box-shadow:var(--sh)}
+.ind-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:6px}
+.ind-val{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--text);letter-spacing:-1px;line-height:1}
+.ind-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.ind-bar{background:var(--bg);border-radius:3px;height:5px;overflow:hidden;margin-top:10px;border:1px solid var(--border-light)}
+.ind-fill{height:100%;border-radius:3px;background:var(--green);transition:width .8s}
+
+/* ── RELATÓRIO CAPA ── */
+.report-header-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;flex-wrap:wrap;gap:10px;
+}
+.report-header-bar h2{font-size:15px;font-weight:700}
+.btn-print{
+  font-family:var(--font);font-size:11px;font-weight:600;
+  padding:7px 16px;background:var(--surface);color:var(--text2);
+  border:1px solid var(--border);border-radius:5px;cursor:pointer;
+  display:flex;align-items:center;gap:6px;transition:all .15s;box-shadow:var(--sh);
+}
+.btn-print:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-print svg{width:13px;height:13px}
+
+.report-cover{
+  background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);
+  color:#fff;border-radius:8px;padding:36px 40px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.report-cover::before{content:"";position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04)}
+.report-cover::after{content:"";position:absolute;bottom:-60px;left:40%;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.03)}
+.rc-logo{display:flex;align-items:center;gap:8px;margin-bottom:28px}
+.rc-mark{width:32px;height:32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.rc-mark svg{width:15px;height:15px;fill:white}
+.rc-brand{font-size:13px;font-weight:600;color:rgba(255,255,255,.9)}
+.rc-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:6px}
+.rc-title{font-size:28px;font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:4px}
+.rc-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:28px}
+.rc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:700px){.rc-kpis{grid-template-columns:repeat(2,1fr)}}
+.rc-kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:12px 14px}
+.rc-kpi-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.rc-kpi-v{font-size:20px;font-weight:700;font-family:var(--mono);color:#fff;letter-spacing:-1px}
+.rc-kpi-s{font-size:9px;color:rgba(255,255,255,.35);margin-top:2px}
+.rc-footer{margin-top:24px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)}
+
+/* ── REPORT SECTION ── */
+.rsec{margin-bottom:20px}
+.rsec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rcg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
 @media(max-width:800px){.rcg{grid-template-columns:repeat(2,1fr)}}
-.rc2{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.rc2{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;position:relative;overflow:hidden}
 .rc2::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%}
-.rc2.cdk::before{background:var(--text-primary)}.rc2.cbl::before{background:var(--g)}.rc2.cgn::before{background:var(--green)}.rc2.crd::before{background:var(--red)}.rc2.cpu::before{background:var(--p)}.rc2.cor::before{background:var(--q)}
-.rc2l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:5px}
-.rc2v{font-size:22px;font-weight:700;font-family:"DM Mono",monospace;color:var(--text-primary);letter-spacing:-.8px;line-height:1}
-.rc2s{font-size:10px;color:var(--text-muted);margin-top:3px}
-/* indicadores extras */
-.ind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-@media(max-width:800px){.ind-grid{grid-template-columns:1fr}}
-.ind-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;box-shadow:var(--sh)}
-.ind-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:8px}
-.ind-val{font-size:26px;font-weight:700;font-family:"DM Mono",monospace;color:var(--text-primary);letter-spacing:-1px;line-height:1}
-.ind-sub{font-size:11px;color:var(--text-muted);margin-top:5px}
-.ind-barra{background:var(--bg);border-radius:4px;height:6px;overflow:hidden;margin-top:10px}
-.ind-fill{height:100%;border-radius:4px;background:var(--g);transition:width .8s}
-/* carregando */
-#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:14px}
-.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--text-primary);border-radius:50%;animation:spin .7s linear infinite}
+.rc2.c-green::before{background:var(--green)}.rc2.c-blue::before{background:var(--blue)}
+.rc2.c-red::before{background:var(--red)}.rc2.c-amber::before{background:var(--amber)}.rc2.c-purple::before{background:var(--purple)}
+.rc2-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px}
+.rc2-v{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);letter-spacing:-.5px;line-height:1}
+.rc2-s{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* ── STATUS BAR BELOW FILTER ── */
+.view-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px}
+.view-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-right:4px}
+.btn-view{
+  font-family:var(--font);font-size:11px;font-weight:500;
+  padding:5px 14px;border-radius:5px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text2);cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:5px;box-shadow:var(--sh);
+}
+.btn-view .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.btn-view:hover{border-color:#B0BAC8}
+.btn-view.v-active{background:var(--text);color:#fff;border-color:var(--text)}
+.btn-view.v-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-view.v-red{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* ── LOADING ── */
+#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:12px}
+.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ltxt2{font-size:13px;color:var(--text-muted)}
-#emsg{display:none;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:16px 20px;margin:16px 0;color:#991B1B;font-size:13px}
-.sd{text-align:center;color:var(--text-muted);padding:32px;font-size:13px}
-.atu{font-size:11px;color:var(--text-muted);margin-top:16px;font-family:"DM Mono",monospace}
-@media(max-width:700px){.main{padding:12px 14px 32px}header{padding:0 14px}}
+.loading-text{font-size:13px;color:var(--text3)}
+#emsg{display:none;background:var(--red-pale);border:1px solid #FFCDD2;border-radius:var(--r);padding:16px 20px;margin:16px 0;color:var(--red);font-size:13px}
+.empty{text-align:center;color:var(--text3);padding:28px;font-size:13px}
+.updated-at{font-size:10px;color:var(--text3);margin-top:16px;font-family:var(--mono)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:10px;padding:28px;width:480px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);border:1px solid var(--border)}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--text3);margin-bottom:18px}
+.modal-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border-light)}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.modal-field{display:flex;flex-direction:column;gap:4px}
+.modal-field label{font-size:11px;font-weight:600;color:var(--text2)}
+.modal-field input,.modal-field select{font-family:var(--font);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text);outline:none}
+.modal-field input:focus,.modal-field select:focus{border-color:var(--green)}
+.modal-hint{font-size:10px;color:var(--text3)}
+.modal-info{background:var(--blue-pale);border:1px solid #BFDBFE;border-radius:6px;padding:10px 12px;margin-bottom:10px;font-size:11px;color:var(--blue)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.btn-modal{font-family:var(--font);font-size:12px;font-weight:500;padding:7px 18px;border-radius:5px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.btn-modal-sec{background:var(--bg);color:var(--text2)}
+.btn-modal-pri{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+.btn-modal-pri:hover{background:var(--green)}
+
+/* PRINT */
 @media print{
-  header,.tabs,.atu,.rel-print-bar{display:none!important}
+  header,.tabs-bar,.view-bar,.updated-at,.report-header-bar,.filter-bar,.date-range-bar{display:none!important}
   body{background:#fff}
-  #tab-relatorio{display:block!important}
+  #tab-rl{display:block!important}
   .main{padding:0}
-  .rcapa{border-radius:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;border-radius:0}
 }
 </style>
 </head>
@@ -227,108 +415,119 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#FAFBFD}
 
 <header>
   <div class="logo">
-    <div class="lmark"><svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div>
-    <div class="ltxt">Gaideski <span>· Dashboard Comercial</span></div>
+    <div class="logo-mark">
+      <svg viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg>
+    </div>
+    <span class="logo-name">Gaideski</span>
+    <div class="logo-sep"></div>
+    <span class="logo-sub">Dashboard Comercial</span>
   </div>
-  <div class="hright">
-    <button class="bh bh-dark" id="btn-metas">
+  <div class="header-right">
+    <button class="btn-header btn-header-solid" id="btn-metas">
       <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 3v3l2 2"/></svg>
       Definir Metas
     </button>
-    <button class="bh" id="btn-att">
+    <button class="btn-header" id="btn-att">
       <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 6a5 5 0 1 0 1.2-3.2M1 2v2h2"/></svg>
       Atualizar
     </button>
-    <div id="spill"><div id="sdot"></div><span id="stxt">Conectando...</span></div>
+    <div class="status-pill">
+      <div id="sdot"></div>
+      <span id="stxt">Conectando...</span>
+    </div>
   </div>
 </header>
 
-<div class="tabs">
-  <button class="tb on" id="tb-vg">Visão Geral</button>
-  <button class="tb" id="tb-mt">Metas & Carteira</button>
-  <button class="tb" id="tb-fn">Funis</button>
-  <button class="tb" id="tb-rk">Ranking</button>
-  <button class="tb" id="tb-ld">Leads</button>
-  <button class="tb" id="tb-rl">Relatórios</button>
+<div class="tabs-bar">
+  <button class="tab-btn active" data-tab="vg">Visão Geral</button>
+  <button class="tab-btn" data-tab="mt">Metas & Carteira</button>
+  <button class="tab-btn" data-tab="fn">Funis</button>
+  <button class="tab-btn" data-tab="rk">Ranking</button>
+  <button class="tab-btn" data-tab="ld">Leads</button>
+  <button class="tab-btn" data-tab="rl">Relatórios</button>
 </div>
 
 <!-- MODAL METAS -->
-<div class="ov" id="ov-metas">
+<div class="modal-overlay" id="ov-metas">
   <div class="modal">
-    <div class="mtit">Definir Metas Mensais</div>
-    <div class="msub">A carteira recorrente acumula mês a mês. Extras renovam todo mês.</div>
-    <div class="minf2" id="modal-info">Carregando...</div>
-    <div class="msec">Selecione o mês</div>
-    <div style="display:flex;gap:10px;margin-bottom:16px">
-      <select id="msel-mes" style="flex:1;font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);outline:none">
+    <div class="modal-title">Definir Metas Mensais</div>
+    <div class="modal-sub">A carteira recorrente acumula mês a mês. Extras renovam todo mês.</div>
+    <div class="modal-info" id="modal-info">Carregando...</div>
+    <div class="modal-sec">Selecione o mês</div>
+    <div style="display:flex;gap:10px;margin-bottom:14px">
+      <select id="msel-mes" style="flex:1;font-family:var(--font);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:5px;background:var(--bg);outline:none;color:var(--text)">
         <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
         <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
         <option value="6">Julho</option><option value="7">Agosto</option><option value="8">Setembro</option>
         <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
       </select>
-      <select id="msel-ano" style="flex:1;font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;background:var(--bg);outline:none"></select>
+      <select id="msel-ano" style="flex:1;font-family:var(--font);font-size:12px;padding:7px 10px;border:1px solid var(--border);border-radius:5px;background:var(--bg);outline:none;color:var(--text)"></select>
     </div>
-    <div class="msec">Metas do mês</div>
-    <div class="mrow">
-      <div class="mfld"><label>Meta Honorários (Recorrente)</label><input type="number" id="mrec" placeholder="0" min="0" step="100"><span class="mhnt">Acumula mês a mês</span></div>
-      <div class="mfld"><label>Meta Serviços Extras</label><input type="number" id="mext" placeholder="0" min="0" step="100"><span class="mhnt">Renova todo mês</span></div>
+    <div class="modal-sec">Metas do mês</div>
+    <div class="modal-row">
+      <div class="modal-field"><label>Meta Honorários (Recorrente)</label><input type="number" id="mrec" placeholder="0" min="0" step="100"><span class="modal-hint">Acumula mês a mês</span></div>
+      <div class="modal-field"><label>Meta Serviços Extras</label><input type="number" id="mext" placeholder="0" min="0" step="100"><span class="modal-hint">Renova todo mês</span></div>
     </div>
-    <div class="mftr">
-      <button class="bm sec" id="btn-cancel-m">Cancelar</button>
-      <button class="bm pri" id="btn-save-m">Salvar Metas</button>
+    <div class="modal-footer">
+      <button class="btn-modal btn-modal-sec" id="btn-cancel-m">Cancelar</button>
+      <button class="btn-modal btn-modal-pri" id="btn-save-m">Salvar Metas</button>
     </div>
   </div>
 </div>
 
 <div class="main">
-  <div id="loading"><div class="spinner"></div><div class="ltxt2">Carregando dados do Kommo...</div></div>
+  <div id="loading"><div class="spinner"></div><div class="loading-text">Carregando dados do Kommo...</div></div>
   <div id="emsg"></div>
   <div id="cont" style="display:none">
 
     <!-- VISÃO GERAL -->
-    <div id="tab-vg" class="tc on">
-      <div class="fbar">
-        <span class="fl">Empresa</span>
-        <div class="bg" id="grp-emp">
-          <button class="bf a" data-v="todos">Todos</button>
-          <button class="bf" data-v="qualificacao">Qualificação</button>
-          <button class="bf" data-v="gaideski">Gaideski</button>
-          <button class="bf" data-v="planicon">Planicon</button>
+    <div id="tab-vg" class="tab-content active">
+      <div class="filter-bar">
+        <span class="filter-label">Empresa</span>
+        <div class="btn-group" id="grp-emp">
+          <button class="btn-filter active" data-v="todos">Todos</button>
+          <button class="btn-filter" data-v="qualificacao">Qualificação</button>
+          <button class="btn-filter" data-v="gaideski">Gaideski</button>
+          <button class="btn-filter" data-v="planicon">Planicon</button>
         </div>
-        <div class="fdiv"></div>
-        <span class="fl">Período</span>
+        <div class="filter-div"></div>
+        <span class="filter-label">Período</span>
         <select class="sf" id="sel-per">
-          <option value="todos">Todos</option><option value="hoje">Hoje</option>
-          <option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option>
-          <option value="90">Últimos 90 dias</option><option value="mes">Este mês</option>
+          <option value="todos">Todos</option>
+          <option value="hoje">Hoje</option>
+          <option value="7">Últimos 7 dias</option>
+          <option value="30">Últimos 30 dias</option>
+          <option value="90">Últimos 90 dias</option>
+          <option value="mes">Este mês</option>
         </select>
-        <div class="bw">
+        <div class="search-wrap">
           <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l2.5 2.5"/></svg>
-          <input type="text" class="bi" id="busca1" placeholder="Buscar lead...">
+          <input type="text" class="search-input" id="busca1" placeholder="Buscar lead...">
         </div>
       </div>
-      <div class="sbar">
-        <span class="slbl">Visualizar:</span>
-        <button class="bs sa" id="btn-at"><span class="dot" style="background:#9BA3AF"></span> Leads Ativos</button>
-        <button class="bs" id="btn-gn"><span class="dot" style="background:var(--green)"></span> Venda Ganha</button>
-        <button class="bs" id="btn-pd"><span class="dot" style="background:var(--red)"></span> Venda Perdida</button>
+      <div class="view-bar">
+        <span class="view-label">Visualizar:</span>
+        <button class="btn-view v-active" id="btn-at"><span class="dot" style="background:#9BA3AF"></span> Leads Ativos</button>
+        <button class="btn-view" id="btn-gn"><span class="dot" style="background:var(--green)"></span> Venda Ganha</button>
+        <button class="btn-view" id="btn-pd"><span class="dot" style="background:var(--red)"></span> Venda Perdida</button>
       </div>
-      <div class="cg" id="cards-vg"></div>
-      <div class="sec"><div class="stit">Etapas por Funil</div><div class="fc" id="funis-vg"></div></div>
+      <div class="cards-grid" id="cards-vg"></div>
+      <div class="sec-title">Etapas por Funil</div>
+      <div class="funnel-list" id="funis-vg"></div>
     </div>
 
     <!-- METAS -->
-    <div id="tab-mt" class="tc">
-      <div class="fbar">
-        <span class="fl">Período</span>
-        <div class="bg" id="grp-pm">
-          <button class="bf a" data-v="mes">Este mês</button>
-          <button class="bf" data-v="ant">Mês anterior</button>
-          <button class="bf" data-v="tri">Trimestre</button>
-          <button class="bf" data-v="sem">Semestre</button>
-          <button class="bf" data-v="ano">Este ano</button>
+    <div id="tab-mt" class="tab-content">
+      <div class="filter-bar">
+        <span class="filter-label">Período</span>
+        <div class="btn-group" id="grp-pm">
+          <button class="btn-filter active" data-v="mes">Este mês</button>
+          <button class="btn-filter" data-v="ant">Mês anterior</button>
+          <button class="btn-filter" data-v="tri">Trimestre</button>
+          <button class="btn-filter" data-v="sem">Semestre</button>
+          <button class="btn-filter" data-v="ano">Este ano</button>
         </div>
-        <div class="fdiv"></div>
+        <div class="filter-div"></div>
         <select class="sf" id="pm-mes">
           <option value="0">Janeiro</option><option value="1">Fevereiro</option><option value="2">Março</option>
           <option value="3">Abril</option><option value="4">Maio</option><option value="5">Junho</option>
@@ -336,73 +535,108 @@ tr:last-child td{border-bottom:none}tr:hover td{background:#FAFBFD}
           <option value="9">Outubro</option><option value="10">Novembro</option><option value="11">Dezembro</option>
         </select>
         <select class="sf" id="pm-ano"></select>
-        <span style="margin-left:auto;font-size:12px;color:var(--text-muted)" id="pm-lbl"></span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text3);font-family:var(--mono)" id="pm-lbl"></span>
       </div>
-      <div class="mg" id="meta-cards"></div>
-      <div class="ecard">
-        <div class="eh">
-          <div class="etitle">Evolução Mensal</div>
-          <div class="eleg">
-            <div class="li"><div class="ld" style="background:var(--g)"></div> Recorrente</div>
-            <div class="li"><div class="ld" style="background:var(--p)"></div> Extra</div>
+      <div class="meta-grid" id="meta-cards"></div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Evolução Mensal — Últimos 6 Meses</div>
+          <div class="chart-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Recorrente</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Extra</div>
           </div>
         </div>
-        <div class="cb" id="chart-evol"></div>
+        <div class="chart-bars" id="chart-evol"></div>
       </div>
     </div>
 
     <!-- FUNIS -->
-    <div id="tab-fn" class="tc">
-      <div class="sec"><div class="stit">Todos os Funis</div><div class="fc" id="funis-all"></div></div>
+    <div id="tab-fn" class="tab-content">
+      <div class="sec-title">Todos os Funis</div>
+      <div class="funnel-list" id="funis-all"></div>
     </div>
 
     <!-- RANKING -->
-    <div id="tab-rk" class="tc">
-      <div class="cg" id="rank-cards"></div>
-      <div class="rcard"><div class="rh">Ranking por Vendas Ganhas</div><div id="rank-list"></div></div>
+    <div id="tab-rk" class="tab-content">
+      <div class="cards-grid" id="rank-cards"></div>
+      <div class="rank-card">
+        <div class="rank-header">Ranking por Vendas Ganhas</div>
+        <div id="rank-list"></div>
+      </div>
     </div>
 
     <!-- LEADS -->
-    <div id="tab-ld" class="tc">
-      <div class="fbar">
-        <span class="fl">Empresa</span>
-        <div class="bg" id="grp-emp2">
-          <button class="bf a" data-v="todos">Todos</button>
-          <button class="bf" data-v="qualificacao">Qualificação</button>
-          <button class="bf" data-v="gaideski">Gaideski</button>
-          <button class="bf" data-v="planicon">Planicon</button>
+    <div id="tab-ld" class="tab-content">
+      <div class="filter-bar">
+        <span class="filter-label">Empresa</span>
+        <div class="btn-group" id="grp-emp2">
+          <button class="btn-filter active" data-v="todos">Todos</button>
+          <button class="btn-filter" data-v="qualificacao">Qualificação</button>
+          <button class="btn-filter" data-v="gaideski">Gaideski</button>
+          <button class="btn-filter" data-v="planicon">Planicon</button>
         </div>
-        <div class="fdiv"></div>
-        <span class="fl">Tipo</span>
-        <div class="bg" id="grp-tv">
-          <button class="bf a" data-v="todos">Todos</button>
-          <button class="bf" data-v="recorrente">Recorrente</button>
-          <button class="bf" data-v="extra">Extra</button>
+        <div class="filter-div"></div>
+        <span class="filter-label">Tipo</span>
+        <div class="btn-group" id="grp-tv">
+          <button class="btn-filter active" data-v="todos">Todos</button>
+          <button class="btn-filter" data-v="recorrente">Recorrente</button>
+          <button class="btn-filter" data-v="extra">Extra</button>
         </div>
-        <div class="bw">
+        <div class="search-wrap">
           <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><path d="M8.5 8.5l2.5 2.5"/></svg>
-          <input type="text" class="bi" id="busca2" placeholder="Buscar lead...">
+          <input type="text" class="search-input" id="busca2" placeholder="Buscar lead...">
         </div>
       </div>
-      <div class="tw">
-        <div class="th2"><span class="tt">Todos os Leads</span><span class="tc2" id="cnt2">0 leads</span></div>
-        <div style="overflow-x:auto"><table><thead><tr><th>Nome</th><th>Etapa</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead><tbody id="tbody2"></tbody></table></div>
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">Todos os Leads</span>
+          <span class="table-count" id="cnt2">0 leads</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Nome</th><th>Etapa</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
+            <tbody id="tbody2"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- RELATÓRIO AO VIVO -->
-    <div id="tab-rl" class="tc rel-live">
-      <div class="rel-print-bar">
+    <!-- RELATÓRIOS -->
+    <div id="tab-rl" class="tab-content">
+      <div class="report-header-bar">
         <h2 id="rel-titulo">Relatório Comercial — <span id="rel-periodo"></span></h2>
-        <button class="bprint" onclick="window.print()">
+        <button class="btn-print" onclick="window.print()">
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="10" height="7" rx="1"/><path d="M4 5V2h6v3M4 12h6"/></svg>
           Imprimir / Salvar PDF
         </button>
       </div>
+
+      <!-- SELETOR DE DATAS -->
+      <div class="date-range-bar">
+        <span class="filter-label" style="color:var(--green-dark)">&#128197; Período do Relatório</span>
+        <div class="filter-div"></div>
+        <div class="btn-group" id="grp-date-quick">
+          <button class="btn-date-quick active" data-v="mes">Este mês</button>
+          <button class="btn-date-quick" data-v="ant">Mês anterior</button>
+          <button class="btn-date-quick" data-v="tri">Trimestre</button>
+          <button class="btn-date-quick" data-v="sem">Semestre</button>
+          <button class="btn-date-quick" data-v="ano">Ano</button>
+          <button class="btn-date-quick" data-v="custom">Personalizado</button>
+        </div>
+        <div class="filter-div"></div>
+        <div id="custom-dates" style="display:none;align-items:center;gap:6px">
+          <input type="date" class="date-input" id="date-ini" />
+          <span class="date-sep">até</span>
+          <input type="date" class="date-input" id="date-fim" />
+          <button class="btn-date-quick active" id="btn-apply-dates">Aplicar</button>
+        </div>
+        <span id="rel-period-display"></span>
+      </div>
+
       <div id="rel-corpo"></div>
     </div>
 
-    <div class="atu" id="atu"></div>
+    <div class="updated-at" id="atu"></div>
   </div>
 </div>
 
@@ -413,11 +647,13 @@ const MC=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez
 const PID={qualificacao:13512120,gaideski:13512132,planicon:13512140};
 const PSET=new Set([13512120,13512132,13512140]);
 const CFV=2057155,ENR=1797505,ENE=1797507;
-const TICKET_MEDIO_META=450; // valor do ticket médio configurado
+const TICKET_MEDIO_META=450;
 
-let leads=[],sm={},pm={},pipes=[];
+let leads=[],pipes=[];
+let sm={},pm={};
 let filt={emp:"todos",per:"todos",tipo:"ativos",emp2:"todos",tv:"todos"};
 let fpm={tipo:"mes",mes:new Date().getMonth(),ano:new Date().getFullYear()};
+let relFiltro={tipo:"mes",ini:null,fim:null};
 let tab="vg";
 
 function fv(v){if(!v||v===0)return"—";return"R$\u00A0"+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:0})}
@@ -433,19 +669,18 @@ function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PI
 
 // TABS
 function initTabs(){
-  const ids=["vg","mt","fn","rk","ld","rl"];
-  ids.forEach(id=>{
-    document.getElementById("tb-"+id).addEventListener("click",()=>{
-      tab=id;
-      document.querySelectorAll(".tb").forEach(b=>b.classList.remove("on"));
-      document.getElementById("tb-"+id).classList.add("on");
-      document.querySelectorAll(".tc").forEach(t=>t.classList.remove("on"));
-      document.getElementById("tab-"+id).classList.add("on");
-      if(id==="mt")renderMetas();
-      if(id==="rk")renderRank();
-      if(id==="fn")renderFunisAll();
-      if(id==="ld")renderLeads();
-      if(id==="rl")renderRelatorio();
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      tab=btn.dataset.tab;
+      document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+      document.getElementById("tab-"+tab).classList.add("active");
+      if(tab==="mt")renderMetas();
+      if(tab==="rk")renderRank();
+      if(tab==="fn")renderFunisAll();
+      if(tab==="ld")renderLeads();
+      if(tab==="rl")renderRelatorio();
     });
   });
 }
@@ -466,14 +701,13 @@ function initModal(){
   document.getElementById("msel-mes").addEventListener("change",carregaModal);
   document.getElementById("msel-ano").addEventListener("change",carregaModal);
 }
-
 function abrirModal(){
   const cart=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
   document.getElementById("modal-info").innerHTML="<strong>Carteira Recorrente Atual:</strong> "+fv(cart)+" — acumula com cada cliente recorrente fechado.";
   carregaModal();
-  document.getElementById("ov-metas").classList.add("on");
+  document.getElementById("ov-metas").classList.add("open");
 }
-function fecharModal(){document.getElementById("ov-metas").classList.remove("on")}
+function fecharModal(){document.getElementById("ov-metas").classList.remove("open")}
 function carregaModal(){
   const mes=parseInt(document.getElementById("msel-mes").value);
   const ano=parseInt(document.getElementById("msel-ano").value);
@@ -519,18 +753,17 @@ async function carregar(){
   }catch(e){
     document.getElementById("loading").style.display="none";
     const el=document.getElementById("emsg");el.style.display="block";
-    el.innerHTML="<strong>Erro ao carregar dados</strong><br><br>"+e.message+"<br><br><button onclick=\"carregar()\" style=\"background:#1F2937;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;font-size:13px\">Tentar novamente</button>";
+    el.innerHTML="<strong>Erro ao carregar dados</strong><br><br>"+e.message+"<br><br><button onclick=\"carregar()\" style=\"background:var(--green-dark);color:#fff;border:none;padding:7px 16px;border-radius:5px;cursor:pointer;font-size:12px\">Tentar novamente</button>";
     serr("Erro");
   }
 }
 
-// FILTROS
+// FILTROS VG
 function initFiltros(){
-  document.getElementById("grp-emp").querySelectorAll(".bf").forEach(b=>{
+  document.getElementById("grp-emp").querySelectorAll(".btn-filter").forEach(b=>{
     b.addEventListener("click",()=>{
-      document.getElementById("grp-emp").querySelectorAll(".bf").forEach(x=>x.className="bf");
-      const cls={gaideski:"bf ag",planicon:"bf ap",qualificacao:"bf aq",todos:"bf a"};
-      b.className=cls[b.dataset.v]||"bf a";filt.emp=b.dataset.v;aplicarFiltros();
+      document.getElementById("grp-emp").querySelectorAll(".btn-filter").forEach(x=>{x.className="btn-filter"});
+      b.className="btn-filter active";filt.emp=b.dataset.v;aplicarFiltros();
     });
   });
   document.getElementById("sel-per").addEventListener("change",e=>{filt.per=e.target.value;aplicarFiltros()});
@@ -543,9 +776,9 @@ function initFiltros(){
 
 function setTipo(t){
   filt.tipo=t;
-  document.getElementById("btn-at").className="bs"+(t==="ativos"?" sa":"");
-  document.getElementById("btn-gn").className="bs"+(t==="ganhos"?" sg":"");
-  document.getElementById("btn-pd").className="bs"+(t==="perdidos"?" sp":"");
+  document.getElementById("btn-at").className="btn-view"+(t==="ativos"?" v-active":"");
+  document.getElementById("btn-gn").className="btn-view"+(t==="ganhos"?" v-green":"");
+  document.getElementById("btn-pd").className="btn-view"+(t==="perdidos"?" v-red":"");
   aplicarFiltros();
 }
 
@@ -573,7 +806,6 @@ function aplicarFiltros(){
   renderFunis(ll,pa,"funis-vg");
 }
 
-// CARDS
 function renderCards(ll,pa,ini,fim){
   const g=document.getElementById("cards-vg"),t=filt.tipo;
   const le=leads.filter(l=>pa.includes(pm[l.status_id])&&l.created_at>=ini&&l.created_at<=fim);
@@ -581,22 +813,22 @@ function renderCards(ll,pa,ini,fim){
   const gn=le.filter(l=>l.status_id===142).length;
   const pd=le.filter(l=>l.status_id===143).length;
   const vg=le.filter(l=>l.status_id===142).reduce((a,l)=>a+(l.price||0),0);
-  if(t==="ativos")g.innerHTML=`<div class="mc dk"><div class="mcl">Leads Ativos</div><div class="mcv">${at}</div><div class="mcs">em andamento</div></div><div class="mc bl"><div class="mcl">Novos no Período</div><div class="mcv">${at}</div><div class="mcs">leads novos</div></div><div class="mc gn"><div class="mcl">Venda Ganha</div><div class="mcv">${gn}</div><div class="mcs">clientes fechados</div></div><div class="mc rd"><div class="mcl">Venda Perdida</div><div class="mcv">${pd}</div><div class="mcs">leads perdidos</div></div>`;
-  else if(t==="ganhos")g.innerHTML=`<div class="mc gn"><div class="mcl">Venda Ganha</div><div class="mcv">${gn}</div><div class="mcs">clientes fechados</div></div><div class="mc bl"><div class="mcl">Receita Total</div><div class="mcv" style="font-size:20px">${fvc(vg)}</div><div class="mcs">valor fechado</div></div><div class="mc dk"><div class="mcl">Leads Ativos</div><div class="mcv">${at}</div><div class="mcs">em andamento</div></div><div class="mc rd"><div class="mcl">Venda Perdida</div><div class="mcv">${pd}</div><div class="mcs">leads perdidos</div></div>`;
-  else g.innerHTML=`<div class="mc rd"><div class="mcl">Venda Perdida</div><div class="mcv">${pd}</div><div class="mcs">leads perdidos</div></div><div class="mc dk"><div class="mcl">Leads Ativos</div><div class="mcv">${at}</div><div class="mcs">em andamento</div></div><div class="mc gn"><div class="mcl">Venda Ganha</div><div class="mcv">${gn}</div><div class="mcs">clientes fechados</div></div><div class="mc gr"><div class="mcl">Total Geral</div><div class="mcv">${at+gn+pd}</div><div class="mcs">todos os leads</div></div>`;
+  if(t==="ativos")g.innerHTML=`<div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-blue"><div class="kpi-label">Novos no Período</div><div class="kpi-value">${at}</div><div class="kpi-sub">leads novos</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
+  else if(t==="ganhos")g.innerHTML=`<div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-blue"><div class="kpi-label">Receita Total</div><div class="kpi-value" style="font-size:20px">${fvc(vg)}</div><div class="kpi-sub">valor fechado</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
+  else g.innerHTML=`<div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-gray"><div class="kpi-label">Total Geral</div><div class="kpi-value">${at+gn+pd}</div><div class="kpi-sub">todos os leads</div></div>`;
 }
 
 // FUNIS
 function renderFunis(ll,pa,cid){
   const cont=document.getElementById(cid);
   const pe=pipes.filter(p=>pa.includes(p.id));
-  if(!pe.length){cont.innerHTML='<div class="sd">Nenhum funil</div>';return}
-  const ft=filt.tipo==="ganhos"?"efgn":filt.tipo==="perdidos"?"efrd":null;
+  if(!pe.length){cont.innerHTML='<div class="empty">Nenhum funil</div>';return}
+  const ft=filt.tipo==="ganhos"?"sfill-ok":filt.tipo==="perdidos"?"sfill-red":null;
   cont.innerHTML=pe.map(pipe=>{
     const pn=pipe.name||"",pl=pn.toLowerCase();
-    let dc="fdq",fc=ft||"efq";
-    if(!ft){if(pl.includes("gaideski")){dc="fdg";fc="efg"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fdp";fc="efp"}}
-    else{if(pl.includes("gaideski"))dc="fdg";else if(pl.includes("planicon")||pl.includes("planicom"))dc="fdp"}
+    let dc="fd-amber",fc=ft||"sfill-amber";
+    if(!ft){if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}}
+    else{if(pl.includes("gaideski"))dc="fd-green";else if(pl.includes("planicon")||pl.includes("planicom"))dc="fd-blue"}
     let ss;
     if(filt.tipo==="ativos")ss=(pipe._embedded?.statuses||[]).filter(s=>s.id!==142&&s.id!==143);
     else{const tid=filt.tipo==="ganhos"?142:143;ss=(pipe._embedded?.statuses||[]).filter(s=>s.id===tid)}
@@ -606,16 +838,16 @@ function renderFunis(ll,pa,cid){
     const mx=Math.max(...Object.values(cnt),1);
     const chips=ss.map((s,i)=>{
       const c=cnt[s.id]||0,pct=Math.round(c/mx*100);
-      let seta="";
+      let arrow="";
       if(i<ss.length-1&&filt.tipo==="ativos"){
         const cn=cnt[ss[i+1].id]||0,cv=c>0?Math.round(cn/c*100):0;
-        const cs=cv>=50?"#10B981":cv>=25?"#D97706":"#9BA3AF";
-        seta=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;flex-shrink:0"><div style="font-size:10px;font-weight:700;color:${cs}">${cv}%</div><div style="font-size:16px;color:${cs};line-height:1">›</div></div>`;
+        const cs=cv>=50?"var(--green)":cv>=25?"var(--amber)":"var(--text3)";
+        arrow=`<div class="stage-arrow"><span style="color:${cs}">${cv}%</span><svg viewBox="0 0 14 14" fill="none" stroke="${cs}" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h6M7 4l3 3-3 3"/></svg></div>`;
       }
-      return`<div style="display:flex;align-items:center"><div class="et"><div class="en" title="${s.name}">${s.name}</div><div class="ec">${c}</div><div class="eb"><div class="ef ${fc}" style="width:${pct}%"></div></div></div>${seta}</div>`;
+      return`<div style="display:flex;align-items:center"><div class="stage-item"><div class="stage-name" title="${s.name}">${s.name}</div><div class="stage-count">${c}</div><div class="stage-bar"><div class="stage-fill ${fc}" style="width:${pct}%"></div></div></div>${arrow}</div>`;
     }).join("");
     const label=filt.tipo==="ativos"?`${tot} ativo${tot!==1?"s":""}`:`${tot} lead${tot!==1?"s":""}`;
-    return`<div class="funil"><div class="fh"><div class="fd ${dc}"></div><div class="fn">${pn}</div><div class="ft">${label}</div></div><div class="er">${chips||'<div class="sd" style="padding:16px 0">Sem leads</div>'}</div></div>`;
+    return`<div class="funnel-card"><div class="funnel-header"><div class="funnel-dot ${dc}"></div><div class="funnel-name">${pn}</div><div class="funnel-count">${label}</div></div><div class="funnel-stages">${chips||'<div class="empty" style="padding:12px 0">Sem leads</div>'}</div></div>`;
   }).join("");
 }
 
@@ -626,7 +858,7 @@ function renderFunisAll(){
   renderFunis(ll,pa,"funis-all");filt.tipo=old;
 }
 
-// METAS FILTRO
+// METAS
 function initFiltroMeta(){
   const ag=new Date();
   const selA=document.getElementById("pm-ano");
@@ -635,10 +867,10 @@ function initFiltroMeta(){
     if(a===ag.getFullYear())o.selected=true;selA.appendChild(o);
   }
   document.getElementById("pm-mes").value=ag.getMonth();
-  document.getElementById("grp-pm").querySelectorAll(".bf").forEach(b=>{
+  document.getElementById("grp-pm").querySelectorAll(".btn-filter").forEach(b=>{
     b.addEventListener("click",()=>{
-      document.getElementById("grp-pm").querySelectorAll(".bf").forEach(x=>x.className="bf");
-      b.className="bf a";fpm.tipo=b.dataset.v;
+      document.getElementById("grp-pm").querySelectorAll(".btn-filter").forEach(x=>x.className="btn-filter");
+      b.className="btn-filter active";fpm.tipo=b.dataset.v;
       const showMs=["mes","ant"].includes(fpm.tipo);
       document.getElementById("pm-mes").style.display=showMs?"":"none";
       document.getElementById("pm-ano").style.display=["mes","ant","ano"].includes(fpm.tipo)?"":"none";
@@ -670,20 +902,20 @@ function renderMetas(){
   const mR=gmv(b.ano,b.mes,"rec"),mE=gmv(b.ano,b.mes,"ext");
   const pR=mR>0?Math.min(Math.round(cart/mR*100),999):0;
   const pE=mE>0?Math.min(Math.round(ext/mE*100),999):0;
-  function cp(p){return p>=100?"mpv":p>=60?"mpa":"mpr"}
-  function cf(p,t){return p>=100?"mfok":t==="r"?"mfr":"mfe"}
+  function cp(p){return p>=100?"pct-ok":p>=60?"pct-mid":"pct-low"}
+  function cf(p,t){return p>=100?"fill-ok":t==="r"?"fill-green":"fill-blue"}
   document.getElementById("meta-cards").innerHTML=`
-  <div class="mcard"><div class="mctit">Carteira Recorrente <span class="mbdg mbr">Honorários</span></div>
-    <div class="mvls"><div class="mva">${fvc(cart)}</div><div class="mvs">/</div><div class="mvt">${mR>0?fvc(mR):"Meta não definida"}</div></div>
-    <div class="mbar"><div class="mfill ${cf(pR,"r")}" style="width:${Math.min(pR,100)}%"></div></div>
-    <div class="minf"><span>${mR>0?"Faltam "+fvc(Math.max(mR-cart,0)):"Configure a meta →"}</span><span class="mpct ${cp(pR)}">${mR>0?pR+"%":"—"}</span></div>
-    <div class="mdet"><strong>${lRec.length}</strong> clientes · <strong>Acumula</strong> mês a mês${mR>0&&cart<mR?" · <strong>+"+fvc(mR-cart)+"</strong> para meta":""}</div>
+  <div class="meta-card"><div class="meta-card-title">Carteira Recorrente <span class="tag tag-green">Honorários</span></div>
+    <div class="meta-vals"><div class="meta-val-a">${fvc(cart)}</div><div class="meta-val-sep">/</div><div class="meta-val-t">${mR>0?fvc(mR):"Meta não definida"}</div></div>
+    <div class="progress-bar"><div class="progress-fill ${cf(pR,"r")}" style="width:${Math.min(pR,100)}%"></div></div>
+    <div class="meta-info"><span>${mR>0?"Faltam "+fvc(Math.max(mR-cart,0)):"Configure a meta →"}</span><span class="meta-pct ${cp(pR)}">${mR>0?pR+"%":"—"}</span></div>
+    <div class="meta-detail"><strong>${lRec.length}</strong> clientes · <strong>Acumula</strong> mês a mês</div>
   </div>
-  <div class="mcard"><div class="mctit">Serviços Extras — ${b.lbl} <span class="mbdg mbe">Extra</span></div>
-    <div class="mvls"><div class="mva">${fvc(ext)}</div><div class="mvs">/</div><div class="mvt">${mE>0?fvc(mE):"Meta não definida"}</div></div>
-    <div class="mbar"><div class="mfill ${cf(pE,"e")}" style="width:${Math.min(pE,100)}%"></div></div>
-    <div class="minf"><span>${mE>0?"Faltam "+fvc(Math.max(mE-ext,0)):"Configure a meta →"}</span><span class="mpct ${cp(pE)}">${mE>0?pE+"%":"—"}</span></div>
-    <div class="mdet"><strong>${lExt.length}</strong> extras · <strong>Renova</strong> todo mês</div>
+  <div class="meta-card"><div class="meta-card-title">Serviços Extras — ${b.lbl} <span class="tag tag-purple">Extra</span></div>
+    <div class="meta-vals"><div class="meta-val-a">${fvc(ext)}</div><div class="meta-val-sep">/</div><div class="meta-val-t">${mE>0?fvc(mE):"Meta não definida"}</div></div>
+    <div class="progress-bar"><div class="progress-fill ${cf(pE,"e")}" style="width:${Math.min(pE,100)}%"></div></div>
+    <div class="meta-info"><span>${mE>0?"Faltam "+fvc(Math.max(mE-ext,0)):"Configure a meta →"}</span><span class="meta-pct ${cp(pE)}">${mE>0?pE+"%":"—"}</span></div>
+    <div class="meta-detail"><strong>${lExt.length}</strong> extras · <strong>Renova</strong> todo mês</div>
   </div>`;
   renderEvol();
 }
@@ -700,8 +932,8 @@ function renderEvol(){
   });
   const mx=Math.max(...dd.map(d=>d.tot),1);
   document.getElementById("chart-evol").innerHTML=dd.map(d=>{
-    const hr=Math.round(d.r/mx*140),he=Math.round(d.e/mx*140);
-    return`<div class="cc"><div class="cs"><div class="bs2 be" style="height:${he}px"></div><div class="bs2 br" style="height:${hr}px"></div></div><div class="cl">${d.lb}</div><div class="cv">${d.tot>0?fvc(d.tot):""}</div></div>`;
+    const hr=Math.round(d.r/mx*130),he=Math.round(d.e/mx*130);
+    return`<div class="bar-col"><div class="bar-stack"><div class="bar-seg bar-seg-p" style="height:${he}px"></div><div class="bar-seg bar-seg-g" style="height:${hr}px"></div></div><div class="bar-label">${d.lb}</div><div class="bar-value">${d.tot>0?fvc(d.tot):""}</div></div>`;
   }).join("");
 }
 
@@ -716,31 +948,30 @@ function renderRank(){
   const vR=gn.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
   const vE=gn.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
   document.getElementById("rank-cards").innerHTML=`
-    <div class="mc gn"><div class="mcl">Total Ganhos</div><div class="mcv">${gn.length}</div><div class="mcs">vendas fechadas</div></div>
-    <div class="mc bl"><div class="mcl">Receita Total</div><div class="mcv" style="font-size:20px">${fvc(vTot)}</div><div class="mcs">valor total</div></div>
-    <div class="mc pu"><div class="mcl">Recorrente Total</div><div class="mcv" style="font-size:20px">${fvc(vR)}</div><div class="mcs">honorários acum.</div></div>
-    <div class="mc or"><div class="mcl">Extras Total</div><div class="mcv" style="font-size:20px">${fvc(vE)}</div><div class="mcs">serviços extras</div></div>`;
-  const pc=["rp1","rp2","rp3"];
+    <div class="kpi-card c-green"><div class="kpi-label">Total Ganhos</div><div class="kpi-value">${gn.length}</div><div class="kpi-sub">vendas fechadas</div></div>
+    <div class="kpi-card c-blue"><div class="kpi-label">Receita Total</div><div class="kpi-value" style="font-size:20px">${fvc(vTot)}</div><div class="kpi-sub">valor total</div></div>
+    <div class="kpi-card c-purple"><div class="kpi-label">Recorrente Total</div><div class="kpi-value" style="font-size:20px">${fvc(vR)}</div><div class="kpi-sub">honorários acum.</div></div>
+    <div class="kpi-card c-amber"><div class="kpi-label">Extras Total</div><div class="kpi-value" style="font-size:20px">${fvc(vE)}</div><div class="kpi-sub">serviços extras</div></div>`;
+  const pc=["rp-1","rp-2","rp-3"];
   document.getElementById("rank-list").innerHTML=lista.length?lista.map(([n,d],i)=>`
-    <div class="ri"><div class="rpos ${pc[i]||"rpn"}">${i+1}</div><div class="rnm">${n}</div>
-    <div class="rbw"><div class="rbf" style="width:${Math.round(d.q/mq*100)}%"></div></div>
-    <div class="rns"><div class="rv">${d.q} venda${d.q!==1?"s":""}</div><div class="rsb">${fvc(d.v)}</div></div></div>`).join("")
-    :"<div class=\"sd\">Nenhuma venda registrada</div>";
+    <div class="rank-row"><div class="rank-pos ${pc[i]||"rp-n"}">${i+1}</div><div class="rank-name">${n}</div>
+    <div class="rank-bar-wrap"><div class="rank-bar-fill" style="width:${Math.round(d.q/mq*100)}%"></div></div>
+    <div class="rank-stats"><div class="rank-val">${d.q} venda${d.q!==1?"s":""}</div><div class="rank-sub">${fvc(d.v)}</div></div></div>`).join("")
+    :"<div class=\"empty\">Nenhuma venda registrada</div>";
 }
 
 // LEADS
 function initLeads(){
-  document.getElementById("grp-emp2").querySelectorAll(".bf").forEach(b=>{
+  document.getElementById("grp-emp2").querySelectorAll(".btn-filter").forEach(b=>{
     b.addEventListener("click",()=>{
-      document.getElementById("grp-emp2").querySelectorAll(".bf").forEach(x=>x.className="bf");
-      const cls={gaideski:"bf ag",planicon:"bf ap",qualificacao:"bf aq",todos:"bf a"};
-      b.className=cls[b.dataset.v]||"bf a";filt.emp2=b.dataset.v;renderLeads();
+      document.getElementById("grp-emp2").querySelectorAll(".btn-filter").forEach(x=>x.className="btn-filter");
+      b.className="btn-filter active";filt.emp2=b.dataset.v;renderLeads();
     });
   });
-  document.getElementById("grp-tv").querySelectorAll(".bf").forEach(b=>{
+  document.getElementById("grp-tv").querySelectorAll(".btn-filter").forEach(b=>{
     b.addEventListener("click",()=>{
-      document.getElementById("grp-tv").querySelectorAll(".bf").forEach(x=>x.className="bf");
-      b.className="bf a";filt.tv=b.dataset.v;renderLeads();
+      document.getElementById("grp-tv").querySelectorAll(".btn-filter").forEach(x=>x.className="btn-filter");
+      b.className="btn-filter active";filt.tv=b.dataset.v;renderLeads();
     });
   });
   document.getElementById("busca2").addEventListener("input",renderLeads);
@@ -757,165 +988,233 @@ function renderLeads(){
   });
   document.getElementById("cnt2").textContent=ll.length+" lead"+(ll.length!==1?"s":"");
   const tb=document.getElementById("tbody2");
-  if(!ll.length){tb.innerHTML='<tr><td colspan="7" class="sd">Nenhum lead</td></tr>';return}
+  if(!ll.length){tb.innerHTML='<tr><td colspan="7" class="empty">Nenhum lead</td></tr>';return}
   tb.innerHTML=ll.slice(0,200).map(l=>{
     const en=sm[l.status_id]||String(l.status_id);
     const tv=gtv(l);
-    const tvb=tv==="recorrente"?'<span class="trec">Recorrente</span>':tv==="extra"?'<span class="text">Extra</span>':"<span style=\"color:var(--text-muted);font-size:11px\">—</span>";
-    return`<tr><td><div class="ln">${l.name||"—"}</div></td><td><span class="badge ${bc(en)}">${en}</span></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name||"—"}</td><td style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px">${fd(l.created_at)}</td><td style="font-family:'DM Mono',monospace;font-size:12px">${fv(l.price)}</td></tr>`;
+    const tvb=tv==="recorrente"?'<span class="tag-rec">Recorrente</span>':tv==="extra"?'<span class="tag-ext">Extra</span>':"<span class=\"td-muted\">—</span>";
+    return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td><span class="badge ${bc(en)}">${en}</span></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
   }).join("");
 }
 
-function bc(n){const v=(n||"").toLowerCase();if(v.includes("ganho")||v.includes("onboarding"))return"badge bgn";if(v.includes("proposta")||v.includes("contrato")||v.includes("aceita")||v.includes("qualificado"))return"badge bpr";if(v.includes("qualif")||v.includes("reuniao")||v.includes("reunião")||v.includes("agendada")||v.includes("recebido")||v.includes("contato"))return"badge bql";if(v.includes("perdida")||v.includes("perda")||v.includes("no-show"))return"badge bpd";return"badge bct"}
-function etg(pid){const p=pipes.find(x=>x.id===pid);if(!p)return"—";const n=(p.name||"").toLowerCase();if(n.includes("gaideski"))return'<span class="etg etg-g">Gaideski</span>';if(n.includes("planicon")||n.includes("planicom"))return'<span class="etg etg-p">Planicon</span>';return'<span class="etg etg-q">Qualif.</span>'}
+function bc(n){const v=(n||"").toLowerCase();if(v.includes("ganho")||v.includes("onboarding"))return"badge b-green";if(v.includes("proposta")||v.includes("contrato")||v.includes("aceita")||v.includes("qualificado"))return"badge b-blue";if(v.includes("qualif")||v.includes("reuniao")||v.includes("reunião")||v.includes("agendada")||v.includes("recebido")||v.includes("contato"))return"badge b-amber";if(v.includes("perdida")||v.includes("perda")||v.includes("no-show"))return"badge b-red";return"badge b-gray"}
+function etg(pid){const p=pipes.find(x=>x.id===pid);if(!p)return"—";const n=(p.name||"").toLowerCase();if(n.includes("gaideski"))return'<span class="etag etag-g">Gaideski</span>';if(n.includes("planicon")||n.includes("planicom"))return'<span class="etag etag-p">Planicon</span>';return'<span class="etag etag-q">Qualif.</span>'}
 
-// RELATÓRIO AO VIVO
-function renderRelatorio(){
+// ── FILTRO DE DATAS DO RELATÓRIO ──
+function initRelDateFilter(){
   const ag=new Date();
-  const mesAtual=ag.getMonth(),anoAtual=ag.getFullYear();
-  document.getElementById("rel-periodo").textContent=MESES[mesAtual]+" / "+anoAtual;
+  // defaults: hoje
+  const y=ag.toISOString().slice(0,10);
+  const fimMes=new Date(ag.getFullYear(),ag.getMonth()+1,0).toISOString().slice(0,10);
+  const iniMes=new Date(ag.getFullYear(),ag.getMonth(),1).toISOString().slice(0,10);
+  document.getElementById("date-ini").value=iniMes;
+  document.getElementById("date-fim").value=y;
 
-  const gn=leads.filter(l=>l.status_id===142);
+  document.getElementById("grp-date-quick").querySelectorAll(".btn-date-quick").forEach(b=>{
+    b.addEventListener("click",()=>{
+      if(b.dataset.v==="custom"){
+        document.getElementById("custom-dates").style.display="flex";
+        document.getElementById("grp-date-quick").querySelectorAll(".btn-date-quick").forEach(x=>x.classList.remove("active"));
+        b.classList.add("active");
+        return;
+      }
+      document.getElementById("custom-dates").style.display="none";
+      document.getElementById("grp-date-quick").querySelectorAll(".btn-date-quick").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      relFiltro.tipo=b.dataset.v;
+      renderRelatorio();
+    });
+  });
+
+  document.getElementById("btn-apply-dates").addEventListener("click",()=>{
+    const ini=document.getElementById("date-ini").value;
+    const fim=document.getElementById("date-fim").value;
+    if(!ini||!fim)return;
+    relFiltro.tipo="custom";
+    relFiltro.ini=new Date(ini+"T00:00:00");
+    relFiltro.fim=new Date(fim+"T23:59:59");
+    renderRelatorio();
+  });
+}
+
+function getRelBounds(){
+  const ag=new Date();
+  const t=relFiltro.tipo;
+  if(t==="custom"&&relFiltro.ini&&relFiltro.fim){
+    const lbl=relFiltro.ini.toLocaleDateString("pt-BR")+" – "+relFiltro.fim.toLocaleDateString("pt-BR");
+    return{ini:relFiltro.ini,fim:relFiltro.fim,lbl,ano:relFiltro.ini.getFullYear(),mes:relFiltro.ini.getMonth()};
+  }
+  if(t==="mes")return{ini:new Date(ag.getFullYear(),ag.getMonth(),1),fim:new Date(ag.getFullYear(),ag.getMonth()+1,0,23,59,59),lbl:MESES[ag.getMonth()]+" "+ag.getFullYear(),ano:ag.getFullYear(),mes:ag.getMonth()};
+  if(t==="ant"){const d=new Date(ag.getFullYear(),ag.getMonth()-1,1);return{ini:d,fim:new Date(d.getFullYear(),d.getMonth()+1,0,23,59,59),lbl:MESES[d.getMonth()]+" "+d.getFullYear(),ano:d.getFullYear(),mes:d.getMonth()}}
+  if(t==="tri"){const tr=Math.floor(ag.getMonth()/3);const ini=new Date(ag.getFullYear(),tr*3,1);const fim=new Date(ag.getFullYear(),tr*3+3,0,23,59,59);return{ini,fim,lbl:(tr+1)+"º Trimestre "+ag.getFullYear(),ano:ag.getFullYear(),mes:ini.getMonth()}}
+  if(t==="sem"){const s=ag.getMonth()<6?0:6;const ini=new Date(ag.getFullYear(),s,1);const fim=new Date(ag.getFullYear(),s+6,0,23,59,59);return{ini,fim,lbl:(s===0?"1º":"2º")+" Semestre "+ag.getFullYear(),ano:ag.getFullYear(),mes:ini.getMonth()}}
+  if(t==="ano")return{ini:new Date(ag.getFullYear(),0,1),fim:new Date(ag.getFullYear(),11,31,23,59,59),lbl:"Ano "+ag.getFullYear(),ano:ag.getFullYear(),mes:0};
+  return{ini:new Date(ag.getFullYear(),ag.getMonth(),1),fim:ag,lbl:MESES[ag.getMonth()]+" "+ag.getFullYear(),ano:ag.getFullYear(),mes:ag.getMonth()};
+}
+
+// RELATÓRIO
+function renderRelatorio(){
+  const b=getRelBounds();
+  const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
+
+  document.getElementById("rel-periodo").textContent=b.lbl;
+  document.getElementById("rel-period-display").textContent=b.lbl;
+
+  // FILTRAR PELO PERÍODO
+  const gnAll=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=iTs&&(l.closed_at||l.updated_at)<=fTs);
   const at=leads.filter(l=>l.status_id!==142&&l.status_id!==143);
-  const pd=leads.filter(l=>l.status_id===143);
-  const lRec=gn.filter(l=>gtv(l)==="recorrente");
-  const lExt=gn.filter(l=>gtv(l)==="extra");
-  const vTot=gn.reduce((a,l)=>a+(l.price||0),0);
-  const vRec=lRec.reduce((a,l)=>a+(l.price||0),0);
+  const pd=leads.filter(l=>l.status_id===143&&(l.closed_at||l.updated_at)>=iTs&&(l.closed_at||l.updated_at)<=fTs);
+
+  const lRec=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente"&&(l.closed_at||l.updated_at)<=fTs);
+  const lExt=gnAll.filter(l=>gtv(l)==="extra");
+
+  const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
+  const vTot=gnAll.reduce((a,l)=>a+(l.price||0),0);
+  const vRec=lRec.reduce((a,l)=>a+(l.price||0),0); // usa cart
   const vExt=lExt.reduce((a,l)=>a+(l.price||0),0);
-  const cart=vRec; // carteira recorrente = soma de todos recorrentes ganhos
-  const tx=leads.length>0?Math.round(gn.length/leads.length*100):0;
-  const tkMedio=gn.length>0?vTot/gn.length:0;
+  const tx=leads.length>0?Math.round(gnAll.length/leads.length*100):0;
+  const tkMedio=gnAll.length>0?vTot/gnAll.length:0;
   const pot=at.reduce((a,l)=>a+(l.price||0),0);
-  const mR=gmv(anoAtual,mesAtual,"rec"),mE=gmv(anoAtual,mesAtual,"ext");
+  const mR=gmv(b.ano,b.mes,"rec"),mE=gmv(b.ano,b.mes,"ext");
   const pR=mR>0?Math.min(Math.round(cart/mR*100),999):0;
   const pE=mE>0?Math.min(Math.round(vExt/mE*100),999):0;
   const metaClientes=mR>0?Math.round(mR/TICKET_MEDIO_META):0;
   const clientesAtingir=Math.max(metaClientes-lRec.length,0);
 
   // Evolução 6 meses
-  const ms=[];for(let i=5;i>=0;i--){const d=new Date(anoAtual,mesAtual-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
+  const ag=new Date();
+  const ms=[];for(let i=5;i>=0;i--){const d=new Date(b.ano,b.mes-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
-    const ini=Math.floor(new Date(m.ano,m.mes,1)/1000),fim=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
-    const gl=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=ini&&(l.closed_at||l.updated_at)<=fim);
+    const ini2=Math.floor(new Date(m.ano,m.mes,1)/1000),fim2=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
+    const gl=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=ini2&&(l.closed_at||l.updated_at)<=fim2);
     const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
     const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
     return{...m,r,e,tot:r+e,q:gl.length};
   });
   const mx=Math.max(...dd.map(d=>d.tot),1);
 
-  // Ranking
+  // Ranking do período
   const pr={};
-  gn.forEach(l=>{const n=l._embedded?.responsible_user?.name||"Sem responsável";if(!pr[n])pr[n]={q:0,v:0};pr[n].q++;pr[n].v+=l.price||0});
+  gnAll.forEach(l=>{const n=l._embedded?.responsible_user?.name||"Sem responsável";if(!pr[n])pr[n]={q:0,v:0};pr[n].q++;pr[n].v+=l.price||0});
   const ranking=Object.entries(pr).sort((a,b)=>b[1].q-a[1].q);
   const mq=ranking[0]?.[1]?.q||1;
-  const prc=["rp1","rp2","rp3"];
+  const prc=["rp-1","rp-2","rp-3"];
 
-  function cp(p){return p>=100?"mpv":p>=60?"mpa":"mpr"}
-  function cf(p,t){return p>=100?"mfok":t==="r"?"mfr":"mfe"}
+  function cp(p){return p>=100?"pct-ok":p>=60?"pct-mid":"pct-low"}
+  function cf(p,t){return p>=100?"fill-ok":t==="r"?"fill-green":"fill-blue"}
 
   let h="";
 
   // CAPA
-  h+=`<div class="rcapa">
-    <div class="rcapa-logo"><div class="rcapa-lm"><svg viewBox="0 0 14 14" fill="white"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div><span style="font-size:14px;font-weight:600;color:rgba(255,255,255,.85)">Gaideski Contabilidade</span></div>
-    <div class="rcapa-tipo">Relatório Comercial</div>
-    <div class="rcapa-titulo">Dashboard de Vendas</div>
-    <div class="rcapa-sub">${MESES[mesAtual]} ${anoAtual} · Atualizado em tempo real</div>
-    <div class="rcapa-kpis">
-      <div class="rk"><div class="rk-l">Vendas Ganhas</div><div class="rk-v">${gn.length}</div><div class="rk-s">clientes fechados</div></div>
-      <div class="rk"><div class="rk-l">Receita Total</div><div class="rk-v">${fvc(vTot)}</div><div class="rk-s">valor acumulado</div></div>
-      <div class="rk"><div class="rk-l">Carteira Recorrente</div><div class="rk-v">${fvc(cart)}</div><div class="rk-s">honorários ativos</div></div>
-      <div class="rk"><div class="rk-l">Conversão</div><div class="rk-v">${tx}%</div><div class="rk-s">leads → clientes</div></div>
+  h+=`<div class="report-cover">
+    <div class="rc-logo">
+      <div class="rc-mark"><svg viewBox="0 0 14 14" fill="white"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div>
+      <span class="rc-brand">Gaideski Contabilidade</span>
     </div>
-    <div class="rcapa-footer"><span>Gerado em ${ag.toLocaleDateString("pt-BR")} às ${ag.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</span><span>Confidencial · Uso interno</span></div>
+    <div class="rc-type">Relatório Comercial</div>
+    <div class="rc-title">Dashboard de Vendas</div>
+    <div class="rc-sub">${b.lbl} · Atualizado em tempo real</div>
+    <div class="rc-kpis">
+      <div class="rc-kpi"><div class="rc-kpi-l">Vendas Ganhas</div><div class="rc-kpi-v">${gnAll.length}</div><div class="rc-kpi-s">no período</div></div>
+      <div class="rc-kpi"><div class="rc-kpi-l">Receita Total</div><div class="rc-kpi-v">${fvc(vTot)}</div><div class="rc-kpi-s">valor acumulado</div></div>
+      <div class="rc-kpi"><div class="rc-kpi-l">Carteira Recorrente</div><div class="rc-kpi-v">${fvc(cart)}</div><div class="rc-kpi-s">honorários ativos</div></div>
+      <div class="rc-kpi"><div class="rc-kpi-l">Conversão</div><div class="rc-kpi-v">${tx}%</div><div class="rc-kpi-s">leads → clientes</div></div>
+    </div>
+    <div class="rc-footer">
+      <span>Gerado em ${ag.toLocaleDateString("pt-BR")} às ${ag.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</span>
+      <span>Confidencial · Uso interno</span>
+    </div>
   </div>`;
 
   // RESUMO
-  h+=`<div class="rsec"><div class="rstit">Resumo Executivo</div>
+  h+=`<div class="rsec"><div class="rsec-title">Resumo Executivo</div>
   <div class="rcg">
-    <div class="rc2 cdk"><div class="rc2l">Leads Ativos</div><div class="rc2v">${at.length}</div><div class="rc2s">em andamento</div></div>
-    <div class="rc2 cgn"><div class="rc2l">Vendas Ganhas</div><div class="rc2v">${gn.length}</div><div class="rc2s">total acumulado</div></div>
-    <div class="rc2 crd"><div class="rc2l">Perdas</div><div class="rc2v">${pd.length}</div><div class="rc2s">leads perdidos</div></div>
-    <div class="rc2 cbl"><div class="rc2l">Taxa de Conversão</div><div class="rc2v">${tx}%</div><div class="rc2s">leads → clientes</div></div>
+    <div class="rc2 c-gray"><div class="rc2-l">Leads Ativos</div><div class="rc2-v">${at.length}</div><div class="rc2-s">em andamento</div></div>
+    <div class="rc2 c-green"><div class="rc2-l">Vendas Ganhas</div><div class="rc2-v">${gnAll.length}</div><div class="rc2-s">no período</div></div>
+    <div class="rc2 c-red"><div class="rc2-l">Perdas</div><div class="rc2-v">${pd.length}</div><div class="rc2-s">leads perdidos</div></div>
+    <div class="rc2 c-blue"><div class="rc2-l">Taxa de Conversão</div><div class="rc2-v">${tx}%</div><div class="rc2-s">leads → clientes</div></div>
   </div>
   <div class="rcg">
-    <div class="rc2 cbl"><div class="rc2l">Receita Total</div><div class="rc2v" style="font-size:18px">${fvc(vTot)}</div><div class="rc2s">acumulada</div></div>
-    <div class="rc2 cbl"><div class="rc2l">Carteira Recorrente</div><div class="rc2v" style="font-size:18px">${fvc(cart)}</div><div class="rc2s">${lRec.length} clientes</div></div>
-    <div class="rc2 cpu"><div class="rc2l">Honorários</div><div class="rc2v" style="font-size:18px">${fvc(vRec)}</div><div class="rc2s">${lRec.length} recorrentes</div></div>
-    <div class="rc2 cor"><div class="rc2l">Extras</div><div class="rc2v" style="font-size:18px">${fvc(vExt)}</div><div class="rc2s">${lExt.length} serviços</div></div>
+    <div class="rc2 c-blue"><div class="rc2-l">Receita Total</div><div class="rc2-v" style="font-size:17px">${fvc(vTot)}</div><div class="rc2-s">acumulada</div></div>
+    <div class="rc2 c-blue"><div class="rc2-l">Carteira Recorrente</div><div class="rc2-v" style="font-size:17px">${fvc(cart)}</div><div class="rc2-s">${lRec.length} clientes</div></div>
+    <div class="rc2 c-green"><div class="rc2-l">Honorários</div><div class="rc2-v" style="font-size:17px">${fvc(vRec)}</div><div class="rc2-s">${lRec.length} recorrentes</div></div>
+    <div class="rc2 c-purple"><div class="rc2-l">Extras</div><div class="rc2-v" style="font-size:17px">${fvc(vExt)}</div><div class="rc2-s">${lExt.length} serviços</div></div>
   </div></div>`;
 
   // METAS
-  h+=`<div class="rsec"><div class="rstit">Metas vs Realizado — ${MESES[mesAtual]} ${anoAtual}</div>
-  <div class="mg">
-    <div class="mcard"><div class="mctit">Carteira Recorrente <span class="mbdg mbr">Honorários</span></div>
-      <div class="mvls"><div class="mva">${fvc(cart)}</div><div class="mvs">/</div><div class="mvt">${mR>0?fvc(mR):"Meta não definida"}</div></div>
-      <div class="mbar"><div class="mfill ${cf(pR,"r")}" style="width:${Math.min(pR,100)}%"></div></div>
-      <div class="minf"><span>${mR>0?"Faltam "+fvc(Math.max(mR-cart,0)):"Configure a meta →"}</span><span class="mpct ${cp(pR)}">${mR>0?pR+"%":"—"}</span></div>
-      <div class="mdet"><strong>${lRec.length}</strong> clientes · Ticket médio: <strong>${fvc(TICKET_MEDIO_META)}</strong>${metaClientes>0?" · Precisam de mais <strong>"+clientesAtingir+"</strong> clientes":""}</div>
+  h+=`<div class="rsec"><div class="rsec-title">Metas vs Realizado — ${b.lbl}</div>
+  <div class="meta-grid">
+    <div class="meta-card"><div class="meta-card-title">Carteira Recorrente <span class="tag tag-green">Honorários</span></div>
+      <div class="meta-vals"><div class="meta-val-a">${fvc(cart)}</div><div class="meta-val-sep">/</div><div class="meta-val-t">${mR>0?fvc(mR):"Meta não definida"}</div></div>
+      <div class="progress-bar"><div class="progress-fill ${cf(pR,"r")}" style="width:${Math.min(pR,100)}%"></div></div>
+      <div class="meta-info"><span>${mR>0?"Faltam "+fvc(Math.max(mR-cart,0)):"Configure a meta →"}</span><span class="meta-pct ${cp(pR)}">${mR>0?pR+"%":"—"}</span></div>
+      <div class="meta-detail"><strong>${lRec.length}</strong> clientes · Ticket médio: <strong>${fvc(TICKET_MEDIO_META)}</strong></div>
     </div>
-    <div class="mcard"><div class="mctit">Serviços Extras <span class="mbdg mbe">Extra</span></div>
-      <div class="mvls"><div class="mva">${fvc(vExt)}</div><div class="mvs">/</div><div class="mvt">${mE>0?fvc(mE):"Meta não definida"}</div></div>
-      <div class="mbar"><div class="mfill ${cf(pE,"e")}" style="width:${Math.min(pE,100)}%"></div></div>
-      <div class="minf"><span>${mE>0?"Faltam "+fvc(Math.max(mE-vExt,0)):"Configure a meta →"}</span><span class="mpct ${cp(pE)}">${mE>0?pE+"%":"—"}</span></div>
-      <div class="mdet"><strong>${lExt.length}</strong> extras este mês</div>
+    <div class="meta-card"><div class="meta-card-title">Serviços Extras <span class="tag tag-purple">Extra</span></div>
+      <div class="meta-vals"><div class="meta-val-a">${fvc(vExt)}</div><div class="meta-val-sep">/</div><div class="meta-val-t">${mE>0?fvc(mE):"Meta não definida"}</div></div>
+      <div class="progress-bar"><div class="progress-fill ${cf(pE,"e")}" style="width:${Math.min(pE,100)}%"></div></div>
+      <div class="meta-info"><span>${mE>0?"Faltam "+fvc(Math.max(mE-vExt,0)):"Configure a meta →"}</span><span class="meta-pct ${cp(pE)}">${mE>0?pE+"%":"—"}</span></div>
+      <div class="meta-detail"><strong>${lExt.length}</strong> extras no período</div>
     </div>
   </div></div>`;
 
   // INDICADORES
-  h+=`<div class="rsec"><div class="rstit">Indicadores de Desempenho</div>
+  h+=`<div class="rsec"><div class="rsec-title">Indicadores de Desempenho</div>
   <div class="ind-grid">
-    <div class="ind-card"><div class="ind-label">Ticket Médio por Cliente</div><div class="ind-val">${fvc(tkMedio)}</div><div class="ind-sub">média por venda fechada</div><div class="ind-barra"><div class="ind-fill" style="width:${tkMedio>0?Math.min(Math.round(tkMedio/TICKET_MEDIO_META*100),100):0}%"></div></div></div>
-    <div class="ind-card"><div class="ind-label">Potencial em Pipeline</div><div class="ind-val">${fvc(pot)}</div><div class="ind-sub">${at.length} leads ativos com valor</div><div class="ind-barra"><div class="ind-fill" style="width:${Math.min(Math.round(at.length/Math.max(leads.length,1)*100),100)}%;background:var(--q)"></div></div></div>
-    <div class="ind-card"><div class="ind-label">Mix Recorrente / Extra</div><div class="ind-val">${vTot>0?Math.round(vRec/vTot*100):0}% / ${vTot>0?Math.round(vExt/vTot*100):0}%</div><div class="ind-sub">recorrente vs serviços extras</div><div class="ind-barra" style="display:flex;height:6px;border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--g);width:${vTot>0?Math.round(vRec/vTot*100):50}%;transition:width .8s"></div><div style="height:100%;background:var(--p);flex:1"></div></div></div>
-    <div class="ind-card"><div class="ind-label">Clientes p/ Meta Recorrente</div><div class="ind-val">${metaClientes>0?lRec.length+" / "+metaClientes:"—"}</div><div class="ind-sub">${metaClientes>0?"Ticket médio de "+fvc(TICKET_MEDIO_META)+"/cliente":"Defina a meta para calcular"}</div>${metaClientes>0?'<div class="ind-barra"><div class="ind-fill" style="width:'+Math.min(Math.round(lRec.length/metaClientes*100),100)+'%"></div></div>':""}</div>
-    <div class="ind-card"><div class="ind-label">Total de Leads</div><div class="ind-val">${leads.length}</div><div class="ind-sub">${gn.length} ganhos · ${pd.length} perdidos · ${at.length} ativos</div><div class="ind-barra"><div class="ind-fill" style="width:${Math.min(tx,100)}%;background:var(--green)"></div></div></div>
-    <div class="ind-card"><div class="ind-label">Projeção Receita Anual</div><div class="ind-val">${fvc(cart*12)}</div><div class="ind-sub">baseado na carteira recorrente atual</div><div class="ind-barra"><div class="ind-fill" style="width:${Math.min(Math.round(new Date().getMonth()/12*100),100)}%;background:var(--q)"></div></div></div>
+    <div class="ind-card"><div class="ind-label">Ticket Médio</div><div class="ind-val">${fvc(tkMedio)}</div><div class="ind-sub">média por venda fechada</div><div class="ind-bar"><div class="ind-fill" style="width:${tkMedio>0?Math.min(Math.round(tkMedio/TICKET_MEDIO_META*100),100):0}%"></div></div></div>
+    <div class="ind-card"><div class="ind-label">Potencial em Pipeline</div><div class="ind-val">${fvc(pot)}</div><div class="ind-sub">${at.length} leads ativos com valor</div><div class="ind-bar"><div class="ind-fill" style="width:${Math.min(Math.round(at.length/Math.max(leads.length,1)*100),100)}%;background:var(--amber)"></div></div></div>
+    <div class="ind-card"><div class="ind-label">Mix Recorrente / Extra</div><div class="ind-val">${vTot>0?Math.round(vRec/vTot*100):0}% / ${vTot>0?Math.round(vExt/vTot*100):0}%</div><div class="ind-sub">recorrente vs extras</div><div class="ind-bar" style="display:flex;height:5px;border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--green);width:${vTot>0?Math.round(vRec/vTot*100):50}%"></div><div style="height:100%;background:var(--purple);flex:1"></div></div></div>
+    <div class="ind-card"><div class="ind-label">Clientes p/ Meta</div><div class="ind-val">${metaClientes>0?lRec.length+" / "+metaClientes:"—"}</div><div class="ind-sub">${metaClientes>0?"Ticket médio de "+fvc(TICKET_MEDIO_META)+"/cliente":"Defina a meta"}</div>${metaClientes>0?'<div class="ind-bar"><div class="ind-fill" style="width:'+Math.min(Math.round(lRec.length/metaClientes*100),100)+'%"></div></div>':""}</div>
+    <div class="ind-card"><div class="ind-label">Total de Leads</div><div class="ind-val">${leads.length}</div><div class="ind-sub">${gnAll.length} ganhos · ${pd.length} perdidos · ${at.length} ativos</div><div class="ind-bar"><div class="ind-fill" style="width:${Math.min(tx,100)}%;background:var(--green)"></div></div></div>
+    <div class="ind-card"><div class="ind-label">Projeção Anual</div><div class="ind-val">${fvc(cart*12)}</div><div class="ind-sub">baseado na carteira recorrente</div><div class="ind-bar"><div class="ind-fill" style="width:${Math.min(Math.round(new Date().getMonth()/12*100),100)}%;background:var(--amber)"></div></div></div>
   </div></div>`;
 
   // EVOLUÇÃO
-  h+=`<div class="rsec"><div class="rstit">Evolução Mensal — Últimos 6 Meses</div>
-  <div class="ecard">
-    <div class="eh"><div class="etitle">Receita por mês (vendas ganhas)</div><div class="eleg"><div class="li"><div class="ld" style="background:var(--g)"></div> Recorrente</div><div class="li"><div class="ld" style="background:var(--p)"></div> Extra</div></div></div>
-    <div class="cb">${dd.map(d=>{const hr=Math.round(d.r/mx*140),he=Math.round(d.e/mx*140);return`<div class="cc"><div class="cs"><div class="bs2 be" style="height:${he}px"></div><div class="bs2 br" style="height:${hr}px"></div></div><div class="cl">${d.lb}</div><div class="cv">${d.tot>0?fvc(d.tot):""}</div></div>`}).join("")}</div>
+  h+=`<div class="rsec"><div class="rsec-title">Evolução Mensal — 6 Meses</div>
+  <div class="chart-card">
+    <div class="chart-header"><div class="chart-title">Receita por mês (vendas ganhas)</div><div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Recorrente</div><div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Extra</div></div></div>
+    <div class="chart-bars">${dd.map(d=>{const hr=Math.round(d.r/mx*130),he=Math.round(d.e/mx*130);return`<div class="bar-col"><div class="bar-stack"><div class="bar-seg bar-seg-p" style="height:${he}px"></div><div class="bar-seg bar-seg-g" style="height:${hr}px"></div></div><div class="bar-label">${d.lb}</div><div class="bar-value">${d.tot>0?fvc(d.tot):""}</div></div>`}).join("")}</div>
   </div>
-  <div class="rcg" style="grid-template-columns:repeat(6,1fr)">${dd.map(d=>`<div class="rc2 cbl"><div class="rc2l">${d.lb}</div><div class="rc2v" style="font-size:16px">${d.q}</div><div class="rc2s">${fvc(d.tot)}</div></div>`).join("")}</div>
+  <div class="rcg" style="grid-template-columns:repeat(6,1fr)">${dd.map(d=>`<div class="rc2 c-blue"><div class="rc2-l">${d.lb}</div><div class="rc2-v" style="font-size:15px">${d.q}</div><div class="rc2-s">${fvc(d.tot)}</div></div>`).join("")}</div>
   </div>`;
 
   // RANKING
-  h+=`<div class="rsec"><div class="rstit">Ranking de Vendedores</div>
-  <div class="rcard"><div class="rh">Por quantidade de vendas ganhas</div>
-  ${ranking.length?ranking.map(([n,d],i)=>`<div class="ri"><div class="rpos ${prc[i]||"rpn"}">${i+1}</div><div class="rnm">${n}</div><div class="rbw"><div class="rbf" style="width:${Math.round(d.q/mq*100)}%"></div></div><div class="rns"><div class="rv">${d.q} venda${d.q!==1?"s":""}</div><div class="rsb">${fvc(d.v)}</div></div></div>`).join(""):"<div class=\"sd\">Nenhuma venda registrada</div>"}
+  h+=`<div class="rsec"><div class="rsec-title">Ranking de Vendedores — ${b.lbl}</div>
+  <div class="rank-card"><div class="rank-header">Por quantidade de vendas ganhas no período</div>
+  ${ranking.length?ranking.map(([n,d],i)=>`<div class="rank-row"><div class="rank-pos ${prc[i]||"rp-n"}">${i+1}</div><div class="rank-name">${n}</div><div class="rank-bar-wrap"><div class="rank-bar-fill" style="width:${Math.round(d.q/mq*100)}%"></div></div><div class="rank-stats"><div class="rank-val">${d.q} venda${d.q!==1?"s":""}</div><div class="rank-sub">${fvc(d.v)}</div></div></div>`).join(""):"<div class=\"empty\">Nenhuma venda no período</div>"}
   </div></div>`;
 
   // FUNIS
   const old=filt.tipo;filt.tipo="ativos";
   const fHtml=pipes.map(pipe=>{
     const pn=pipe.name||"",pl=pn.toLowerCase();
-    let dc="fdq",fc="efq";
-    if(pl.includes("gaideski")){dc="fdg";fc="efg"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fdp";fc="efp"}
+    let dc="fd-amber",fc="sfill-amber";
+    if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}
     const ss=(pipe._embedded?.statuses||[]).filter(s=>s.id!==142&&s.id!==143);
     const lp=leads.filter(l=>pm[l.status_id]===pipe.id&&l.status_id!==142&&l.status_id!==143);
     const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
     const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
     const mx2=Math.max(...Object.values(cnt),1);
-    const chips=ss.map(s=>{const c=cnt[s.id]||0,pct=Math.round(c/mx2*100);return`<div class="et"><div class="en" title="${s.name}">${s.name}</div><div class="ec">${c}</div><div class="eb"><div class="ef ${fc}" style="width:${pct}%"></div></div></div>`}).join("");
-    return`<div class="funil"><div class="fh"><div class="fd ${dc}"></div><div class="fn">${pn}</div><div class="ft">${tot} ativo${tot!==1?"s":""}</div></div><div class="er">${chips||'<div class="sd" style="padding:12px">Sem leads ativos</div>'}</div></div>`;
+    const chips=ss.map(s=>{const c=cnt[s.id]||0,pct=Math.round(c/mx2*100);return`<div class="stage-item"><div class="stage-name">${s.name}</div><div class="stage-count">${c}</div><div class="stage-bar"><div class="stage-fill ${fc}" style="width:${pct}%"></div></div></div>`}).join("");
+    return`<div class="funnel-card"><div class="funnel-header"><div class="funnel-dot ${dc}"></div><div class="funnel-name">${pn}</div><div class="funnel-count">${tot} ativo${tot!==1?"s":""}</div></div><div class="funnel-stages">${chips||'<div class="empty" style="padding:10px">Sem leads ativos</div>'}</div></div>`;
   }).join("");
   filt.tipo=old;
-  h+=`<div class="rsec"><div class="rstit">Funil de Vendas por Empresa</div><div class="fc">${fHtml}</div></div>`;
+  h+=`<div class="rsec"><div class="rsec-title">Funil de Vendas Atual</div><div class="funnel-list">${fHtml}</div></div>`;
 
-  // CLIENTES FECHADOS
-  const gnAll=leads.filter(l=>l.status_id===142);
-  h+=`<div class="rsec"><div class="rstit">Clientes Fechados — Total: ${gnAll.length}</div>
-  <div class="tw"><div style="overflow-x:auto"><table><thead><tr><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
-  <tbody>${gnAll.slice(0,50).map(l=>{
-    const tv=gtv(l);const tvb=tv==="recorrente"?'<span class="trec">Recorrente</span>':tv==="extra"?'<span class="text">Extra</span>':"—";
-    return`<tr><td><div class="ln">${l.name||"—"}</div></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td style="color:var(--text-muted);font-size:12px">${l._embedded?.responsible_user?.name||"—"}</td><td style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px">${fd(l.closed_at||l.created_at)}</td><td style="font-family:'DM Mono',monospace;font-size:12px">${fv(l.price)}</td></tr>`;
-  }).join("")}</tbody></table></div></div>
-  <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted)"><span>Gaideski Contabilidade e Associados Ltda · Confidencial</span><span>${ag.toLocaleDateString("pt-BR")}</span></div>
-  </div>`;
+  // CLIENTES FECHADOS NO PERÍODO
+  h+=`<div class="rsec"><div class="rsec-title">Clientes Fechados no Período — ${gnAll.length} total</div>
+  <div class="table-wrap"><div style="overflow-x:auto"><table>
+    <thead><tr><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
+    <tbody>${gnAll.length?gnAll.slice(0,50).map(l=>{
+      const tv=gtv(l);const tvb=tv==="recorrente"?'<span class="tag-rec">Recorrente</span>':tv==="extra"?'<span class="tag-ext">Extra</span>':"—";
+      return`<tr><td><div class="td-name">${l.name||"—"}</div></td><td>${etg(pm[l.status_id])}</td><td>${tvb}</td><td class="td-muted">${l._embedded?.responsible_user?.name||"—"}</td><td class="td-mono">${fd(l.closed_at||l.created_at)}</td><td class="td-mono">${fv(l.price)}</td></tr>`;
+    }).join(""):'<tr><td colspan="6" class="empty">Nenhum cliente fechado neste período</td></tr>'}
+    </tbody>
+  </table></div></div>
+  <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:10px;color:var(--text3)">
+    <span>Gaideski Contabilidade e Associados Ltda · Confidencial · Uso interno</span>
+    <span style="font-family:var(--mono)">${ag.toLocaleDateString("pt-BR")}</span>
+  </div></div>`;
 
   document.getElementById("rel-corpo").innerHTML=h;
 }
@@ -926,6 +1225,7 @@ initModal();
 initFiltros();
 initFiltroMeta();
 initLeads();
+initRelDateFilter();
 carregar();
 </script>
 </body>
