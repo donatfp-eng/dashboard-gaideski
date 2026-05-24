@@ -1276,15 +1276,21 @@ function renderRelatorio(){
   const isGaideski=l=>getLeadPipe(l)===PID.gaideski;
   const isPlanicon=l=>getLeadPipe(l)===PID.planicon;
 
+  // Vendas ganhas por empresa
+  const gnG=gnAll.filter(isGaideski); const vGnG=gnG.reduce((a,l)=>a+(l.price||0),0);
+  const gnP=gnAll.filter(isPlanicon); const vGnP=gnP.reduce((a,l)=>a+(l.price||0),0);
+  const gnQ=gnAll.filter(l=>getLeadPipe(l)===PID.qualificacao);
+
   const lRecG=lRec.filter(isGaideski); const vRecG=lRecG.reduce((a,l)=>a+(l.price||0),0);
   const lRecP=lRec.filter(isPlanicon); const vRecP=lRecP.reduce((a,l)=>a+(l.price||0),0);
   const lExtG=lExt.filter(isGaideski); const vExtG=lExtG.reduce((a,l)=>a+(l.price||0),0);
   const lExtP=lExt.filter(isPlanicon); const vExtP=lExtP.reduce((a,l)=>a+(l.price||0),0);
 
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
-  const vTot=gnAll.reduce((a,l)=>a+(l.price||0),0);
-  const vRec=lRec.reduce((a,l)=>a+(l.price||0),0); // usa cart
+  // vTot = somente recorrente + extras (leads sem tipo não entram na receita)
+  const vRec=lRec.reduce((a,l)=>a+(l.price||0),0);
   const vExt=lExt.reduce((a,l)=>a+(l.price||0),0);
+  const vTot=vRec+vExt;
   const tx=leads.length>0?Math.round(gnAll.length/leads.length*100):0;
   const tkMedio=gnAll.length>0?vTot/gnAll.length:0;
   const pot=at.reduce((a,l)=>a+(l.price||0),0);
@@ -1378,13 +1384,18 @@ function renderRelatorio(){
     <div class="resumo-row" style="grid-template-columns:repeat(5,1fr)">
       <div class="resumo-cell" style="background:var(--surface2)">
         <div class="resumo-cell-label" style="color:var(--text3)">Empresa</div>
-        <div style="font-size:11px;font-weight:700;color:var(--text3);margin-top:4px">Honorários</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);margin-top:4px">Vendas Ganhas</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text3);margin-top:18px">Honorários</div>
         <div style="font-size:11px;font-weight:700;color:var(--text3);margin-top:18px">Serv. Extras</div>
       </div>
       <div class="resumo-cell">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent);display:inline-block;margin-right:3px"></span>Gaideski</div>
-        <div class="resumo-cell-value" style="font-size:17px;color:var(--accent)">${fvc(vRecG)}</div>
-        <div class="resumo-cell-sub">${lRecG.length} cliente${lRecG.length!==1?'s':''}</div>
+        <div class="resumo-cell-value" style="font-size:17px">${gnG.length}</div>
+        <div class="resumo-cell-sub">${fvc(vGnG)}</div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
+          <div class="resumo-cell-value" style="font-size:17px;color:var(--accent)">${fvc(vRecG)}</div>
+          <div class="resumo-cell-sub">${lRecG.length} cliente${lRecG.length!==1?'s':''}</div>
+        </div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
           <div class="resumo-cell-value" style="font-size:17px">${fvc(vExtG)}</div>
           <div class="resumo-cell-sub">${lExtG.length} serviço${lExtG.length!==1?'s':''}</div>
@@ -1392,8 +1403,12 @@ function renderRelatorio(){
       </div>
       <div class="resumo-cell">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--purple);display:inline-block;margin-right:3px"></span>Planicon</div>
-        <div class="resumo-cell-value" style="font-size:17px;color:var(--purple)">${fvc(vRecP)}</div>
-        <div class="resumo-cell-sub">${lRecP.length} cliente${lRecP.length!==1?'s':''}</div>
+        <div class="resumo-cell-value" style="font-size:17px">${gnP.length}</div>
+        <div class="resumo-cell-sub">${fvc(vGnP)}</div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
+          <div class="resumo-cell-value" style="font-size:17px;color:var(--purple)">${fvc(vRecP)}</div>
+          <div class="resumo-cell-sub">${lRecP.length} cliente${lRecP.length!==1?'s':''}</div>
+        </div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
           <div class="resumo-cell-value" style="font-size:17px">${fvc(vExtP)}</div>
           <div class="resumo-cell-sub">${lExtP.length} serviço${lExtP.length!==1?'s':''}</div>
@@ -1401,8 +1416,12 @@ function renderRelatorio(){
       </div>
       <div class="resumo-cell" style="background:var(--surface2)">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--text2);display:inline-block;margin-right:3px"></span>Qualificação</div>
-        <div class="resumo-cell-value" style="font-size:17px">${fvc(lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
-        <div class="resumo-cell-sub">${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length} cliente${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length!==1?'s':''}</div>
+        <div class="resumo-cell-value" style="font-size:17px">${gnQ.length}</div>
+        <div class="resumo-cell-sub">${fvc(gnQ.reduce((a,l)=>a+(l.price||0),0))}</div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
+          <div class="resumo-cell-value" style="font-size:17px">${fvc(lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
+          <div class="resumo-cell-sub">${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length} cliente${lRec.filter(l=>getLeadPipe(l)===PID.qualificacao).length!==1?'s':''}</div>
+        </div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
           <div class="resumo-cell-value" style="font-size:17px">${fvc(lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).reduce((a,l)=>a+(l.price||0),0))}</div>
           <div class="resumo-cell-sub">${lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).length} serviço${lExt.filter(l=>getLeadPipe(l)===PID.qualificacao).length!==1?'s':''}</div>
@@ -1410,8 +1429,12 @@ function renderRelatorio(){
       </div>
       <div class="resumo-cell highlight">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--green);display:inline-block;margin-right:3px"></span>TOTAL</div>
-        <div class="resumo-cell-value" style="font-size:17px">${fvc(vRec)}</div>
-        <div class="resumo-cell-sub">${lRec.length} recorrente${lRec.length!==1?'s':''}</div>
+        <div class="resumo-cell-value" style="font-size:17px">${gnAll.length}</div>
+        <div class="resumo-cell-sub">${fvc(vTot)}</div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
+          <div class="resumo-cell-value" style="font-size:17px">${fvc(vRec)}</div>
+          <div class="resumo-cell-sub">${lRec.length} recorrente${lRec.length!==1?'s':''}</div>
+        </div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)">
           <div class="resumo-cell-value" style="font-size:17px">${fvc(vExt)}</div>
           <div class="resumo-cell-sub">${lExt.length} extra${lExt.length!==1?'s':''}</div>
