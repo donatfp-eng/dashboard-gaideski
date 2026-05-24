@@ -806,6 +806,8 @@ function detectStatusIds(){
 const TICKET_MEDIO_META=450;
 
 let leads=[],pipes=[];
+let leadPipeMap={}; // mapeia lead.id -> pipeline_id correto
+function getLeadPipe(l){return leadPipeMap[l.id]||pm[l.status_id]||null}
 let sm={},pm={};
 let filt={emp:"todos",per:"todos",tipo:"ativos",emp2:"todos",tv:"todos"};
 let fpm={tipo:"mes",mes:new Date().getMonth(),ano:new Date().getFullYear()};
@@ -906,20 +908,28 @@ async function carregar(){
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
     
-    // CORREÇÃO CRÍTICA: leads ganhos/perdidos têm status_id especial que não está no mapa pm
-    // Usamos pipeline_id do próprio lead como fallback
+    // Limpa e reconstrói o mapa por lead (não por status_id global)
+    leadPipeMap={};
     leads=ll.filter(l=>{
-      // Tenta pelo mapa normal
-      if(pm[l.status_id]&&PSET.has(pm[l.status_id]))return true;
-      // Fallback: usa pipeline_id embutido no lead (Kommo inclui isso)
+      // 1. Status normal (leads ativos) — pm tem o pipeline correto
+      if(pm[l.status_id]&&PSET.has(pm[l.status_id])){
+        leadPipeMap[l.id]=pm[l.status_id];
+        return true;
+      }
+      // 2. Leads ganhos/perdidos — usa pipeline_id do próprio lead
       const pid=l.pipeline_id||l._embedded?.pipeline?.id;
       if(pid&&PSET.has(pid)){
-        pm[l.status_id]=pid; // registra no mapa para uso posterior
+        leadPipeMap[l.id]=pid; // salva POR LEAD — não polui pm[]
         return true;
       }
       return false;
     });
-    console.log("[DEBUG] Leads após filtro PSET:",leads.length,"(antes eram",ll.length,")");
+    
+    // Debug: distribuição por empresa
+    const _dbgPipe={};
+    leads.forEach(l=>{const p=getLeadPipe(l);_dbgPipe[p]=(_dbgPipe[p]||0)+1});
+    console.log("[DEBUG] Leads por pipeline:",JSON.stringify(_dbgPipe));
+    console.log("[DEBUG] Gaideski("+PID.gaideski+"):",_dbgPipe[PID.gaideski]||0,"Planicon("+PID.planicon+"):",_dbgPipe[PID.planicon]||0);
     detectStatusIds();
     // DEBUG: mostra leads ganhos no console
     const dbgGanhos=leads.filter(l=>isWin(l));
