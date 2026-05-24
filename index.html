@@ -323,31 +323,28 @@ tbody tr:hover td{background:#F8FAF8}
 .btn-print svg{width:13px;height:13px}
 
 .report-cover{
-  background:var(--green-dark);
+  background:#1A1D23;
   color:#fff;border-radius:8px;padding:32px 36px;margin-bottom:16px;
   position:relative;overflow:hidden;
-  border:1px solid rgba(0,0,0,.2);
+  border:1px solid #2A2E38;
 }
-.report-cover::after{content:"";position:absolute;top:0;right:0;bottom:0;width:40%;
-  background:linear-gradient(270deg,rgba(0,0,0,.12) 0%,transparent 100%);pointer-events:none}
-.rc-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.rc-mark{width:32px;height:32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.rc-mark svg{width:14px;height:14px;fill:white}
-.rc-brand{font-size:13px;font-weight:600;color:rgba(255,255,255,.9)}
-.rc-divider{width:1px;height:16px;background:rgba(255,255,255,.2);margin:0 8px}
-.rc-date-badge{font-size:11px;font-weight:600;color:rgba(255,255,255,.65);background:rgba(255,255,255,.1);padding:3px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.15)}
-.rc-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.4);margin-bottom:6px}
+.rc-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.rc-mark{width:30px;height:30px;background:var(--green);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rc-mark svg{width:13px;height:13px;fill:white}
+.rc-brand{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+.rc-divider{width:1px;height:16px;background:rgba(255,255,255,.15);margin:0 10px}
+.rc-date-badge{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);padding:3px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.1)}
+.rc-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.3);margin-bottom:6px}
 .rc-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:-1.2px;margin-bottom:4px;line-height:1}
-.rc-sub{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:28px;font-weight:400}
-/* KPI row: sem cards, só colunas com separador */
-.rc-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.12);padding-top:20px}
+.rc-sub{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:28px}
+.rc-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.08);padding-top:20px}
 @media(max-width:700px){.rc-kpis{grid-template-columns:repeat(2,1fr);gap:16px 0;padding-top:16px}}
-.rc-kpi{padding:0 20px 0 0;border-right:1px solid rgba(255,255,255,.1)}
-.rc-kpi:last-child{border-right:none}
-.rc-kpi-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:rgba(255,255,255,.4);margin-bottom:6px}
-.rc-kpi-v{font-size:24px;font-weight:800;font-family:var(--mono);color:#fff;letter-spacing:-1px;line-height:1}
-.rc-kpi-s{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px}
-.rc-footer{margin-top:20px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.25);font-family:var(--mono)}
+.rc-kpi{padding:0 20px 0 0;border-right:1px solid rgba(255,255,255,.07)}
+.rc-kpi:last-child{border-right:none;padding-right:0}
+.rc-kpi-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:rgba(255,255,255,.35);margin-bottom:6px}
+.rc-kpi-v{font-size:26px;font-weight:800;font-family:var(--mono);color:#fff;letter-spacing:-1px;line-height:1}
+.rc-kpi-s{font-size:10px;color:rgba(255,255,255,.3);margin-top:3px}
+.rc-footer{margin-top:20px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--mono)}
 
 /* ── REPORT SECTION ── */
 .rsec{margin-bottom:20px}
@@ -676,35 +673,27 @@ const PSET=new Set([13512120,13512132,13512140]);
 const CFV=2057155,ENR=1797505,ENE=1797507;
 
 // IDs detectados dinamicamente dos pipelines
-let SID_WIN=null, SID_LOST=null;
+// SID_WIN e SID_LOST são ARRAYS pois cada pipeline tem seu próprio status de ganho/perda
+let SID_WIN=[], SID_LOST=[];
+
+function isWin(l){return SID_WIN.includes(l.status_id)}
+function isLost(l){return SID_LOST.includes(l.status_id)}
+function isActive(l){return !isWin(l)&&!isLost(l)}
 
 function detectStatusIds(){
-  // Kommo tem status especiais: "won" type=142 ou name contendo "ganho/venda ganha/won"
-  // Detecta pelo type ou pelo nome
-  const allStatus=[];
+  const winIds=new Set();
+  const lostIds=new Set();
   pipes.forEach(p=>{
     (p._embedded?.statuses||[]).forEach(s=>{
-      allStatus.push({id:s.id,name:(s.name||"").toLowerCase(),type:s.type});
+      const n=(s.name||"").toLowerCase();
+      if(n.includes("venda ganha")||n.includes("ganho")||n.includes("won")||n.includes("onboarding")||n.includes("cliente ativo"))winIds.add(s.id);
+      if(n.includes("venda perdida")||n.includes("perdid")||n.includes("lost")||n.includes("no-show"))lostIds.add(s.id);
     });
   });
-  console.log("[DEBUG STATUS] Todos os status:", allStatus.map(s=>s.id+":"+s.name+"(type="+s.type+")").join(", "));
-  
-  // type=142 = won, type=143 = lost no Kommo padrão
-  // mas também pode ser pelo nome
-  const won=allStatus.find(s=>s.type===142||s.name.includes("ganho")||s.name.includes("won")||s.name.includes("venda ganha")||s.name.includes("fechado")||s.name.includes("cliente"));
-  const lost=allStatus.find(s=>s.type===143||s.name.includes("perdid")||s.name.includes("lost")||s.name.includes("no-show"));
-  
-  if(won){SID_WIN=won.id;console.log("[DEBUG STATUS] SID_WIN detectado:",SID_WIN,won.name)}
-  else{SID_WIN=142;console.log("[DEBUG STATUS] SID_WIN fallback 142")}
-  
-  if(lost){SID_LOST=lost.id;console.log("[DEBUG STATUS] SID_LOST detectado:",SID_LOST,lost.name)}
-  else{SID_LOST=143;console.log("[DEBUG STATUS] SID_LOST fallback 143")}
-  
-  console.log("[DEBUG STATUS] Leads com SID_WIN("+SID_WIN+"):",leads.filter(l=>l.status_id===SID_WIN).length);
-  console.log("[DEBUG STATUS] Leads com status 142:",leads.filter(l=>l.status_id===SID_WIN).length);
-  // mostra todos os status_id únicos dos leads
-  const uniq=[...new Set(leads.map(l=>l.status_id))];
-  console.log("[DEBUG STATUS] status_ids únicos nos leads:",uniq.join(", "));
+  SID_WIN=[...winIds];
+  SID_LOST=[...lostIds];
+  console.log("[DEBUG] SID_WIN:",SID_WIN,"SID_LOST:",SID_LOST);
+  console.log("[DEBUG] Leads ganhos:",leads.filter(isWin).length,"de",leads.length,"total");
 }
 const TICKET_MEDIO_META=450;
 
@@ -763,7 +752,7 @@ function initModal(){
   document.getElementById("msel-ano").addEventListener("change",carregaModal);
 }
 function abrirModal(){
-  const cart=leads.filter(l=>l.status_id===SID_WIN&&gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
+  const cart=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
   document.getElementById("modal-info").innerHTML="<strong>Carteira Recorrente Atual:</strong> "+fv(cart)+" — acumula com cada cliente recorrente fechado.";
   carregaModal();
   document.getElementById("ov-metas").classList.add("open");
@@ -804,7 +793,7 @@ async function carregar(){
     leads=ll.filter(l=>PSET.has(pm[l.status_id]));
     detectStatusIds();
     // DEBUG: mostra leads ganhos no console
-    const dbgGanhos=leads.filter(l=>l.status_id===SID_WIN);
+    const dbgGanhos=leads.filter(l=>isWin(l));
     console.log("[DEBUG] Total leads filtrados:",leads.length);
     console.log("[DEBUG] Leads ganhos (status 142):",dbgGanhos.length);
     if(dbgGanhos.length>0){
@@ -867,9 +856,9 @@ function aplicarFiltros(){
     if(!pa.includes(pm[l.status_id]))return false;
     if(l.created_at<ini||l.created_at>fim)return false;
     if(b&&!(l.name||"").toLowerCase().includes(b))return false;
-    if(filt.tipo==="ativos")return l.status_id!==SID_WIN&&l.status_id!==SID_LOST;
-    if(filt.tipo==="ganhos")return l.status_id===SID_WIN;
-    if(filt.tipo==="perdidos")return l.status_id===SID_LOST;
+    if(filt.tipo==="ativos")return !isWin(l)&&!isLost(l);
+    if(filt.tipo==="ganhos")return isWin(l);
+    if(filt.tipo==="perdidos")return isLost(l);
     return true;
   });
   renderCards(ll,pa,ini,fim);
@@ -879,10 +868,10 @@ function aplicarFiltros(){
 function renderCards(ll,pa,ini,fim){
   const g=document.getElementById("cards-vg"),t=filt.tipo;
   const le=leads.filter(l=>pa.includes(pm[l.status_id])&&l.created_at>=ini&&l.created_at<=fim);
-  const at=le.filter(l=>l.status_id!==SID_WIN&&l.status_id!==SID_LOST).length;
-  const gn=le.filter(l=>l.status_id===SID_WIN).length;
-  const pd=le.filter(l=>l.status_id===SID_LOST).length;
-  const vg=le.filter(l=>l.status_id===SID_WIN).reduce((a,l)=>a+(l.price||0),0);
+  const at=le.filter(l=>!isWin(l)&&!isLost(l)).length;
+  const gn=le.filter(l=>isWin(l)).length;
+  const pd=le.filter(l=>isLost(l)).length;
+  const vg=le.filter(l=>isWin(l)).reduce((a,l)=>a+(l.price||0),0);
   if(t==="ativos")g.innerHTML=`<div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-blue"><div class="kpi-label">Novos no Período</div><div class="kpi-value">${at}</div><div class="kpi-sub">leads novos</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
   else if(t==="ganhos")g.innerHTML=`<div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-blue"><div class="kpi-label">Receita Total</div><div class="kpi-value" style="font-size:20px">${fvc(vg)}</div><div class="kpi-sub">valor fechado</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
   else g.innerHTML=`<div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-gray"><div class="kpi-label">Total Geral</div><div class="kpi-value">${at+gn+pd}</div><div class="kpi-sub">todos os leads</div></div>`;
@@ -900,7 +889,7 @@ function renderFunis(ll,pa,cid){
     if(!ft){if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}}
     else{if(pl.includes("gaideski"))dc="fd-green";else if(pl.includes("planicon")||pl.includes("planicom"))dc="fd-blue"}
     let ss;
-    if(filt.tipo==="ativos")ss=(pipe._embedded?.statuses||[]).filter(s=>s.id!==SID_WIN&&s.id!==SID_LOST);
+    if(filt.tipo==="ativos")ss=(pipe._embedded?.statuses||[]).filter(s=>!SID_WIN.includes(s.id)&&!SID_LOST.includes(s.id));
     else{const tid=filt.tipo==="ganhos"?142:143;ss=(pipe._embedded?.statuses||[]).filter(s=>s.id===tid)}
     const lp=ll.filter(l=>pm[l.status_id]===pipe.id);
     const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
@@ -923,7 +912,7 @@ function renderFunis(ll,pa,cid){
 
 function renderFunisAll(){
   const pa=[PID.qualificacao,PID.gaideski,PID.planicon];
-  const ll=leads.filter(l=>l.status_id!==SID_WIN&&l.status_id!==SID_LOST);
+  const ll=leads.filter(l=>!isWin(l)&&!isLost(l));
   const old=filt.tipo;filt.tipo="ativos";
   renderFunis(ll,pa,"funis-all");filt.tipo=old;
 }
@@ -965,9 +954,9 @@ function getMetaBounds(){
 function renderMetas(){
   const b=getMetaBounds();const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
   document.getElementById("pm-lbl").textContent=b.lbl;
-  const lRec=leads.filter(l=>l.status_id===SID_WIN&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
+  const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
-  const lExt=leads.filter(l=>l.status_id===SID_WIN&&gtv(l)==="extra"&&gdt(l)>=iTs&&gdt(l)<=fTs);
+  const lExt=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const ext=lExt.reduce((a,l)=>a+(l.price||0),0);
   const mR=gmv(b.ano,b.mes,"rec"),mE=gmv(b.ano,b.mes,"ext");
   const pR=mR>0?Math.min(Math.round(cart/mR*100),999):0;
@@ -995,7 +984,7 @@ function renderEvol(){
   const ms=[];for(let i=5;i>=0;i--){const d=new Date(ag.getFullYear(),ag.getMonth()-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
     const ini=Math.floor(new Date(m.ano,m.mes,1)/1000),fim=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
-    const gl=leads.filter(l=>l.status_id===SID_WIN&&gdt(l)>=ini&&gdt(l)<=fim);
+    const gl=leads.filter(l=>isWin(l)&&gdt(l)>=ini&&gdt(l)<=fim);
     const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
     const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
     return{...m,r,e,tot:r+e};
@@ -1009,7 +998,7 @@ function renderEvol(){
 
 // RANKING
 function renderRank(){
-  const gn=leads.filter(l=>l.status_id===SID_WIN);
+  const gn=leads.filter(l=>isWin(l));
   const pr={};
   gn.forEach(l=>{const n=l._embedded?.responsible_user?.name||"Sem responsável";if(!pr[n])pr[n]={q:0,v:0,r:0,e:0};pr[n].q++;pr[n].v+=l.price||0;const tv=gtv(l);if(tv==="recorrente")pr[n].r+=l.price||0;if(tv==="extra")pr[n].e+=l.price||0});
   const lista=Object.entries(pr).sort((a,b)=>b[1].q-a[1].q);
@@ -1127,8 +1116,8 @@ function renderRelatorio(){
   const b=getRelBounds();
   const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
   console.log("[DEBUG REL] Período:",b.lbl,"iTs:",iTs,"fTs:",fTs);
-  console.log("[DEBUG REL] Leads totais:",leads.length,"Ganhos totais:",leads.filter(l=>l.status_id===SID_WIN).length);
-  const todosGanhos=leads.filter(l=>l.status_id===SID_WIN);
+  console.log("[DEBUG REL] Leads totais:",leads.length,"Ganhos totais:",leads.filter(l=>isWin(l)).length);
+  const todosGanhos=leads.filter(l=>isWin(l));
   if(todosGanhos.length>0){
     todosGanhos.forEach(l=>console.log("[DEBUG REL] Lead ganho:",l.name,"gdt:",gdt(l),"no período?",gdt(l)>=iTs&&gdt(l)<=fTs));
   }
@@ -1137,11 +1126,11 @@ function renderRelatorio(){
   document.getElementById("rel-titulo").innerHTML="Relatório Comercial &mdash; <span id=\"rel-periodo\">"+b.lbl+"</span>";
 
   // FILTRAR PELO PERÍODO — usa gdt() que prioriza closed_at > created_at > updated_at
-  const gnAll=leads.filter(l=>l.status_id===SID_WIN&&gdt(l)>=iTs&&gdt(l)<=fTs);
-  const at=leads.filter(l=>l.status_id!==SID_WIN&&l.status_id!==SID_LOST);
-  const pd=leads.filter(l=>l.status_id===SID_LOST&&gdt(l)>=iTs&&gdt(l)<=fTs);
+  const gnAll=leads.filter(l=>isWin(l)&&gdt(l)>=iTs&&gdt(l)<=fTs);
+  const at=leads.filter(l=>!isWin(l)&&!isLost(l));
+  const pd=leads.filter(l=>isLost(l)&&gdt(l)>=iTs&&gdt(l)<=fTs);
 
-  const lRec=leads.filter(l=>l.status_id===SID_WIN&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
+  const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
@@ -1162,7 +1151,7 @@ function renderRelatorio(){
   const ms=[];for(let i=5;i>=0;i--){const d=new Date(b.ano,b.mes-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
     const ini2=Math.floor(new Date(m.ano,m.mes,1)/1000),fim2=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
-    const gl=leads.filter(l=>l.status_id===SID_WIN&&gdt(l)>=ini2&&gdt(l)<=fim2);
+    const gl=leads.filter(l=>isWin(l)&&gdt(l)>=ini2&&gdt(l)<=fim2);
     const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
     const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
     return{...m,r,e,tot:r+e,q:gl.length};
@@ -1302,8 +1291,8 @@ function renderRelatorio(){
     const pn=pipe.name||"",pl=pn.toLowerCase();
     let dc="fd-amber",fc="sfill-amber";
     if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}
-    const ss=(pipe._embedded?.statuses||[]).filter(s=>s.id!==SID_WIN&&s.id!==SID_LOST);
-    const lp=leads.filter(l=>pm[l.status_id]===pipe.id&&l.status_id!==SID_WIN&&l.status_id!==SID_LOST);
+    const ss=(pipe._embedded?.statuses||[]).filter(s=>!SID_WIN.includes(s.id)&&!SID_LOST.includes(s.id));
+    const lp=leads.filter(l=>pm[l.status_id]===pipe.id&&!isWin(l)&&!isLost(l));
     const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
     const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
     const mx2=Math.max(...Object.values(cnt),1);
