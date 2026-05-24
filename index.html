@@ -1257,43 +1257,59 @@ function renderProjecao(cartAtual){
   // Mês atual: cartAtual real
   // Meses futuros: cartAtual + meta de cada mês acumulando
 
-  // ── LINHA META: acumulado de metas mês a mês ──
-  // Soma as metas definidas para cada mês do ano
-
   const meses=[];
-  let realAcum=0;  // acumulado real
-  let metaAcum=0;  // acumulado meta
 
   for(let m=0;m<12;m++){
     const isPast=m<mesAtual;
     const isCurrent=m===mesAtual;
     const isFuture=m>mesAtual;
 
-    // Meta do mês (honorários recorrentes definidos para aquele mês)
+    // Meta do mês definida pelo usuário
     const metaMes=gmv(anoAtual,m,"rec")||0;
-    metaAcum+=metaMes;
 
-    // Real do mês
+    // ── LINHA REAL ──
+    // Passado: distribuição proporcional do real atual
+    // Atual: cartAtual real
+    // Futuro: cartAtual + soma das metas dos meses futuros (projeção)
     let realVal;
     if(isPast){
-      // Distribui o real atual proporcionalmente pelos meses passados
       const prop=(m+1)/Math.max(mesAtual,1);
       realVal=Math.round(cartAtual*Math.min(prop,1));
     } else if(isCurrent){
       realVal=cartAtual;
     } else {
-      // Futuro: real acumula com a meta de cada mês
-      realAcum=cartAtual;
+      // Projeta acumulando a meta de cada mês futuro sobre o real atual
+      let proj=cartAtual;
       for(let fm=mesAtual+1;fm<=m;fm++){
-        realAcum+=gmv(anoAtual,fm,"rec")||0;
+        proj+=gmv(anoAtual,fm,"rec")||0;
       }
-      realVal=realAcum;
+      realVal=proj;
+    }
+
+    // ── LINHA META ──
+    // Passado/Atual: igual ao real (não há meta retroativa)
+    // Futuro: cartAtual + SOMA ACUMULADA das metas dos próximos meses
+    // Ex: Jun = cartAtual + metaJun
+    //     Jul = cartAtual + metaJun + metaJul
+    //     Ago = cartAtual + metaJun + metaJul + metaAgo
+    let metaVal;
+    if(isPast){
+      // Nos meses passados não mostramos meta separada (sem meta retroativa)
+      metaVal=0;
+    } else if(isCurrent){
+      metaVal=cartAtual; // meta do mês atual = real atual
+    } else {
+      let metaAc=cartAtual;
+      for(let fm=mesAtual+1;fm<=m;fm++){
+        metaAc+=gmv(anoAtual,fm,"rec")||0;
+      }
+      metaVal=metaAc;
     }
 
     meses.push({
       m, lbl:MC[m],
       real:realVal,
-      meta:metaAcum,
+      meta:metaVal,
       metaMes,
       isPast, isCurrent, isFuture
     });
@@ -1320,18 +1336,19 @@ function renderProjecao(cartAtual){
     <div class="proj-grid">
       ${meses.map(d=>{
         const hReal=maxVal>0?Math.max(Math.round(d.real/maxVal*60),2):2;
-        const hMeta=maxVal>0?Math.max(Math.round(d.meta/maxVal*60),2):2;
+        const hMeta=maxVal>0&&d.meta>0?Math.max(Math.round(d.meta/maxVal*60),2):0;
         const cls=d.isCurrent?"pm-current":d.isFuture?"pm-future":"pm-past";
-        const acimaMeta=d.real>=d.meta&&d.meta>0;
+        const acimaMeta=d.isFuture&&d.real>=d.meta&&d.meta>0;
         return`<div class="proj-month ${cls}">
           <div class="proj-mlbl">${d.lbl}</div>
           <div class="proj-bar-wrap">
-            <div class="proj-bar proj-bar-real" style="height:${hReal}px;opacity:${d.isFuture?'.5':'1'}"></div>
-            <div class="proj-bar proj-bar-meta" style="height:${hMeta}px"></div>
+            <div class="proj-bar proj-bar-real" style="height:${hReal}px;opacity:${d.isFuture?'.6':'1'}"></div>
+            ${hMeta>0?`<div class="proj-bar proj-bar-meta" style="height:${hMeta}px"></div>`:''}
           </div>
           <div class="proj-val-row">
             <div class="proj-vreal ${d.isFuture?'pv-proj':''}" style="${acimaMeta?'color:var(--green)':''}">${fvc(d.real)}</div>
-            ${d.meta>0?`<div class="proj-vmeta">meta: ${fvc(d.meta)}</div>`:'<div class="proj-vmeta" style="color:var(--text3)">sem meta</div>'}
+            ${d.isFuture&&d.meta>0?`<div class="proj-vmeta">meta: ${fvc(d.meta)}</div>`:''}
+            ${d.isPast?'<div class="proj-vmeta">real</div>':''}
             ${d.isCurrent?'<div class="proj-badge-atual">ATUAL</div>':''}
           </div>
         </div>`;
