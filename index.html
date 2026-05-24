@@ -323,25 +323,31 @@ tbody tr:hover td{background:#F8FAF8}
 .btn-print svg{width:13px;height:13px}
 
 .report-cover{
-  background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);
+  background:var(--green-dark);
   color:#fff;border-radius:8px;padding:36px 40px;margin-bottom:16px;
   position:relative;overflow:hidden;
+  border:1px solid rgba(0,0,0,.15);
 }
-.report-cover::before{content:"";position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.04)}
-.report-cover::after{content:"";position:absolute;bottom:-60px;left:40%;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.03)}
-.rc-logo{display:flex;align-items:center;gap:8px;margin-bottom:28px}
-.rc-mark{width:32px;height:32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:7px;display:flex;align-items:center;justify-content:center}
-.rc-mark svg{width:15px;height:15px;fill:white}
-.rc-brand{font-size:13px;font-weight:600;color:rgba(255,255,255,.9)}
-.rc-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.4);margin-bottom:6px}
-.rc-title{font-size:28px;font-weight:700;color:#fff;letter-spacing:-1px;margin-bottom:4px}
-.rc-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:28px}
+.report-cover::before{content:"";position:absolute;top:0;right:0;width:300px;height:100%;
+  background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,.03) 100%);pointer-events:none}
+.rc-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.rc-mark{width:34px;height:34px;background:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rc-mark svg{width:16px;height:16px;fill:var(--green-dark)}
+.rc-brand{font-size:14px;font-weight:700;color:#fff;letter-spacing:-.2px}
+.rc-divider{width:1px;height:20px;background:rgba(255,255,255,.2);margin:0 4px}
+.rc-date-badge{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);padding:3px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.15)}
+.rc-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:rgba(255,255,255,.45);margin-bottom:6px}
+.rc-title{font-size:32px;font-weight:800;color:#fff;letter-spacing:-1.5px;margin-bottom:4px;line-height:1}
+.rc-sub{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:28px;font-weight:400}
 .rc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media(max-width:700px){.rc-kpis{grid-template-columns:repeat(2,1fr)}}
-.rc-kpi{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:12px 14px}
-.rc-kpi-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:4px}
-.rc-kpi-v{font-size:20px;font-weight:700;font-family:var(--mono);color:#fff;letter-spacing:-1px}
-.rc-kpi-s{font-size:9px;color:rgba(255,255,255,.35);margin-top:2px}
+.rc-kpi{
+  background:#fff;border-radius:6px;padding:14px 16px;
+  border:none;
+}
+.rc-kpi-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--text3);margin-bottom:6px}
+.rc-kpi-v{font-size:22px;font-weight:800;font-family:var(--mono);color:var(--text);letter-spacing:-1px;line-height:1}
+.rc-kpi-s{font-size:10px;color:var(--text3);margin-top:3px;font-weight:400}
 .rc-footer{margin-top:24px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.3);font-family:var(--mono)}
 
 /* ── REPORT SECTION ── */
@@ -679,7 +685,7 @@ let relFiltro={tipo:"mes",ini:null,fim:null};
 let tab="vg";
 
 // Pega a melhor data de fechamento do lead (Kommo nem sempre preenche closed_at)
-function gdt(l){return l.closed_at||l.updated_at||l.created_at||0}
+function gdt(l){return l.closed_at||l.created_at||l.updated_at||0}
 function fv(v){if(!v||v===0)return"—";return"R$\u00A0"+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:0})}
 function fvc(v){if(!v||v===0)return"R$ 0";if(v>=1000000)return"R$\u00A0"+(v/1000000).toFixed(1)+"M";if(v>=1000)return"R$\u00A0"+(v/1000).toFixed(1)+"k";return"R$\u00A0"+Number(v).toLocaleString("pt-BR")}
 function fd(ts){if(!ts)return"—";return new Date(ts*1000).toLocaleDateString("pt-BR")}
@@ -765,6 +771,14 @@ async function carregar(){
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
     leads=ll.filter(l=>PSET.has(pm[l.status_id]));
+    // DEBUG: mostra leads ganhos no console
+    const dbgGanhos=leads.filter(l=>l.status_id===142);
+    console.log("[DEBUG] Total leads filtrados:",leads.length);
+    console.log("[DEBUG] Leads ganhos (status 142):",dbgGanhos.length);
+    if(dbgGanhos.length>0){
+      const ex=dbgGanhos[0];
+      console.log("[DEBUG] Exemplo lead ganho:",{name:ex.name,price:ex.price,closed_at:ex.closed_at,created_at:ex.created_at,updated_at:ex.updated_at,gdt:gdt(ex)});
+    }
     aplicarFiltros();
     document.getElementById("loading").style.display="none";
     document.getElementById("cont").style.display="block";
@@ -1080,11 +1094,17 @@ function getRelBounds(){
 function renderRelatorio(){
   const b=getRelBounds();
   const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
-
-  document.getElementById("rel-periodo").textContent=b.lbl;
+  console.log("[DEBUG REL] Período:",b.lbl,"iTs:",iTs,"fTs:",fTs);
+  console.log("[DEBUG REL] Leads totais:",leads.length,"Ganhos totais:",leads.filter(l=>l.status_id===142).length);
+  const todosGanhos=leads.filter(l=>l.status_id===142);
+  if(todosGanhos.length>0){
+    todosGanhos.forEach(l=>console.log("[DEBUG REL] Lead ganho:",l.name,"gdt:",gdt(l),"no período?",gdt(l)>=iTs&&gdt(l)<=fTs));
+  }
   document.getElementById("rel-period-display").textContent=b.lbl;
+  document.getElementById("rel-periodo").textContent=b.lbl;
+  document.getElementById("rel-titulo").innerHTML="Relatório Comercial &mdash; <span id=\"rel-periodo\">"+b.lbl+"</span>";
 
-  // FILTRAR PELO PERÍODO
+  // FILTRAR PELO PERÍODO — usa gdt() que prioriza closed_at > created_at > updated_at
   const gnAll=leads.filter(l=>l.status_id===142&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const at=leads.filter(l=>l.status_id!==142&&l.status_id!==143);
   const pd=leads.filter(l=>l.status_id===143&&gdt(l)>=iTs&&gdt(l)<=fTs);
@@ -1132,12 +1152,14 @@ function renderRelatorio(){
   // CAPA
   h+=`<div class="report-cover">
     <div class="rc-logo">
-      <div class="rc-mark"><svg viewBox="0 0 14 14" fill="white"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div>
+      <div class="rc-mark"><svg viewBox="0 0 14 14" fill="var(--green-dark)"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div>
       <span class="rc-brand">Gaideski Contabilidade</span>
+      <div class="rc-divider"></div>
+      <span class="rc-date-badge">${b.lbl}</span>
     </div>
     <div class="rc-type">Relatório Comercial</div>
     <div class="rc-title">Dashboard de Vendas</div>
-    <div class="rc-sub">${b.lbl} · Atualizado em tempo real</div>
+    <div class="rc-sub">Atualizado em tempo real · ${ag.toLocaleDateString("pt-BR")} às ${ag.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</div>
     <div class="rc-kpis">
       <div class="rc-kpi"><div class="rc-kpi-l">Vendas Ganhas</div><div class="rc-kpi-v">${gnAll.length}</div><div class="rc-kpi-s">no período</div></div>
       <div class="rc-kpi"><div class="rc-kpi-l">Receita Total</div><div class="rc-kpi-v">${fvc(vTot)}</div><div class="rc-kpi-s">valor acumulado</div></div>
@@ -1145,8 +1167,8 @@ function renderRelatorio(){
       <div class="rc-kpi"><div class="rc-kpi-l">Conversão</div><div class="rc-kpi-v">${tx}%</div><div class="rc-kpi-s">leads → clientes</div></div>
     </div>
     <div class="rc-footer">
-      <span>Gerado em ${ag.toLocaleDateString("pt-BR")} às ${ag.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</span>
       <span>Confidencial · Uso interno</span>
+      <span>${ag.toLocaleDateString("pt-BR")}</span>
     </div>
   </div>`;
 
