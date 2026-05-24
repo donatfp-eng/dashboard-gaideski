@@ -221,23 +221,34 @@ select.sf{
 .pct-ok{color:var(--green)}.pct-mid{color:var(--amber)}.pct-low{color:var(--red)}
 /* projeção anual */
 .proj-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-top:14px}
-.proj-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border-light);background:var(--surface2)}
+.proj-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--border-light);background:var(--surface2);flex-wrap:wrap;gap:8px}
 .proj-title{font-size:11px;font-weight:600}
-.proj-grid{display:grid;grid-template-columns:repeat(12,1fr)}
-.proj-month{padding:10px 8px;border-right:1px solid var(--border-light);text-align:center;position:relative}
+.proj-legend{display:flex;gap:14px}
+.proj-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3)}
+.proj-leg-dot{width:8px;height:8px;border-radius:50%}
+.proj-grid{display:grid;grid-template-columns:repeat(12,1fr);border-bottom:1px solid var(--border-light)}
+.proj-month{padding:10px 6px;border-right:1px solid var(--border-light);text-align:center;position:relative;min-width:0}
 .proj-month:last-child{border-right:none}
 .proj-month.pm-past{background:var(--surface2)}
 .proj-month.pm-current{background:var(--accent-pale)}
 .proj-month.pm-future{background:var(--surface)}
-.proj-mlbl{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.proj-mval{font-size:11px;font-weight:700;color:var(--text);letter-spacing:-.3px}
-.proj-mval.pv-proj{color:var(--text3)}
-.proj-mdelta{font-size:9px;color:var(--green);margin-top:2px;font-weight:600}
-.proj-footer{padding:10px 16px;border-top:1px solid var(--border-light);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.proj-stat{display:flex;align-items:baseline;gap:4px}
+.proj-mlbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.proj-bar-wrap{height:60px;display:flex;align-items:flex-end;justify-content:center;gap:2px;margin-bottom:5px}
+.proj-bar{border-radius:2px 2px 0 0;min-height:2px;transition:height .4s;flex:1}
+.proj-bar-real{background:var(--accent)}
+.proj-bar-meta{background:#CBD5E8}
+.proj-val-row{display:flex;gap:2px;justify-content:center;flex-direction:column;align-items:center}
+.proj-vreal{font-size:9.5px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.proj-vreal.pv-proj{color:var(--accent);opacity:.7}
+.proj-vmeta{font-size:9px;color:var(--text3);letter-spacing:-.1px}
+.proj-badge-atual{font-size:8px;font-weight:700;background:var(--accent);color:#fff;padding:1px 5px;border-radius:3px;margin-top:2px}
+.proj-footer{padding:12px 16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:var(--surface2);border-top:1px solid var(--border-light)}
+.proj-stat{display:flex;flex-direction:column;gap:1px}
 .proj-stat-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text3)}
 .proj-stat-v{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px}
 .proj-stat-v.psv-accent{color:var(--accent)}
+.proj-stat-v.psv-green{color:var(--green)}
+.proj-stat-v.psv-meta{color:var(--text3)}
 /* metas por empresa */
 .empresa-metas{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .emp-meta-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px}
@@ -441,7 +452,7 @@ tbody tr:hover td{background:#F4F6FA}
 /* ── MODAL ── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:10px;padding:28px;width:480px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);border:1px solid var(--border)}
+.modal{background:var(--surface);border-radius:10px;padding:28px 32px;width:760px;max-width:97vw;box-shadow:0 20px 60px rgba(0,0,0,.2);border:1px solid var(--border)}
 .modal-title{font-size:15px;font-weight:700;margin-bottom:4px}
 .modal-sub{font-size:12px;color:var(--text3);margin-bottom:18px}
 .modal-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border-light)}
@@ -1241,55 +1252,59 @@ function renderProjecao(cartAtual){
   const anoAtual=ag.getFullYear();
   const mesAtual=ag.getMonth(); // 0-11
 
-  // Todos os clientes recorrentes ganhos (sem filtro de data — carteira é acumulativa)
-  const todosRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente");
+  // ── LINHA REAL: acumulado real mês a mês ──
+  // Meses passados: proporção linear do real atual
+  // Mês atual: cartAtual real
+  // Meses futuros: cartAtual + meta de cada mês acumulando
 
-  // Média de novos clientes recorrentes por mês nos últimos 3 meses
-  // Usa o mês atual como referência e calcula quanto entrou por mês
-  let somaUlt3=0;
-  for(let i=1;i<=3;i++){
-    const d=new Date(anoAtual,mesAtual-i,1);
-    const ini=Math.floor(d/1000);
-    const fim=Math.floor(new Date(d.getFullYear(),d.getMonth()+1,0,23,59,59)/1000);
-    const novos=todosRec.filter(l=>gdt(l)>=ini&&gdt(l)<=fim).reduce((a,l)=>a+(l.price||0),0);
-    somaUlt3+=novos;
-  }
-  // Se não achou nada nos últimos 3 meses (leads antigos sem data correta),
-  // usa a média do ano atual dividindo pela quantidade de meses decorridos
-  let mediaMensal=Math.round(somaUlt3/3);
-  if(mediaMensal===0&&mesAtual>0){
-    // Fallback: divide carteira atual pelos meses decorridos do ano
-    mediaMensal=Math.round(cartAtual/Math.max(mesAtual,1));
-  }
+  // ── LINHA META: acumulado de metas mês a mês ──
+  // Soma as metas definidas para cada mês do ano
 
-  // Projeta mês a mês até dezembro
   const meses=[];
-  let acumulado=cartAtual;
+  let realAcum=0;  // acumulado real
+  let metaAcum=0;  // acumulado meta
+
   for(let m=0;m<12;m++){
     const isPast=m<mesAtual;
     const isCurrent=m===mesAtual;
+    const isFuture=m>mesAtual;
+
+    // Meta do mês (honorários recorrentes definidos para aquele mês)
+    const metaMes=gmv(anoAtual,m,"rec")||0;
+    metaAcum+=metaMes;
+
+    // Real do mês
+    let realVal;
     if(isPast){
-      // Meses passados: valor acumulado real até aquele mês (proporcional)
-      // Usa proporção do mês em relação ao total atual
-      const proporcao=(m+1)/Math.max(mesAtual,1);
-      const val=Math.round(cartAtual*Math.min(proporcao,1));
-      meses.push({m,lbl:MC[m],val,proj:false,current:false});
+      // Distribui o real atual proporcionalmente pelos meses passados
+      const prop=(m+1)/Math.max(mesAtual,1);
+      realVal=Math.round(cartAtual*Math.min(prop,1));
     } else if(isCurrent){
-      meses.push({m,lbl:MC[m],val:cartAtual,proj:false,current:true});
+      realVal=cartAtual;
     } else {
-      acumulado+=mediaMensal;
-      meses.push({m,lbl:MC[m],val:acumulado,proj:true,current:false});
+      // Futuro: real acumula com a meta de cada mês
+      realAcum=cartAtual;
+      for(let fm=mesAtual+1;fm<=m;fm++){
+        realAcum+=gmv(anoAtual,fm,"rec")||0;
+      }
+      realVal=realAcum;
     }
+
+    meses.push({
+      m, lbl:MC[m],
+      real:realVal,
+      meta:metaAcum,
+      metaMes,
+      isPast, isCurrent, isFuture
+    });
   }
 
-  const maxVal=Math.max(...meses.map(m=>m.val),1);
-  const projDez=meses[11].val;
-  const projAnual=projDez*12; // receita anual se mantiver carteira de dez
+  const maxVal=Math.max(...meses.map(m=>Math.max(m.real,m.meta)),1);
+  const projDez=meses[11].real;
+  const metaDez=meses[11].meta;
 
   const existingEl=document.getElementById("proj-block");
   if(existingEl) existingEl.remove();
-
-  const metaAno=gmv(anoAtual,0,"rec"); // meta anual (usa jan como referência)
 
   const el=document.createElement("div");
   el.id="proj-block";
@@ -1297,23 +1312,52 @@ function renderProjecao(cartAtual){
   el.innerHTML=`
     <div class="proj-header">
       <span class="proj-title">Projeção da Carteira Recorrente — ${anoAtual}</span>
-      <span style="font-size:10px;color:var(--text3)">Baseado na média dos últimos 3 meses: <strong>+${fvc(mediaMensal)}/mês</strong></span>
+      <div class="proj-legend">
+        <div class="proj-leg-item"><div class="proj-leg-dot" style="background:var(--accent)"></div>Real / Projetado</div>
+        <div class="proj-leg-item"><div class="proj-leg-dot" style="background:#CBD5E8"></div>Meta acumulada</div>
+      </div>
     </div>
     <div class="proj-grid">
-      ${meses.map(m=>`
-        <div class="proj-month ${m.current?"pm-current":m.proj?"pm-future":"pm-past"}">
-          <div class="proj-mlbl">${m.lbl}</div>
-          <div class="proj-mval ${m.proj?"pv-proj":""}">${fvc(m.val)}</div>
-          ${m.current?'<div class="proj-mdelta">atual</div>':m.proj?`<div style="font-size:9px;color:var(--text3)">+${fvc(mediaMensal)}</div>`:'<div style="font-size:9px;color:var(--text3)">real</div>'}
-          <div style="position:absolute;bottom:0;left:0;right:0;height:${Math.round(m.val/maxVal*40)}px;background:${m.proj?"var(--accent)":"var(--green)"};opacity:${m.proj?".15":".2"};border-radius:2px 2px 0 0"></div>
-        </div>`).join("")}
+      ${meses.map(d=>{
+        const hReal=maxVal>0?Math.max(Math.round(d.real/maxVal*60),2):2;
+        const hMeta=maxVal>0?Math.max(Math.round(d.meta/maxVal*60),2):2;
+        const cls=d.isCurrent?"pm-current":d.isFuture?"pm-future":"pm-past";
+        const acimaMeta=d.real>=d.meta&&d.meta>0;
+        return`<div class="proj-month ${cls}">
+          <div class="proj-mlbl">${d.lbl}</div>
+          <div class="proj-bar-wrap">
+            <div class="proj-bar proj-bar-real" style="height:${hReal}px;opacity:${d.isFuture?'.5':'1'}"></div>
+            <div class="proj-bar proj-bar-meta" style="height:${hMeta}px"></div>
+          </div>
+          <div class="proj-val-row">
+            <div class="proj-vreal ${d.isFuture?'pv-proj':''}" style="${acimaMeta?'color:var(--green)':''}">${fvc(d.real)}</div>
+            ${d.meta>0?`<div class="proj-vmeta">meta: ${fvc(d.meta)}</div>`:'<div class="proj-vmeta" style="color:var(--text3)">sem meta</div>'}
+            ${d.isCurrent?'<div class="proj-badge-atual">ATUAL</div>':''}
+          </div>
+        </div>`;
+      }).join("")}
     </div>
     <div class="proj-footer">
-      <div class="proj-stat"><span class="proj-stat-l">Carteira atual</span><span class="proj-stat-v">${fvc(cartAtual)}</span></div>
-      <div class="proj-stat"><span class="proj-stat-l">Projeção Dez/${anoAtual}</span><span class="proj-stat-v psv-accent">${fvc(projDez)}</span></div>
-      <div class="proj-stat"><span class="proj-stat-l">Crescimento projetado</span><span class="proj-stat-v" style="color:var(--green)">+${fvc(projDez-cartAtual)}</span></div>
-      <div class="proj-stat"><span class="proj-stat-l">Receita anual projetada</span><span class="proj-stat-v">${fvc(projAnual)}</span></div>
-      <div style="margin-left:auto;font-size:10px;color:var(--text3)">Média mensal calculada nos últimos 3 meses</div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Carteira atual</span>
+        <span class="proj-stat-v">${fvc(cartAtual)}</span>
+      </div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Projeção Dez/${anoAtual} (real)</span>
+        <span class="proj-stat-v psv-accent">${fvc(projDez)}</span>
+      </div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Meta Dez/${anoAtual} (acumulada)</span>
+        <span class="proj-stat-v psv-meta">${metaDez>0?fvc(metaDez):'—'}</span>
+      </div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Crescimento projetado</span>
+        <span class="proj-stat-v psv-green">+${fvc(projDez-cartAtual)}</span>
+      </div>
+      <div class="proj-stat">
+        <span class="proj-stat-l">Receita anual projetada</span>
+        <span class="proj-stat-v">${fvc(projDez*12)}</span>
+      </div>
     </div>`;
 
   // Insert after chart-card
