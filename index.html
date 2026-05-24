@@ -357,6 +357,28 @@ tbody tr:hover td{background:#F8FAF8}
 .rc2-v{font-size:20px;font-weight:700;font-family:var(--mono);color:var(--text);letter-spacing:-.5px;line-height:1}
 .rc2-s{font-size:10px;color:var(--text3);margin-top:2px}
 
+/* ── RESUMO TABLE STYLE ── */
+.resumo-block{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;margin-bottom:12px;box-shadow:var(--sh);
+}
+.resumo-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--border-light);
+}
+.resumo-row:last-child{border-bottom:none}
+.resumo-cell{
+  padding:12px 16px;border-right:1px solid var(--border-light);
+  position:relative;
+}
+.resumo-cell:last-child{border-right:none}
+.resumo-cell-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.resumo-cell-label .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.resumo-cell-value{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text);letter-spacing:-.8px;line-height:1}
+.resumo-cell-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.resumo-cell.highlight{background:var(--green-pale2)}
+.resumo-cell.highlight .resumo-cell-value{color:var(--green-dark)}
+
 /* ── STATUS BAR BELOW FILTER ── */
 .view-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px}
 .view-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-right:4px}
@@ -656,6 +678,8 @@ let fpm={tipo:"mes",mes:new Date().getMonth(),ano:new Date().getFullYear()};
 let relFiltro={tipo:"mes",ini:null,fim:null};
 let tab="vg";
 
+// Pega a melhor data de fechamento do lead (Kommo nem sempre preenche closed_at)
+function gdt(l){return l.closed_at||l.updated_at||l.created_at||0}
 function fv(v){if(!v||v===0)return"—";return"R$\u00A0"+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:0})}
 function fvc(v){if(!v||v===0)return"R$ 0";if(v>=1000000)return"R$\u00A0"+(v/1000000).toFixed(1)+"M";if(v>=1000)return"R$\u00A0"+(v/1000).toFixed(1)+"k";return"R$\u00A0"+Number(v).toLocaleString("pt-BR")}
 function fd(ts){if(!ts)return"—";return new Date(ts*1000).toLocaleDateString("pt-BR")}
@@ -895,9 +919,9 @@ function getMetaBounds(){
 function renderMetas(){
   const b=getMetaBounds();const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
   document.getElementById("pm-lbl").textContent=b.lbl;
-  const lRec=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente"&&(l.closed_at||l.updated_at)<=fTs);
+  const lRec=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
-  const lExt=leads.filter(l=>l.status_id===142&&gtv(l)==="extra"&&(l.closed_at||l.updated_at)>=iTs&&(l.closed_at||l.updated_at)<=fTs);
+  const lExt=leads.filter(l=>l.status_id===142&&gtv(l)==="extra"&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const ext=lExt.reduce((a,l)=>a+(l.price||0),0);
   const mR=gmv(b.ano,b.mes,"rec"),mE=gmv(b.ano,b.mes,"ext");
   const pR=mR>0?Math.min(Math.round(cart/mR*100),999):0;
@@ -925,7 +949,7 @@ function renderEvol(){
   const ms=[];for(let i=5;i>=0;i--){const d=new Date(ag.getFullYear(),ag.getMonth()-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
     const ini=Math.floor(new Date(m.ano,m.mes,1)/1000),fim=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
-    const gl=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=ini&&(l.closed_at||l.updated_at)<=fim);
+    const gl=leads.filter(l=>l.status_id===142&&gdt(l)>=ini&&gdt(l)<=fim);
     const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
     const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
     return{...m,r,e,tot:r+e};
@@ -1061,11 +1085,11 @@ function renderRelatorio(){
   document.getElementById("rel-period-display").textContent=b.lbl;
 
   // FILTRAR PELO PERÍODO
-  const gnAll=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=iTs&&(l.closed_at||l.updated_at)<=fTs);
+  const gnAll=leads.filter(l=>l.status_id===142&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const at=leads.filter(l=>l.status_id!==142&&l.status_id!==143);
-  const pd=leads.filter(l=>l.status_id===143&&(l.closed_at||l.updated_at)>=iTs&&(l.closed_at||l.updated_at)<=fTs);
+  const pd=leads.filter(l=>l.status_id===143&&gdt(l)>=iTs&&gdt(l)<=fTs);
 
-  const lRec=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente"&&(l.closed_at||l.updated_at)<=fTs);
+  const lRec=leads.filter(l=>l.status_id===142&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
@@ -1086,7 +1110,7 @@ function renderRelatorio(){
   const ms=[];for(let i=5;i>=0;i--){const d=new Date(b.ano,b.mes-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
     const ini2=Math.floor(new Date(m.ano,m.mes,1)/1000),fim2=Math.floor(new Date(m.ano,m.mes+1,0,23,59,59)/1000);
-    const gl=leads.filter(l=>l.status_id===142&&(l.closed_at||l.updated_at)>=ini2&&(l.closed_at||l.updated_at)<=fim2);
+    const gl=leads.filter(l=>l.status_id===142&&gdt(l)>=ini2&&gdt(l)<=fim2);
     const r=gl.filter(l=>gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
     const e=gl.filter(l=>gtv(l)==="extra").reduce((a,l)=>a+(l.price||0),0);
     return{...m,r,e,tot:r+e,q:gl.length};
@@ -1128,17 +1152,51 @@ function renderRelatorio(){
 
   // RESUMO
   h+=`<div class="rsec"><div class="rsec-title">Resumo Executivo</div>
-  <div class="rcg">
-    <div class="rc2 c-gray"><div class="rc2-l">Leads Ativos</div><div class="rc2-v">${at.length}</div><div class="rc2-s">em andamento</div></div>
-    <div class="rc2 c-green"><div class="rc2-l">Vendas Ganhas</div><div class="rc2-v">${gnAll.length}</div><div class="rc2-s">no período</div></div>
-    <div class="rc2 c-red"><div class="rc2-l">Perdas</div><div class="rc2-v">${pd.length}</div><div class="rc2-s">leads perdidos</div></div>
-    <div class="rc2 c-blue"><div class="rc2-l">Taxa de Conversão</div><div class="rc2-v">${tx}%</div><div class="rc2-s">leads → clientes</div></div>
-  </div>
-  <div class="rcg">
-    <div class="rc2 c-blue"><div class="rc2-l">Receita Total</div><div class="rc2-v" style="font-size:17px">${fvc(vTot)}</div><div class="rc2-s">acumulada</div></div>
-    <div class="rc2 c-blue"><div class="rc2-l">Carteira Recorrente</div><div class="rc2-v" style="font-size:17px">${fvc(cart)}</div><div class="rc2-s">${lRec.length} clientes</div></div>
-    <div class="rc2 c-green"><div class="rc2-l">Honorários</div><div class="rc2-v" style="font-size:17px">${fvc(vRec)}</div><div class="rc2-s">${lRec.length} recorrentes</div></div>
-    <div class="rc2 c-purple"><div class="rc2-l">Extras</div><div class="rc2-v" style="font-size:17px">${fvc(vExt)}</div><div class="rc2-s">${lExt.length} serviços</div></div>
+  <div class="resumo-block">
+    <div class="resumo-row">
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--text3)"></span>Leads Ativos</div>
+        <div class="resumo-cell-value">${at.length}</div>
+        <div class="resumo-cell-sub">em andamento no funil</div>
+      </div>
+      <div class="resumo-cell highlight">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--green)"></span>Vendas Ganhas</div>
+        <div class="resumo-cell-value">${gnAll.length}</div>
+        <div class="resumo-cell-sub">clientes fechados no período</div>
+      </div>
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--red)"></span>Perdas</div>
+        <div class="resumo-cell-value">${pd.length}</div>
+        <div class="resumo-cell-sub">leads perdidos no período</div>
+      </div>
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--blue)"></span>Taxa de Conversão</div>
+        <div class="resumo-cell-value">${tx}%</div>
+        <div class="resumo-cell-sub">leads → clientes</div>
+      </div>
+    </div>
+    <div class="resumo-row">
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--blue)"></span>Receita Total</div>
+        <div class="resumo-cell-value" style="font-size:18px">${fvc(vTot)}</div>
+        <div class="resumo-cell-sub">acumulada no período</div>
+      </div>
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--blue)"></span>Carteira Recorrente</div>
+        <div class="resumo-cell-value" style="font-size:18px">${fvc(cart)}</div>
+        <div class="resumo-cell-sub">${lRec.length} clientes ativos</div>
+      </div>
+      <div class="resumo-cell highlight">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--green)"></span>Honorários</div>
+        <div class="resumo-cell-value" style="font-size:18px">${fvc(vRec)}</div>
+        <div class="resumo-cell-sub">${lRec.length} recorrentes</div>
+      </div>
+      <div class="resumo-cell">
+        <div class="resumo-cell-label"><span class="dot" style="background:var(--purple)"></span>Extras</div>
+        <div class="resumo-cell-value" style="font-size:18px">${fvc(vExt)}</div>
+        <div class="resumo-cell-sub">${lExt.length} serviços no período</div>
+      </div>
+    </div>
   </div></div>`;
 
   // METAS
