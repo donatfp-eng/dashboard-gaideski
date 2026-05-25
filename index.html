@@ -775,16 +775,18 @@ async function carregar(){
   document.getElementById("cont").style.display="none";
   document.getElementById("emsg").style.display="none";
   try{
-    const[ld,ldWon,ldLost,pd]=await Promise.all([
+    const[ld,ldWon,ldLost,ldQual,ldQualWon,pd]=await Promise.all([
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=0").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=143").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads/pipelines?limit=50").then(r=>r.json())
     ]);
-    const allLeads=[...(ld?._embedded?.leads||[]),...(ldWon?._embedded?.leads||[]),...(ldLost?._embedded?.leads||[])];
+    const allLeads=[...(ld?._embedded?.leads||[]),...(ldWon?._embedded?.leads||[]),...(ldLost?._embedded?.leads||[]),...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[])];
     const seen=new Set();
     const ll=allLeads.filter(l=>{if(seen.has(l.id))return false;seen.add(l.id);return true});
-    console.log("[DEBUG FETCH] Ativos:",ld?._embedded?.leads?.length||0,"Ganhos:",ldWon?._embedded?.leads?.length||0,"Perdidos:",ldLost?._embedded?.leads?.length||0,"Total único:",ll.length);
+    console.log("[DEBUG FETCH] Ativos:",ld?._embedded?.leads?.length||0,"Ganhos:",ldWon?._embedded?.leads?.length||0,"Perdidos:",ldLost?._embedded?.leads?.length||0,"Qualif:",ldQual?._embedded?.leads?.length||0,"Total único:",ll.length);
     const pd2=pd; const pp=pd2?._embedded?.pipelines||[];
     pipes=pp.filter(p=>PSET.has(p.id));
     sm={};pm={};
