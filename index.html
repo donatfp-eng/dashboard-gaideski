@@ -905,9 +905,17 @@ function renderFunis(ll,pa,cid){
     else{if(pl.includes("gaideski"))dc="fd-green";else if(pl.includes("planicon")||pl.includes("planicom"))dc="fd-blue"}
     let ss;
     if(filt.tipo==="ativos")ss=(pipe._embedded?.statuses||[]).filter(s=>!SID_WIN.includes(s.id)&&!SID_LOST.includes(s.id));
-    else{const tid=filt.tipo==="ganhos"?142:143;ss=(pipe._embedded?.statuses||[]).filter(s=>s.id===tid)}
-    const lp=ll.filter(l=>pm[l.status_id]===pipe.id);
-    const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    else if(filt.tipo==="ganhos")ss=SID_WIN.length>0?[{id:SID_WIN[0],name:"Venda Ganha"}]:(pipe._embedded?.statuses||[]).filter(s=>SID_WIN.includes(s.id));
+    else ss=SID_LOST.length>0?[{id:SID_LOST[0],name:"Venda Perdida"}]:(pipe._embedded?.statuses||[]).filter(s=>SID_LOST.includes(s.id));
+    const lp=ll.filter(l=>getLeadPipe(l)===pipe.id);
+    const cnt={};
+    if(filt.tipo==="ganhos"&&SID_WIN.length>0){
+      lp.forEach(l=>{cnt[SID_WIN[0]]=(cnt[SID_WIN[0]]||0)+1});
+    }else if(filt.tipo==="perdidos"&&SID_LOST.length>0){
+      lp.forEach(l=>{cnt[SID_LOST[0]]=(cnt[SID_LOST[0]]||0)+1});
+    }else{
+      lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    }
     const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
     const mx=Math.max(...Object.values(cnt),1);
     const chips=ss.map((s,i)=>{
@@ -1630,7 +1638,14 @@ function renderRelatorio(){
     if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}
     const ss=(pipe._embedded?.statuses||[]).filter(s=>!SID_WIN.includes(s.id)&&!SID_LOST.includes(s.id));
     const lp=leads.filter(l=>pm[l.status_id]===pipe.id&&!isWin(l)&&!isLost(l));
-    const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    const cnt={};
+    if(filt.tipo==="ganhos"&&SID_WIN.length>0){
+      lp.forEach(l=>{cnt[SID_WIN[0]]=(cnt[SID_WIN[0]]||0)+1});
+    }else if(filt.tipo==="perdidos"&&SID_LOST.length>0){
+      lp.forEach(l=>{cnt[SID_LOST[0]]=(cnt[SID_LOST[0]]||0)+1});
+    }else{
+      lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    }
     const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
     const mx2=Math.max(...Object.values(cnt),1);
     const chips=ss.map(s=>{const c=cnt[s.id]||0,pct=Math.round(c/mx2*100);return`<div class="stage-item"><div class="stage-name">${s.name}</div><div class="stage-count">${c}</div><div class="stage-bar"><div class="stage-fill ${fc}" style="width:${pct}%"></div></div></div>`}).join("");
