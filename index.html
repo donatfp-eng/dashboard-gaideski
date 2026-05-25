@@ -472,12 +472,7 @@ tbody tr:hover td{background:#F4F6FA}
           <input type="text" class="search-input" id="busca1" placeholder="Buscar lead...">
         </div>
       </div>
-      <div class="view-bar">
-        <span class="view-label">Visualizar:</span>
-        <button class="btn-view v-active" id="btn-at"><span class="dot" style="background:#9BA3AF"></span> Leads Ativos</button>
-        <button class="btn-view" id="btn-gn"><span class="dot" style="background:var(--green)"></span> Venda Ganha</button>
-        <button class="btn-view" id="btn-pd"><span class="dot" style="background:var(--red)"></span> Venda Perdida</button>
-      </div>
+
       <div class="cards-grid" id="cards-vg"></div>
       <div class="sec-title">Etapas por Funil</div>
       <div class="funnel-list" id="funis-vg"></div>
@@ -840,19 +835,11 @@ function initFiltros(){
   });
   document.getElementById("sel-per").addEventListener("change",e=>{filt.per=e.target.value;aplicarFiltros()});
   document.getElementById("busca1").addEventListener("input",aplicarFiltros);
-  document.getElementById("btn-at").addEventListener("click",()=>setTipo("ativos"));
-  document.getElementById("btn-gn").addEventListener("click",()=>setTipo("ganhos"));
-  document.getElementById("btn-pd").addEventListener("click",()=>setTipo("perdidos"));
+
   document.getElementById("btn-att").addEventListener("click",carregar);
 }
 
-function setTipo(t){
-  filt.tipo=t;
-  document.getElementById("btn-at").className="btn-view"+(t==="ativos"?" v-active":"");
-  document.getElementById("btn-gn").className="btn-view"+(t==="ganhos"?" v-green":"");
-  document.getElementById("btn-pd").className="btn-view"+(t==="perdidos"?" v-red":"");
-  aplicarFiltros();
-}
+
 
 function getBounds(){
   const ag=Math.floor(Date.now()/1000),p=filt.per;
@@ -865,31 +852,30 @@ function getBounds(){
 function aplicarFiltros(){
   const{ini,fim}=getBounds();const pa=gpipes();
   const b=(document.getElementById("busca1")?.value||"").toLowerCase();
+  // Para os cards: leads ativos no período
   const ll=leads.filter(l=>{
-    // Usa getLeadPipe para suportar leads ganhos/perdidos com status especial
     const lp=getLeadPipe(l);
     if(!pa.includes(lp))return false;
     if(l.created_at<ini||l.created_at>fim)return false;
     if(b&&!(l.name||"").toLowerCase().includes(b))return false;
-    if(filt.tipo==="ativos")return !isWin(l)&&!isLost(l);
-    if(filt.tipo==="ganhos")return isWin(l);
-    if(filt.tipo==="perdidos")return isLost(l);
-    return true;
+    return !isLost(l);
   });
   renderCards(ll,pa,ini,fim);
   renderFunis(ll,pa,"funis-vg");
 }
 
 function renderCards(ll,pa,ini,fim){
-  const g=document.getElementById("cards-vg"),t=filt.tipo;
+  const g=document.getElementById("cards-vg");
   const le=leads.filter(l=>pa.includes(getLeadPipe(l))&&l.created_at>=ini&&l.created_at<=fim);
   const at=le.filter(l=>!isWin(l)&&!isLost(l)).length;
   const gn=le.filter(l=>isWin(l)).length;
   const pd=le.filter(l=>isLost(l)).length;
   const vg=le.filter(l=>isWin(l)).reduce((a,l)=>a+(l.price||0),0);
-  if(t==="ativos")g.innerHTML=`<div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-blue"><div class="kpi-label">Novos no Período</div><div class="kpi-value">${at}</div><div class="kpi-sub">leads novos</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
-  else if(t==="ganhos")g.innerHTML=`<div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-blue"><div class="kpi-label">Receita Total</div><div class="kpi-value" style="font-size:20px">${fvc(vg)}</div><div class="kpi-sub">valor fechado</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
-  else g.innerHTML=`<div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div><div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div><div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div><div class="kpi-card c-gray"><div class="kpi-label">Total Geral</div><div class="kpi-value">${at+gn+pd}</div><div class="kpi-sub">todos os leads</div></div>`;
+  g.innerHTML=`
+    <div class="kpi-card c-gray"><div class="kpi-label">Leads Ativos</div><div class="kpi-value">${at}</div><div class="kpi-sub">em andamento</div></div>
+    <div class="kpi-card c-green"><div class="kpi-label">Venda Ganha</div><div class="kpi-value">${gn}</div><div class="kpi-sub">clientes fechados</div></div>
+    <div class="kpi-card c-blue"><div class="kpi-label">Receita Fechada</div><div class="kpi-value" style="font-size:20px">${fvc(vg)}</div><div class="kpi-sub">valor acumulado</div></div>
+    <div class="kpi-card c-red"><div class="kpi-label">Venda Perdida</div><div class="kpi-value">${pd}</div><div class="kpi-sub">leads perdidos</div></div>`;
 }
 
 // FUNIS
@@ -897,39 +883,46 @@ function renderFunis(ll,pa,cid){
   const cont=document.getElementById(cid);
   const pe=pipes.filter(p=>pa.includes(p.id));
   if(!pe.length){cont.innerHTML='<div class="empty">Nenhum funil</div>';return}
-  const ft=filt.tipo==="ganhos"?"sfill-ok":filt.tipo==="perdidos"?"sfill-red":null;
+  // Todos os leads do pipeline (ativos + ganhos)
+  const allLeadsMap={};
+  leads.forEach(l=>{const p=getLeadPipe(l);if(p)allLeadsMap[p]=(allLeadsMap[p]||[]).concat(l)});
   cont.innerHTML=pe.map(pipe=>{
     const pn=pipe.name||"",pl=pn.toLowerCase();
-    let dc="fd-amber",fc=ft||"sfill-amber";
-    if(!ft){if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}}
-    else{if(pl.includes("gaideski"))dc="fd-green";else if(pl.includes("planicon")||pl.includes("planicom"))dc="fd-blue"}
-    let ss;
-    if(filt.tipo==="ativos")ss=(pipe._embedded?.statuses||[]).filter(s=>!SID_WIN.includes(s.id)&&!SID_LOST.includes(s.id));
-    else if(filt.tipo==="ganhos")ss=SID_WIN.length>0?[{id:SID_WIN[0],name:"Venda Ganha"}]:(pipe._embedded?.statuses||[]).filter(s=>SID_WIN.includes(s.id));
-    else ss=SID_LOST.length>0?[{id:SID_LOST[0],name:"Venda Perdida"}]:(pipe._embedded?.statuses||[]).filter(s=>SID_LOST.includes(s.id));
-    const lp=ll.filter(l=>getLeadPipe(l)===pipe.id);
-    const cnt={};
-    if(filt.tipo==="ganhos"&&SID_WIN.length>0){
-      lp.forEach(l=>{cnt[SID_WIN[0]]=(cnt[SID_WIN[0]]||0)+1});
-    }else if(filt.tipo==="perdidos"&&SID_LOST.length>0){
-      lp.forEach(l=>{cnt[SID_LOST[0]]=(cnt[SID_LOST[0]]||0)+1});
-    }else{
-      lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    let dc="fd-amber",fc="sfill-amber";
+    if(pl.includes("gaideski")){dc="fd-green";fc="sfill-green"}
+    else if(pl.includes("planicon")||pl.includes("planicom")){dc="fd-blue";fc="sfill-blue"}
+    // Todas as etapas exceto perdidos — inclui venda ganha no final
+    const allSS=(pipe._embedded?.statuses||[]).filter(s=>!SID_LOST.includes(s.id));
+    // Contar todos os leads deste pipeline por status
+    const lp=allLeadsMap[pipe.id]||[];
+    const cnt={};lp.forEach(l=>{cnt[l.status_id]=(cnt[l.status_id]||0)+1});
+    // Agrupar ganhos num único bucket
+    if(SID_WIN.length>0){
+      const totalWin=SID_WIN.reduce((a,sid)=>a+(cnt[sid]||0),0);
+      SID_WIN.forEach(sid=>delete cnt[sid]);
+      if(totalWin>0)cnt["_win"]=totalWin;
     }
-    const tot=Object.values(cnt).reduce((a,b)=>a+b,0);
-    const mx=Math.max(...Object.values(cnt),1);
-    const chips=ss.map((s,i)=>{
-      const c=cnt[s.id]||0,pct=Math.round(c/mx*100);
+    // Montar lista de etapas: normais + venda ganha no final
+    const stages=allSS.filter(s=>!SID_WIN.includes(s.id));
+    const winCount=cnt["_win"]||0;
+    if(winCount>0||SID_WIN.length>0) stages.push({id:"_win",name:"Venda Ganha",_win:true});
+    const tot=lp.filter(l=>!isLost(l)).length;
+    const mx=Math.max(...stages.map(s=>cnt[s.id]||0),1);
+    const chips=stages.map((s,i)=>{
+      const c=s.id==="_win"?winCount:(cnt[s.id]||0);
+      const pct=Math.round(c/mx*100);
+      const fc2=s._win?"sfill-ok":fc;
       let arrow="";
-      if(i<ss.length-1&&filt.tipo==="ativos"){
-        const cn=cnt[ss[i+1].id]||0,cv=c>0?Math.round(cn/c*100):0;
+      if(i<stages.length-1){
+        const next=stages[i+1];
+        const cn=next.id==="_win"?winCount:(cnt[next.id]||0);
+        const cv=c>0?Math.round(cn/c*100):0;
         const cs=cv>=50?"var(--green)":cv>=25?"var(--amber)":"var(--text3)";
         arrow=`<div class="stage-arrow"><span style="color:${cs}">${cv}%</span><svg viewBox="0 0 14 14" fill="none" stroke="${cs}" stroke-width="1.5" stroke-linecap="round"><path d="M4 7h6M7 4l3 3-3 3"/></svg></div>`;
       }
-      return`<div style="display:flex;align-items:center"><div class="stage-item"><div class="stage-name" title="${s.name}">${s.name}</div><div class="stage-count">${c}</div><div class="stage-bar"><div class="stage-fill ${fc}" style="width:${pct}%"></div></div></div>${arrow}</div>`;
+      return`<div style="display:flex;align-items:center"><div class="stage-item${s._win?' style="border-color:var(--green);background:var(--green-pale)"':''}" ${s._win?'style="border-color:var(--green);background:var(--green-pale)"':''}><div class="stage-name" title="${s.name}" style="${s._win?'color:var(--green-dark)':''}">${s.name}</div><div class="stage-count" style="${s._win?'color:var(--green)':''}">${c}</div><div class="stage-bar"><div class="stage-fill ${fc2}" style="width:${pct}%"></div></div></div>${arrow}</div>`;
     }).join("");
-    const label=filt.tipo==="ativos"?`${tot} ativo${tot!==1?"s":""}`:`${tot} lead${tot!==1?"s":""}`;
-    return`<div class="funnel-card"><div class="funnel-header"><div class="funnel-dot ${dc}"></div><div class="funnel-name">${pn}</div><div class="funnel-count">${label}</div></div><div class="funnel-stages">${chips||'<div class="empty" style="padding:12px 0">Sem leads</div>'}</div></div>`;
+    return`<div class="funnel-card"><div class="funnel-header"><div class="funnel-dot ${dc}"></div><div class="funnel-name">${pn}</div><div class="funnel-count">${tot} lead${tot!==1?"s":""}</div></div><div class="funnel-stages">${chips||'<div class="empty" style="padding:12px 0">Sem leads</div>'}</div></div>`;
   }).join("");
 }
 
