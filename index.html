@@ -638,13 +638,14 @@ tbody tr:hover td{background:#F4F6FA}
   </div>
 </header>
 
+<!-- ✅ MUDANÇA 1 & 2: Dashboard primeiro + active em rl -->
 <div class="tabs-bar">
-  <button class="tab-btn active" data-tab="vg">Visão Geral</button>
+  <button class="tab-btn active" data-tab="rl">Dashboard</button>
+  <button class="tab-btn" data-tab="vg">Visão Geral</button>
   <button class="tab-btn" data-tab="mt">Metas & Carteira</button>
   <button class="tab-btn" data-tab="fn">Funis</button>
   <button class="tab-btn" data-tab="rk">Ranking</button>
   <button class="tab-btn" data-tab="ld">Leads</button>
-  <button class="tab-btn" data-tab="rl">Relatórios</button>
 </div>
 
 <!-- MODAL METAS -->
@@ -691,7 +692,8 @@ tbody tr:hover td{background:#F4F6FA}
   <div id="cont" style="display:none">
 
     <!-- VISÃO GERAL -->
-    <div id="tab-vg" class="tab-content active">
+    <!-- ✅ MUDANÇA 3: tab-vg SEM active -->
+    <div id="tab-vg" class="tab-content">
       <div class="filter-bar">
         <span class="filter-label">Empresa</span>
         <div class="btn-group" id="grp-emp">
@@ -728,7 +730,6 @@ tbody tr:hover td{background:#F4F6FA}
 
     <!-- METAS -->
     <div id="tab-mt" class="tab-content">
-      <!-- barra de período -->
       <div class="filter-bar" style="margin-bottom:14px">
         <span class="filter-label">Período</span>
         <div class="btn-group" id="grp-pm">
@@ -748,7 +749,6 @@ tbody tr:hover td{background:#F4F6FA}
         <select class="sf" id="pm-ano"></select>
         <span style="margin-left:auto;font-size:11px;color:var(--text3)" id="pm-lbl"></span>
       </div>
-      <!-- conteúdo renderizado pelo JS -->
       <div id="mt-dashboard"></div>
     </div>
 
@@ -803,8 +803,9 @@ tbody tr:hover td{background:#F4F6FA}
       </div>
     </div>
 
-    <!-- RELATÓRIOS -->
-    <div id="tab-rl" class="tab-content">
+    <!-- DASHBOARD (antes Relatórios) -->
+    <!-- ✅ MUDANÇA 4: tab-rl COM active -->
+    <div id="tab-rl" class="tab-content active">
       <div class="report-header-bar">
         <h2 id="rel-titulo">Relatório Comercial — <span id="rel-periodo"></span></h2>
         <button class="btn-print" onclick="window.print()">
@@ -813,7 +814,6 @@ tbody tr:hover td{background:#F4F6FA}
         </button>
       </div>
 
-      <!-- SELETOR DE DATAS -->
       <div class="date-range-bar">
         <span class="filter-label" style="color:var(--green-dark)">&#128197; Período do Relatório</span>
         <div class="filter-div"></div>
@@ -837,7 +837,6 @@ tbody tr:hover td{background:#F4F6FA}
 
       <div id="rel-corpo"></div>
 
-      <!-- CONCILIAÇÃO FINANCEIRA — fica no final -->
       <div class="conc-block" style="margin-top:16px">
         <div class="conc-header">
           <div class="conc-header-left">
@@ -871,8 +870,6 @@ const PID={qualificacao:13512120,gaideski:13512132,planicon:13512140};
 const PSET=new Set([13512120,13512132,13512140]);
 const CFV=2057155,ENR=1797505,ENE=1797507;
 
-// IDs detectados dinamicamente dos pipelines
-// SID_WIN e SID_LOST são ARRAYS pois cada pipeline tem seu próprio status de ganho/perda
 let SID_WIN=[], SID_LOST=[];
 
 function isWin(l){return SID_WIN.includes(l.status_id)}
@@ -885,18 +882,15 @@ function detectStatusIds(){
   pipes.forEach(p=>{
     (p._embedded?.statuses||[]).forEach(s=>{
       const n=(s.name||"").toLowerCase();
-      // Venda ganha: qualquer variação de nome
       if(n.includes("venda ganha")||n.includes("ganho")||n.includes("won")||
          n.includes("onboarding")||n.includes("cliente ativo")||n.includes("fechado"))
         winIds.add(s.id);
-      // Venda perdida
       if(n.includes("venda perdida")||n.includes("perdid")||n.includes("lost")||n.includes("no-show"))
         lostIds.add(s.id);
     });
   });
   SID_WIN=[...winIds];
   SID_LOST=[...lostIds];
-  // Se não achou nada pelo nome, loga todos os status para diagnóstico
   if(SID_WIN.length===0){
     console.warn("[AVISO] Nenhum status de venda ganha detectado pelo nome. Status disponíveis:");
     pipes.forEach(p=>{
@@ -911,15 +905,15 @@ function detectStatusIds(){
 const TICKET_MEDIO_META=450;
 
 let leads=[],pipes=[];
-let leadPipeMap={}; // mapeia lead.id -> pipeline_id correto
+let leadPipeMap={};
 function getLeadPipe(l){return leadPipeMap[l.id]||pm[l.status_id]||null}
 let sm={},pm={};
 let filt={emp:"todos",per:"todos",tipo:"ativos",emp2:"todos",tv:"todos"};
 let fpm={tipo:"mes",mes:new Date().getMonth(),ano:new Date().getFullYear()};
 let relFiltro={tipo:"mes",ini:null,fim:null};
-let tab="vg";
+// ✅ MUDANÇA 5: tab inicia em "rl"
+let tab="rl";
 
-// Pega a melhor data de fechamento do lead (Kommo nem sempre preenche closed_at)
 function gdt(l){return l.closed_at||l.created_at||l.updated_at||0}
 function fv(v){if(!v||v===0)return"—";return"R$\u00A0"+Number(v).toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:0})}
 function fvc(v){if(!v||v===0)return"R$ 0";if(v>=1000000)return"R$\u00A0"+(v/1000000).toFixed(1)+"M";if(v>=1000)return"R$\u00A0"+(v/1000).toFixed(1)+"k";return"R$\u00A0"+Number(v).toLocaleString("pt-BR")}
@@ -969,7 +963,6 @@ function initModal(){
 function abrirModal(){
   const cart=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente").reduce((a,l)=>a+(l.price||0),0);
   document.getElementById("modal-info").innerHTML="<strong>Carteira Recorrente Atual:</strong> "+fv(cart)+" — acumula com cada cliente recorrente fechado.";
-  // Sincroniza modal com o período ativo na aba Metas
   const ag=new Date();
   const mesAtivo=fpm.mes??ag.getMonth();
   const anoAtivo=fpm.ano??ag.getFullYear();
@@ -986,7 +979,6 @@ function carregaModal(){
   document.getElementById("mext-g").value=gmv(ano,mes,"ext-g")||"";
   document.getElementById("mrec-p").value=gmv(ano,mes,"rec-p")||"";
   document.getElementById("mext-p").value=gmv(ano,mes,"ext-p")||"";
-  // Total: soma das empresas, ou manual se definido
   const autoRec=(gmv(ano,mes,"rec-g")||0)+(gmv(ano,mes,"rec-p")||0);
   const autoExt=(gmv(ano,mes,"ext-g")||0)+(gmv(ano,mes,"ext-p")||0);
   document.getElementById("mrec").value=gmv(ano,mes,"rec")||autoRec||"";
@@ -1004,7 +996,6 @@ function salvarMetas(){
   m[ano+"_"+mes+"_ext-g"]=extG;
   m[ano+"_"+mes+"_rec-p"]=recP;
   m[ano+"_"+mes+"_ext-p"]=extP;
-  // Total: se campo manual preenchido usa ele, senão soma empresas
   const mrecVal=document.getElementById("mrec").value.trim();
   const mextVal=document.getElementById("mext").value.trim();
   const recTot=mrecVal!=""?parseFloat(mrecVal)||0:recG+recP;
@@ -1012,7 +1003,6 @@ function salvarMetas(){
   m[ano+"_"+mes+"_rec"]=recTot;
   m[ano+"_"+mes+"_ext"]=extTot;
   sm2(m);
-  // Feedback visual
   const btn=document.getElementById("btn-save-m");
   const orig=btn.textContent;
   btn.textContent="✓ Salvo!";
@@ -1029,14 +1019,12 @@ async function carregar(){
   document.getElementById("cont").style.display="none";
   document.getElementById("emsg").style.display="none";
   try{
-    // Busca leads ativos + ganhos + perdidos separadamente para garantir que todos apareçam
     const[ld,ldWon,ldLost,pd]=await Promise.all([
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=0").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=143").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads/pipelines?limit=50").then(r=>r.json())
     ]);
-    // Junta todos os leads, removendo duplicatas por ID
     const allLeads=[...(ld?._embedded?.leads||[]),...(ldWon?._embedded?.leads||[]),...(ldLost?._embedded?.leads||[])];
     const seen=new Set();
     const ll=allLeads.filter(l=>{if(seen.has(l.id))return false;seen.add(l.id);return true});
@@ -1046,37 +1034,27 @@ async function carregar(){
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
     
-    // Limpa e reconstrói o mapa por lead (não por status_id global)
     leadPipeMap={};
     leads=ll.filter(l=>{
-      // 1. Status normal (leads ativos) — pm tem o pipeline correto
       if(pm[l.status_id]&&PSET.has(pm[l.status_id])){
         leadPipeMap[l.id]=pm[l.status_id];
         return true;
       }
-      // 2. Leads ganhos/perdidos — usa pipeline_id do próprio lead
       const pid=l.pipeline_id||l._embedded?.pipeline?.id;
       if(pid&&PSET.has(pid)){
-        leadPipeMap[l.id]=pid; // salva POR LEAD — não polui pm[]
+        leadPipeMap[l.id]=pid;
         return true;
       }
       return false;
     });
     
-    // Debug: distribuição por empresa
     const _dbgPipe={};
     leads.forEach(l=>{const p=getLeadPipe(l);_dbgPipe[p]=(_dbgPipe[p]||0)+1});
     console.log("[DEBUG] Leads por pipeline:",JSON.stringify(_dbgPipe));
-    console.log("[DEBUG] Gaideski("+PID.gaideski+"):",_dbgPipe[PID.gaideski]||0,"Planicon("+PID.planicon+"):",_dbgPipe[PID.planicon]||0);
     detectStatusIds();
-    // DEBUG: mostra leads ganhos no console
     const dbgGanhos=leads.filter(l=>isWin(l));
     console.log("[DEBUG] Total leads filtrados:",leads.length);
     console.log("[DEBUG] Leads ganhos (status 142):",dbgGanhos.length);
-    if(dbgGanhos.length>0){
-      const ex=dbgGanhos[0];
-      console.log("[DEBUG] Exemplo lead ganho:",{name:ex.name,price:ex.price,closed_at:ex.closed_at,created_at:ex.created_at,updated_at:ex.updated_at,gdt:gdt(ex)});
-    }
     aplicarFiltros();
     document.getElementById("loading").style.display="none";
     document.getElementById("cont").style.display="block";
@@ -1233,7 +1211,6 @@ function renderMetas(){
   const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
   document.getElementById("pm-lbl").textContent=b.lbl;
 
-  // ── Dados reais ──
   const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
   const lExt=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&gdt(l)>=iTs&&gdt(l)<=fTs);
@@ -1247,7 +1224,6 @@ function renderMetas(){
   const lExtP=lExt.filter(l=>getLeadPipe(l)===PID.planicon);
   const extP=lExtP.reduce((a,l)=>a+(l.price||0),0);
 
-  // ── Metas ──
   const mR=gmv(b.ano,b.mes,"rec")||0;
   const mE=gmv(b.ano,b.mes,"ext")||0;
   const mRG=gmv(b.ano,b.mes,"rec-g")||0;
@@ -1255,7 +1231,6 @@ function renderMetas(){
   const mEG=gmv(b.ano,b.mes,"ext-g")||0;
   const mEP=gmv(b.ano,b.mes,"ext-p")||0;
 
-  // ── Helpers ──
   function pct(real,meta){return meta>0?Math.min(Math.round(real/meta*100),999):null}
   function pctColor(p){return p===null?"var(--text3)":p>=100?"var(--green)":p>=60?"var(--amber)":"var(--red)"}
   function barW(p){return p===null?0:Math.min(p,100)}
@@ -1272,7 +1247,6 @@ function renderMetas(){
     </div>`;
   }
 
-  // ── Evolução 6 meses (para o mini gráfico) ──
   const ag=new Date();
   const evolMeses=[];
   for(let i=5;i>=0;i--){
@@ -1292,7 +1266,6 @@ function renderMetas(){
 
   const el=document.getElementById("mt-dashboard");
   el.innerHTML=`
-  <!-- ROW 1: KPIs grandes -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent)"></div>
@@ -1337,10 +1310,7 @@ function renderMetas(){
     </div>
   </div>
 
-  <!-- ROW 2: Empresa cards + Gráfico evolução -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-bottom:14px">
-
-    <!-- GAIDESKI -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:8px">
@@ -1349,7 +1319,6 @@ function renderMetas(){
         </div>
         <button onclick="abrirModalEmpresa('gaideski')" style="font-size:10px;font-weight:600;color:var(--accent);background:var(--accent-pale);border:1px solid var(--accent);border-radius:3px;padding:3px 10px;cursor:pointer;font-family:var(--font)">✏ Metas</button>
       </div>
-      <!-- Honorários -->
       <div style="margin-bottom:12px">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Honorários Recorrentes</div>
         <div style="display:flex;align-items:baseline;justify-content:space-between">
@@ -1362,7 +1331,6 @@ function renderMetas(){
         <div style="font-size:10px;color:var(--text3);margin-bottom:4px">${lRecG.length} clientes${mRG>0&&cartG<mRG?" · faltam "+fvc(mRG-cartG):""}</div>
         ${barHoriz(cartG,mRG,"var(--accent)")}
       </div>
-      <!-- Extras -->
       <div style="padding-top:10px;border-top:1px solid var(--border-light)">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:4px">Serviços Extras</div>
         <div style="display:flex;align-items:baseline;justify-content:space-between">
@@ -1377,7 +1345,6 @@ function renderMetas(){
       </div>
     </div>
 
-    <!-- PLANICON -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="display:flex;align-items:center;gap:8px">
@@ -1412,7 +1379,6 @@ function renderMetas(){
       </div>
     </div>
 
-    <!-- GRÁFICO EVOLUÇÃO -->
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh)">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <span style="font-size:12px;font-weight:700">Evolução — Últimos 6 Meses</span>
@@ -1454,13 +1420,11 @@ function abrirModalEmpresa(emp){
   },100);
 }
 
-
 function renderProjecao(cartAtual){
   const ag=new Date();
   const anoAtual=ag.getFullYear();
   const mesAtual=ag.getMonth();
 
-  // Reais por empresa
   const todosRecG=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&getLeadPipe(l)===PID.gaideski);
   const todosRecP=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&getLeadPipe(l)===PID.planicon);
   const cartG=todosRecG.reduce((a,l)=>a+(l.price||0),0);
@@ -1470,7 +1434,6 @@ function renderProjecao(cartAtual){
   const extG=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&getLeadPipe(l)===PID.gaideski&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
   const extP=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&getLeadPipe(l)===PID.planicon&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
 
-  // Monta 12 meses
   const meses=[];
   for(let m=0;m<12;m++){
     const isPast=m<mesAtual;
@@ -1483,7 +1446,6 @@ function renderProjecao(cartAtual){
     const mRecTot=(gmv(anoAtual,m,"rec"))||0;
     const mExtTot=(gmv(anoAtual,m,"ext"))||0;
 
-    // Real acumulado recorrente
     let realG,realP,realTot;
     if(isPast){ realG=0;realP=0; }
     else if(isCurrent){ realG=cartG;realP=cartP; }
@@ -1494,7 +1456,6 @@ function renderProjecao(cartAtual){
     }
     realTot=realG+realP;
 
-    // Meta acumulada
     let metaG,metaP,metaTot;
     if(isPast){metaG=0;metaP=0;metaTot=0;}
     else if(isCurrent){metaG=cartG;metaP=cartP;metaTot=cartAtual;}
@@ -1510,11 +1471,6 @@ function renderProjecao(cartAtual){
       isPast,isCurrent,isFuture});
   }
 
-  // Receita total projetada Mai→Dez: soma das metas de cada mês (não acumulado, mas o que ENTRA por mês)
-  // = cartAtual (Mai) + metaJun + metaJul + ... + metaDez
-  // Receita total Mai-Dez: soma do que será FATURADO em cada mês
-  // Cada mês fatura o valor da carteira acumulada daquele mês
-  // Mai: cartAtual, Jun: cartAtual+metaJun, Jul: cartAtual+metaJun+metaJul, etc.
   let receitaAnual=0;
   for(let m=mesAtual;m<12;m++){
     const d=meses[m];
@@ -1544,7 +1500,6 @@ function renderProjecao(cartAtual){
     <div id="pm-popup" class="pm-inline-edit"></div>
     ${[0,1,2,3].map(q=>{
       const qm=meses.slice(q*3,q*3+3);
-      // Total do trimestre = soma das metas dos meses do tri (nova receita que entra)
       const qTotal=qm.reduce((a,d)=>a+(d.mRecTot+d.mExtTot),0);
       const qHasData=qm.some(d=>!d.isPast);
       return`<div class="proj-tri-wrap">
@@ -1555,9 +1510,6 @@ function renderProjecao(cartAtual){
         <div class="proj-tri-months">
         ${qm.map(d=>{
           const cls=d.isCurrent?"pm-current":d.isFuture?"pm-future":"pm-past";
-          // Progresso: para meses futuros compara carteira ATUAL vs meta acumulada do mês
-          // Para mês atual: real vs meta do mês
-          // Para passado: não há barra
           const pctBase=d.isCurrent?cartAtual:d.isFuture?cartAtual:0;
           const pct=d.metaTot>0?Math.min(Math.round(pctBase/d.metaTot*100),100):0;
           const isOk=d.isCurrent&&pct>=100;
@@ -1648,6 +1600,7 @@ function renderProjecao(cartAtual){
 
   const chartCard=document.querySelector("#tab-mt .chart-card");
   if(chartCard) chartCard.insertAdjacentElement("afterend",el);
+  else document.getElementById("mt-dashboard").appendChild(el);
 
   document.addEventListener("click",function(e){
     const popup=document.getElementById("pm-popup");
@@ -1740,9 +1693,7 @@ function etg(pid){const p=pipes.find(x=>x.id===pid);if(!p)return"—";const n=(p
 // ── FILTRO DE DATAS DO RELATÓRIO ──
 function initRelDateFilter(){
   const ag=new Date();
-  // defaults: hoje
   const y=ag.toISOString().slice(0,10);
-  const fimMes=new Date(ag.getFullYear(),ag.getMonth()+1,0).toISOString().slice(0,10);
   const iniMes=new Date(ag.getFullYear(),ag.getMonth(),1).toISOString().slice(0,10);
   document.getElementById("date-ini").value=iniMes;
   document.getElementById("date-fim").value=y;
@@ -1793,17 +1744,10 @@ function getRelBounds(){
 function renderRelatorio(){
   const b=getRelBounds();
   const iTs=Math.floor(b.ini/1000),fTs=Math.floor(b.fim/1000);
-  console.log("[DEBUG REL] Período:",b.lbl,"iTs:",iTs,"fTs:",fTs);
-  console.log("[DEBUG REL] Leads totais:",leads.length,"Ganhos totais:",leads.filter(l=>isWin(l)).length);
-  const todosGanhos=leads.filter(l=>isWin(l));
-  if(todosGanhos.length>0){
-    todosGanhos.forEach(l=>console.log("[DEBUG REL] Lead ganho:",l.name,"gdt:",gdt(l),"no período?",gdt(l)>=iTs&&gdt(l)<=fTs));
-  }
   document.getElementById("rel-period-display").textContent=b.lbl;
   document.getElementById("rel-periodo").textContent=b.lbl;
   document.getElementById("rel-titulo").innerHTML="Relatório Comercial &mdash; <span id=\"rel-periodo\">"+b.lbl+"</span>";
 
-  // FILTRAR PELO PERÍODO — usa gdt() que prioriza closed_at > created_at > updated_at
   const gnAll=leads.filter(l=>isWin(l)&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const at=leads.filter(l=>!isWin(l)&&!isLost(l));
   const pd=leads.filter(l=>isLost(l)&&gdt(l)>=iTs&&gdt(l)<=fTs);
@@ -1811,11 +1755,9 @@ function renderRelatorio(){
   const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
-  // Separação por empresa (Gaideski vs Planicon)
   const isGaideski=l=>getLeadPipe(l)===PID.gaideski;
   const isPlanicon=l=>getLeadPipe(l)===PID.planicon;
 
-  // Vendas ganhas por empresa
   const gnG=gnAll.filter(isGaideski); const vGnG=gnG.reduce((a,l)=>a+(l.price||0),0);
   const gnP=gnAll.filter(isPlanicon); const vGnP=gnP.reduce((a,l)=>a+(l.price||0),0);
   const gnQ=gnAll.filter(l=>getLeadPipe(l)===PID.qualificacao);
@@ -1826,7 +1768,6 @@ function renderRelatorio(){
   const lExtP=lExt.filter(isPlanicon); const vExtP=lExtP.reduce((a,l)=>a+(l.price||0),0);
 
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
-  // vTot = somente recorrente + extras (leads sem tipo não entram na receita)
   const vRec=lRec.reduce((a,l)=>a+(l.price||0),0);
   const vExt=lExt.reduce((a,l)=>a+(l.price||0),0);
   const vTot=vRec+vExt;
@@ -1837,9 +1778,7 @@ function renderRelatorio(){
   const pR=mR>0?Math.min(Math.round(cart/mR*100),999):0;
   const pE=mE>0?Math.min(Math.round(vExt/mE*100),999):0;
   const metaClientes=mR>0?Math.round(mR/TICKET_MEDIO_META):0;
-  const clientesAtingir=Math.max(metaClientes-lRec.length,0);
 
-  // Evolução 6 meses
   const ag=new Date();
   const ms=[];for(let i=5;i>=0;i--){const d=new Date(b.ano,b.mes-i,1);ms.push({ano:d.getFullYear(),mes:d.getMonth(),lb:MC[d.getMonth()]+"/"+String(d.getFullYear()).slice(2)})}
   const dd=ms.map(m=>{
@@ -1851,7 +1790,6 @@ function renderRelatorio(){
   });
   const mx=Math.max(...dd.map(d=>d.tot),1);
 
-  // Ranking do período
   const pr={};
   gnAll.forEach(l=>{const n=l._embedded?.responsible_user?.name||"Sem responsável";if(!pr[n])pr[n]={q:0,v:0};pr[n].q++;pr[n].v+=l.price||0});
   const ranking=Object.entries(pr).sort((a,b)=>b[1].q-a[1].q);
@@ -1863,7 +1801,6 @@ function renderRelatorio(){
 
   let h="";
 
-  // CAPA
   h+=`<div class="report-cover">
     <div class="rc-logo">
       <div class="rc-mark"><svg viewBox="0 0 14 14" fill="var(--green-dark)"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1" opacity=".4"/></svg></div>
@@ -1886,7 +1823,6 @@ function renderRelatorio(){
     </div>
   </div>`;
 
-  // RESUMO
   h+=`<div class="rsec"><div class="rsec-title">Resumo Executivo</div>
   <div class="resumo-block">
     <div class="resumo-row">
@@ -1912,8 +1848,6 @@ function renderRelatorio(){
       </div>
     </div>
   </div>
-
-  <!-- BREAKDOWN POR EMPRESA -->
   <div class="resumo-block" style="margin-top:8px">
     <div class="resumo-row" style="background:var(--surface2)">
       <div class="resumo-cell" style="grid-column:span 4;padding:8px 16px">
@@ -1982,7 +1916,6 @@ function renderRelatorio(){
     </div>
   </div></div>`;
 
-  // METAS
   h+=`<div class="rsec"><div class="rsec-title">Metas vs Realizado — ${b.lbl}</div>
   <div class="meta-grid">
     <div class="meta-card"><div class="meta-card-title">Carteira Recorrente <span class="tag tag-green">Honorários</span></div>
@@ -1999,7 +1932,6 @@ function renderRelatorio(){
     </div>
   </div></div>`;
 
-  // INDICADORES
   h+=`<div class="rsec"><div class="rsec-title">Indicadores de Desempenho</div>
   <div class="ind-grid">
     <div class="ind-card"><div class="ind-label">Ticket Médio</div><div class="ind-val">${fvc(tkMedio)}</div><div class="ind-sub">média por venda fechada</div><div class="ind-bar"><div class="ind-fill" style="width:${tkMedio>0?Math.min(Math.round(tkMedio/TICKET_MEDIO_META*100),100):0}%"></div></div></div>
@@ -2010,7 +1942,6 @@ function renderRelatorio(){
     <div class="ind-card"><div class="ind-label">Projeção Anual</div><div class="ind-val">${fvc(cart*12)}</div><div class="ind-sub">baseado na carteira recorrente</div><div class="ind-bar"><div class="ind-fill" style="width:${Math.min(Math.round(new Date().getMonth()/12*100),100)}%;background:var(--amber)"></div></div></div>
   </div></div>`;
 
-  // EVOLUÇÃO
   h+=`<div class="rsec"><div class="rsec-title">Evolução Mensal — 6 Meses</div>
   <div class="chart-card">
     <div class="chart-header"><div class="chart-title">Receita por mês (vendas ganhas)</div><div class="chart-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Recorrente</div><div class="legend-item"><div class="legend-dot" style="background:var(--purple)"></div> Extra</div></div></div>
@@ -2019,13 +1950,11 @@ function renderRelatorio(){
   <div class="rcg" style="grid-template-columns:repeat(6,1fr)">${dd.map(d=>`<div class="rc2 c-blue"><div class="rc2-l">${d.lb}</div><div class="rc2-v" style="font-size:15px">${d.q}</div><div class="rc2-s">${fvc(d.tot)}</div></div>`).join("")}</div>
   </div>`;
 
-  // RANKING
   h+=`<div class="rsec"><div class="rsec-title">Ranking de Vendedores — ${b.lbl}</div>
   <div class="rank-card"><div class="rank-header">Por quantidade de vendas ganhas no período</div>
   ${ranking.length?ranking.map(([n,d],i)=>`<div class="rank-row"><div class="rank-pos ${prc[i]||"rp-n"}">${i+1}</div><div class="rank-name">${n}</div><div class="rank-bar-wrap"><div class="rank-bar-fill" style="width:${Math.round(d.q/mq*100)}%"></div></div><div class="rank-stats"><div class="rank-val">${d.q} venda${d.q!==1?"s":""}</div><div class="rank-sub">${fvc(d.v)}</div></div></div>`).join(""):"<div class=\"empty\">Nenhuma venda no período</div>"}
   </div></div>`;
 
-  // FUNIS
   const old=filt.tipo;filt.tipo="ativos";
   const fHtml=pipes.map(pipe=>{
     const pn=pipe.name||"",pl=pn.toLowerCase();
@@ -2042,7 +1971,6 @@ function renderRelatorio(){
   filt.tipo=old;
   h+=`<div class="rsec"><div class="rsec-title">Funil de Vendas Atual</div><div class="funnel-list">${fHtml}</div></div>`;
 
-  // CLIENTES FECHADOS NO PERÍODO
   h+=`<div class="rsec"><div class="rsec-title">Clientes Fechados no Período — ${gnAll.length} total</div>
   <div class="table-wrap"><div style="overflow-x:auto"><table>
     <thead><tr><th>Nome</th><th>Empresa</th><th>Tipo</th><th>Responsável</th><th>Data</th><th>Valor</th></tr></thead>
@@ -2061,7 +1989,7 @@ function renderRelatorio(){
 }
 
 // ── CONCILIAÇÃO FINANCEIRA ──
-let concData = []; // dados do arquivo carregado
+let concData = [];
 let concFiltro = 'todos';
 
 function initConciliacao(){
@@ -2072,19 +2000,6 @@ function initConciliacao(){
     if(!file) return;
     const lbl = document.getElementById('lbl-upload');
     lbl.textContent = '⏳ Carregando...';
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        parseConcFile(file.name, ev.target.result);
-      } catch(err) {
-        document.getElementById('conc-status').innerHTML = '<p style="color:var(--red);padding:20px">Erro ao ler o arquivo: '+err.message+'</p>';
-        document.getElementById('conc-status').style.display='flex';
-      }
-      // restore button
-      lbl.innerHTML = '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 9V2M4 5l3-3 3 3"/><path d="M2 10v1a1 1 0 001 1h8a1 1 0 001-1v-1"/></svg> Trocar arquivo';
-    };
-    reader.readAsArrayBuffer(ev.target.result !== undefined ? null : file);
-    // use readAsArrayBuffer for xlsx
     const reader2 = new FileReader();
     reader2.onload = ev2 => {
       try { parseConcFile(file.name, ev2.target.result); }
@@ -2099,17 +2014,12 @@ function initConciliacao(){
 }
 
 function parseConcFile(filename, arrayBuffer){
-  // Usa SheetJS (XLSX) — importado via CDN
   const data = new Uint8Array(arrayBuffer);
   const wb = XLSX.read(data, {type:'array', cellDates:true});
   const ws = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-  
   if(!rows.length){ throw new Error('Arquivo vazio ou formato inválido'); }
-  
-  // Mapeia colunas — suporta variações de nome
   concData = rows.map(r => {
-    // CNPJ/CPF
     const cnpjKey = Object.keys(r).find(k => k.toLowerCase().includes('identificador') || k.toLowerCase().includes('cnpj') || k.toLowerCase().includes('cpf'));
     const nomeKey = Object.keys(r).find(k => k.toLowerCase().includes('nome do cliente') || k.toLowerCase().includes('cliente'));
     const valorKey = Object.keys(r).find(k => k.toLowerCase().includes('valor original') || k.toLowerCase().includes('valor total da parcela'));
@@ -2117,7 +2027,6 @@ function parseConcFile(filename, arrayBuffer){
     const situKey = Object.keys(r).find(k => k.toLowerCase().includes('situação') || k.toLowerCase().includes('situacao') || k.toLowerCase() === 'status');
     const vencKey = Object.keys(r).find(k => k.toLowerCase().includes('vencimento'));
     const recebKey = Object.keys(r).find(k => k.toLowerCase().includes('recebimento') || k.toLowerCase().includes('data do último'));
-
     const cnpjRaw = cnpjKey ? String(r[cnpjKey]).replace(/\D/g,'') : '';
     const nome = nomeKey ? String(r[nomeKey]) : '';
     const valor = parseFloat(String(r[valorKey]||'0').replace(',','.')) || 0;
@@ -2128,34 +2037,21 @@ function parseConcFile(filename, arrayBuffer){
     else if(situRaw.includes('vencido')||situRaw.includes('atraso'))status='vencido';
     const venc = vencKey ? r[vencKey] : '';
     const receb = recebKey ? r[recebKey] : '';
-
     return { cnpj: cnpjRaw, nome, valor, valorRec, status, venc, receb };
   }).filter(r => r.nome || r.cnpj);
-
   document.getElementById('conc-status').style.display = 'none';
   renderConciliacao();
 }
 
 function normCNPJ(s){ return String(s||'').replace(/\D/g,'') }
 
-function getConcClienteKommo(cnpj){
-  // Tenta cruzar com leads ganhos pelo CNPJ nos custom fields ou pelo nome
-  const gn = leads.filter(isWin);
-  return gn.find(l => {
-    const cf = (l.custom_fields_values||[]);
-    return cf.some(f => normCNPJ(f.values?.[0]?.value) === cnpj);
-  }) || null;
-}
-
 function renderConciliacao(){
   const res = document.getElementById('conc-resultado');
   res.style.display = 'block';
-
   let filtered = concData;
   if(concFiltro === 'pago') filtered = concData.filter(r=>r.status==='pago');
   else if(concFiltro === 'pendente') filtered = concData.filter(r=>r.status==='pendente');
   else if(concFiltro === 'vencido') filtered = concData.filter(r=>r.status==='vencido');
-
   const totPago = concData.filter(r=>r.status==='pago').reduce((a,r)=>a+(r.valorRec||r.valor),0);
   const totPendente = concData.filter(r=>r.status==='pendente').reduce((a,r)=>a+r.valor,0);
   const totVencido = concData.filter(r=>r.status==='vencido').reduce((a,r)=>a+r.valor,0);
@@ -2164,38 +2060,16 @@ function renderConciliacao(){
   const nPend = concData.filter(r=>r.status==='pendente').length;
   const nVenc = concData.filter(r=>r.status==='vencido').length;
   const pctPago = totGeral > 0 ? Math.round(totPago/totGeral*100) : 0;
-
   function fmt(v){ if(!v)return'R$ 0'; if(v>=1000)return'R$\u00A0'+(v/1000).toFixed(1)+'k'; return'R$\u00A0'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) }
   function fmtD(v){ if(!v)return'—'; try{ const d=new Date(v); if(isNaN(d))return String(v); return d.toLocaleDateString('pt-BR') }catch{ return String(v) } }
-
   let html = `
   <div class="conc-resumo">
-    <div class="conc-kpi ck-green">
-      <div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>Recebido</div>
-      <div class="conc-kpi-v">${fmt(totPago)}</div>
-      <div class="conc-kpi-s">${nPago} lançamento${nPago!==1?'s':''} quitado${nPago!==1?'s':''}</div>
-    </div>
-    <div class="conc-kpi ck-amber">
-      <div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block"></span>Pendente</div>
-      <div class="conc-kpi-v">${fmt(totPendente)}</div>
-      <div class="conc-kpi-s">${nPend} a receber</div>
-    </div>
-    <div class="conc-kpi ck-red">
-      <div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block"></span>Vencido</div>
-      <div class="conc-kpi-v">${fmt(totVencido)}</div>
-      <div class="conc-kpi-s">${nVenc} em atraso</div>
-    </div>
-    <div class="conc-kpi">
-      <div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block"></span>Total do período</div>
-      <div class="conc-kpi-v">${fmt(totGeral)}</div>
-      <div class="conc-kpi-s">${concData.length} lançamentos</div>
-    </div>
+    <div class="conc-kpi ck-green"><div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>Recebido</div><div class="conc-kpi-v">${fmt(totPago)}</div><div class="conc-kpi-s">${nPago} lançamento${nPago!==1?'s':''} quitado${nPago!==1?'s':''}</div></div>
+    <div class="conc-kpi ck-amber"><div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block"></span>Pendente</div><div class="conc-kpi-v">${fmt(totPendente)}</div><div class="conc-kpi-s">${nPend} a receber</div></div>
+    <div class="conc-kpi ck-red"><div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--red);display:inline-block"></span>Vencido</div><div class="conc-kpi-v">${fmt(totVencido)}</div><div class="conc-kpi-s">${nVenc} em atraso</div></div>
+    <div class="conc-kpi"><div class="conc-kpi-l"><span style="width:7px;height:7px;border-radius:50%;background:var(--blue);display:inline-block"></span>Total do período</div><div class="conc-kpi-v">${fmt(totGeral)}</div><div class="conc-kpi-s">${concData.length} lançamentos</div></div>
   </div>
-  <div class="conc-progress">
-    <span class="conc-prog-label">Recebimento do período</span>
-    <div class="conc-prog-bar"><div class="conc-prog-fill" style="width:${pctPago}%"></div></div>
-    <span class="conc-prog-pct">${pctPago}%</span>
-  </div>
+  <div class="conc-progress"><span class="conc-prog-label">Recebimento do período</span><div class="conc-prog-bar"><div class="conc-prog-fill" style="width:${pctPago}%"></div></div><span class="conc-prog-pct">${pctPago}%</span></div>
   <div class="conc-table-header">
     <span class="conc-table-title">${filtered.length} lançamento${filtered.length!==1?'s':''}</span>
     <div class="conc-filters">
@@ -2205,36 +2079,16 @@ function renderConciliacao(){
       <button class="conc-filter-btn ${concFiltro==='vencido'?'cf-red':''}" onclick="setConcFiltro('vencido')">❌ Vencido (${nVenc})</button>
     </div>
   </div>
-  <div class="conc-table-wrap">
-    <table>
-      <thead><tr>
-        <th>Cliente</th>
-        <th>CNPJ / CPF</th>
-        <th>Vencimento</th>
-        <th>Recebimento</th>
-        <th>Valor</th>
-        <th>Recebido</th>
-        <th>Situação</th>
-      </tr></thead>
-      <tbody>
-        ${filtered.length ? filtered.map(r => {
-          const cnpjFmt = r.cnpj.length===14 ? r.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5') : r.cnpj.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/,'$1.$2.$3-$4');
-          const stBadge = r.status==='pago'?'<span class="st-pago">✅ Quitado</span>':r.status==='vencido'?'<span class="st-vencido">❌ Vencido</span>':'<span class="st-pendente">⏳ Pendente</span>';
-          const recVal = r.valorRec > 0 ? fmt(r.valorRec) : '<span class="td-muted">—</span>';
-          return `<tr>
-            <td><div class="td-name">${r.nome}</div></td>
-            <td class="td-mono" style="font-size:11px">${cnpjFmt||'—'}</td>
-            <td class="td-mono">${fmtD(r.venc)}</td>
-            <td class="td-mono">${fmtD(r.receb)}</td>
-            <td class="td-mono" style="font-weight:600">${fmt(r.valor)}</td>
-            <td class="td-mono">${recVal}</td>
-            <td>${stBadge}</td>
-          </tr>`;
-        }).join('') : '<tr><td colspan="7" class="empty">Nenhum lançamento neste filtro</td></tr>'}
-      </tbody>
-    </table>
-  </div>`;
-
+  <div class="conc-table-wrap"><table>
+    <thead><tr><th>Cliente</th><th>CNPJ / CPF</th><th>Vencimento</th><th>Recebimento</th><th>Valor</th><th>Recebido</th><th>Situação</th></tr></thead>
+    <tbody>${filtered.length ? filtered.map(r => {
+      const cnpjFmt = r.cnpj.length===14 ? r.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,'$1.$2.$3/$4-$5') : r.cnpj.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/,'$1.$2.$3-$4');
+      const stBadge = r.status==='pago'?'<span class="st-pago">✅ Quitado</span>':r.status==='vencido'?'<span class="st-vencido">❌ Vencido</span>':'<span class="st-pendente">⏳ Pendente</span>';
+      const recVal = r.valorRec > 0 ? fmt(r.valorRec) : '<span class="td-muted">—</span>';
+      return `<tr><td><div class="td-name">${r.nome}</div></td><td class="td-mono" style="font-size:11px">${cnpjFmt||'—'}</td><td class="td-mono">${fmtD(r.venc)}</td><td class="td-mono">${fmtD(r.receb)}</td><td class="td-mono" style="font-weight:600">${fmt(r.valor)}</td><td class="td-mono">${recVal}</td><td>${stBadge}</td></tr>`;
+    }).join('') : '<tr><td colspan="7" class="empty">Nenhum lançamento neste filtro</td></tr>'}
+    </tbody>
+  </table></div>`;
   res.innerHTML = html;
 }
 
