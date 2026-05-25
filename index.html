@@ -866,7 +866,9 @@ function aplicarFiltros(){
   const{ini,fim}=getBounds();const pa=gpipes();
   const b=(document.getElementById("busca1")?.value||"").toLowerCase();
   const ll=leads.filter(l=>{
-    if(!pa.includes(pm[l.status_id]))return false;
+    // Usa getLeadPipe para suportar leads ganhos/perdidos com status especial
+    const lp=getLeadPipe(l);
+    if(!pa.includes(lp))return false;
     if(l.created_at<ini||l.created_at>fim)return false;
     if(b&&!(l.name||"").toLowerCase().includes(b))return false;
     if(filt.tipo==="ativos")return !isWin(l)&&!isLost(l);
@@ -880,7 +882,7 @@ function aplicarFiltros(){
 
 function renderCards(ll,pa,ini,fim){
   const g=document.getElementById("cards-vg"),t=filt.tipo;
-  const le=leads.filter(l=>pa.includes(pm[l.status_id])&&l.created_at>=ini&&l.created_at<=fim);
+  const le=leads.filter(l=>pa.includes(getLeadPipe(l))&&l.created_at>=ini&&l.created_at<=fim);
   const at=le.filter(l=>!isWin(l)&&!isLost(l)).length;
   const gn=le.filter(l=>isWin(l)).length;
   const pd=le.filter(l=>isLost(l)).length;
@@ -1378,7 +1380,7 @@ function renderLeads(){
   const pa=gpipes(filt.emp2);
   const b=(document.getElementById("busca2")?.value||"").toLowerCase();
   const ll=leads.filter(l=>{
-    if(!pa.includes(pm[l.status_id]))return false;
+    if(!pa.includes(getLeadPipe(l)))return false;
     if(b&&!(l.name||"").toLowerCase().includes(b))return false;
     if(filt.tv!=="todos"){const tv=gtv(l);if(filt.tv==="recorrente"&&tv!=="recorrente")return false;if(filt.tv==="extra"&&tv!=="extra")return false}
     return true;
