@@ -635,7 +635,7 @@ function detectStatusIds(){
     (p._embedded?.statuses||[]).forEach(s=>{
       const n=(s.name||"").toLowerCase();
       if(n.includes("venda ganha")||n.includes("ganho")||n.includes("won")||
-         n.includes("onboarding")||n.includes("cliente ativo")||n.includes("fechado"))
+         n.includes("onboarding")||n.includes("cliente ativo")||n.includes("fechado")||n.includes(" ativo"))
         winIds.add(s.id);
       if(n.includes("venda perdida")||n.includes("perdid")||n.includes("lost")||n.includes("no-show"))
         lostIds.add(s.id);
