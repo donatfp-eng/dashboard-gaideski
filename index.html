@@ -675,8 +675,8 @@ function sok(t){document.getElementById("sdot").className="ok";document.getEleme
 function serr(t){document.getElementById("sdot").className="err";document.getElementById("stxt").textContent=t}
 function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PID.comercial,PID.clientesAtivos];if(x==="qualificacao")return[PID.qualificacao];if(x==="comercial")return[PID.comercial];if(x==="clientesativos")return[PID.clientesAtivos];return[PID.qualificacao,PID.comercial,PID.clientesAtivos]}
 function getTags(l){return(l._embedded?.tags||l.tags||[]).map(t=>((t.name||t||"")).toUpperCase())}
-function isGaideski(l){return getTags(l).some(t=>t.includes("GAIDESKI"))}
-function isPlanicon(l){return getTags(l).some(t=>t.includes("PLANICON"))}
+function isGaideski(l){const tags=(l._embedded?.tags||l.tags||[]);return tags.some(t=>((t.name||"")+"").toUpperCase().includes("GAIDESKI")||(typeof t==="string"&&t.toUpperCase().includes("GAIDESKI")))}
+function isPlanicon(l){const tags=(l._embedded?.tags||l.tags||[]);return tags.some(t=>((t.name||"")+"").toUpperCase().includes("PLANICON")||(typeof t==="string"&&t.toUpperCase().includes("PLANICON")))}
 function getEmpresa(l){if(isGaideski(l))return"gaideski";if(isPlanicon(l))return"planicon";return null}
 
 // TABS
