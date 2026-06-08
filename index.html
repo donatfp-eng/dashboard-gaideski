@@ -617,8 +617,8 @@ const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agos
 const MC=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 // ✅ FIX: Pipeline ID da Qualificação atualizado: 13512120 → 11807368
-const PID={qualificacao:11807368,gaideski:13512132,planicon:13512140,clientesAtivos:13825620};
-const PSET=new Set([11807368,13512132,13512140,13825620]);
+const PID={qualificacao:11807368,comercial:13825548,clientesAtivos:13825620};
+const PSET=new Set([11807368,13825548,13825620]);
 
 const CFV=2057155,ENR=1797505,ENE=1797507;
 
@@ -631,7 +631,7 @@ function isActive(l){return !isWin(l)&&!isLost(l)}
 function detectStatusIds(){
   const winIds=new Set([106679232]);
   const lostIds=new Set();
-  pipes.forEach(p=>{
+  const allPipes=[...pipes,...(window._allPipes||[])];allPipes.forEach(p=>{
     (p._embedded?.statuses||[]).forEach(s=>{
       const n=(s.name||"").toLowerCase();
       if(n.includes("venda ganha")||n.includes("ganho")||n.includes("won")||
@@ -675,7 +675,11 @@ function sm2(m){localStorage.setItem("gaideski_metas",JSON.stringify(m))}
 function gmv(a,m,t){return parseFloat(gm()[a+"_"+m+"_"+t]||0)}
 function sok(t){document.getElementById("sdot").className="ok";document.getElementById("stxt").textContent=t}
 function serr(t){document.getElementById("sdot").className="err";document.getElementById("stxt").textContent=t}
-function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PID.comercial,PID.clientesAtivos];return[PID[x]]}
+function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PID.comercial,PID.clientesAtivos];if(x==="qualificacao")return[PID.qualificacao];if(x==="comercial")return[PID.comercial];if(x==="clientesativos")return[PID.clientesAtivos];return[PID.qualificacao,PID.comercial,PID.clientesAtivos]}
+function getTags(l){return(l._embedded?.tags||l.tags||[]).map(t=>((t.name||"")+"").toUpperCase())}
+function isGaideski(l){const tags=(l._embedded?.tags||l.tags||[]);return tags.some(t=>((t.name||"")+"").toUpperCase().includes("GAIDESKI")||(typeof t==="string"&&t.toUpperCase().includes("GAIDESKI")))}
+function isPlanicon(l){const tags=(l._embedded?.tags||l.tags||[]);return tags.some(t=>((t.name||"")+"").toUpperCase().includes("PLANICON")||(typeof t==="string"&&t.toUpperCase().includes("PLANICON")))}
+function getEmpresa(l){if(isGaideski(l))return"gaideski";if(isPlanicon(l))return"planicon";return null}
 
 // TABS
 function initTabs(){
@@ -770,21 +774,21 @@ async function carregar(){
   document.getElementById("cont").style.display="none";
   document.getElementById("emsg").style.display="none";
   try{
-    const[ld,ldWon,ldLost,ldQual,ldQualWon,ldAtivos,pd]=await Promise.all([
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=0").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=143").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=13825620").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads/pipelines?limit=50").then(r=>r.json())
+    const[ldQual,ldQualWon,ldCom,ldComWon,ldAtivos,pd]=await Promise.all([
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=11807368").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=11807368&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825620").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads/pipelines?limit=50&with=statuses").then(r=>r.json())
     ]);
-    const allLeads=[...(ld?._embedded?.leads||[]),...(ldWon?._embedded?.leads||[]),...(ldLost?._embedded?.leads||[]),...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[]),...(ldAtivos?._embedded?.leads||[])];
+    const allLeads=[...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[]),...(ldCom?._embedded?.leads||[]),...(ldComWon?._embedded?.leads||[]),...(ldAtivos?._embedded?.leads||[])];
     const seen=new Set();
     const ll=allLeads.filter(l=>{if(seen.has(l.id))return false;seen.add(l.id);return true});
-    console.log("[DEBUG FETCH] Ativos:",ld?._embedded?.leads?.length||0,"Ganhos:",ldWon?._embedded?.leads?.length||0,"Perdidos:",ldLost?._embedded?.leads?.length||0,"Qualif:",ldQual?._embedded?.leads?.length||0,"Total único:",ll.length);
+    console.log("[DEBUG FETCH] Qualif:",ldQual?._embedded?.leads?.length||0,"QualifWon:",ldQualWon?._embedded?.leads?.length||0,"Comercial:",ldCom?._embedded?.leads?.length||0,"ComercialWon:",ldComWon?._embedded?.leads?.length||0,"Ativos:",ldAtivos?._embedded?.leads?.length||0,"Total único:",ll.length);
     const pd2=pd; const pp=pd2?._embedded?.pipelines||[];
     pipes=pp.filter(p=>PSET.has(p.id));
+    window._allPipes=pp;
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
     
@@ -1569,7 +1573,7 @@ function renderRelatorio(){
     <div class="rc-kpis">
       <div class="rc-kpi"><div class="rc-kpi-l">Vendas Ganhas</div><div class="rc-kpi-v">${gnAll.length}</div><div class="rc-kpi-s">no período</div></div>
       <div class="rc-kpi"><div class="rc-kpi-l">Receita Total</div><div class="rc-kpi-v">${fvc(vTot)}</div><div class="rc-kpi-s">valor acumulado</div></div>
-      <div class="rc-kpi"><div class="rc-kpi-l">Novas Recorrentes</div><div class="rc-kpi-v">${fvc(cart)}</div><div class="rc-kpi-s">fechadas no período · carteira total: ${fvc(cartTotal)}</div></div>
+      <div class="rc-kpi"><div class="rc-kpi-l">Novas Recorrentes</div><div class="rc-kpi-v">${fvc(cart)}</div><div class="rc-kpi-s">fechadas no período · total: ${fvc(cartTotal)}</div></div>
       <div class="rc-kpi"><div class="rc-kpi-l">Conversão</div><div class="rc-kpi-v">${tx}%</div><div class="rc-kpi-s">leads → clientes</div></div>
     </div>
     <div class="rc-footer"><span>Confidencial · Uso interno</span><span>${ag.toLocaleDateString("pt-BR")}</span></div>
@@ -1598,13 +1602,13 @@ function renderRelatorio(){
       <div class="resumo-cell">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--accent);display:inline-block;margin-right:3px"></span>Gaideski</div>
         <div class="resumo-cell-value" style="font-size:17px">${gnG.length}</div><div class="resumo-cell-sub">${fvc(vGnG)}</div>
-        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px;color:var(--accent)">${fvc(vRecTotalG)}</div><div class="resumo-cell-sub">${lRecTotalG.length} cliente${lRecTotalG.length!==1?'s':''} · ${lRecG.length} novo${lRecG.length!==1?'s':''}</div></div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px;color:var(--accent)">${fvc(vRecG)}</div><div class="resumo-cell-sub">${lRecG.length} cliente${lRecG.length!==1?'s':''}</div></div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px">${fvc(vExtG)}</div><div class="resumo-cell-sub">${lExtG.length} serviço${lExtG.length!==1?'s':''}</div></div>
       </div>
       <div class="resumo-cell">
         <div class="resumo-cell-label"><span style="width:7px;height:7px;border-radius:2px;background:var(--purple);display:inline-block;margin-right:3px"></span>Planicon</div>
         <div class="resumo-cell-value" style="font-size:17px">${gnP.length}</div><div class="resumo-cell-sub">${fvc(vGnP)}</div>
-        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px;color:var(--purple)">${fvc(vRecTotalP)}</div><div class="resumo-cell-sub">${lRecTotalP.length} cliente${lRecTotalP.length!==1?'s':''} · ${lRecP.length} novo${lRecP.length!==1?'s':''}</div></div>
+        <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px;color:var(--purple)">${fvc(vRecP)}</div><div class="resumo-cell-sub">${lRecP.length} cliente${lRecP.length!==1?'s':''}</div></div>
         <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-light)"><div class="resumo-cell-value" style="font-size:17px">${fvc(vExtP)}</div><div class="resumo-cell-sub">${lExtP.length} serviço${lExtP.length!==1?'s':''}</div></div>
       </div>
       <div class="resumo-cell" style="background:var(--surface2)">
