@@ -454,8 +454,7 @@ tbody tr:hover td{background:#F4F6FA}
         <div class="btn-group" id="grp-emp">
           <button class="btn-filter active" data-v="todos">Todos</button>
           <button class="btn-filter" data-v="qualificacao">Qualificação</button>
-          <button class="btn-filter" data-v="gaideski">Gaideski</button>
-          <button class="btn-filter" data-v="planicon">Planicon</button>
+          <button class="btn-filter" data-v="comercial">Comercial</button>
         </div>
         <div class="filter-div"></div>
         <span class="filter-label">Período</span>
@@ -524,8 +523,7 @@ tbody tr:hover td{background:#F4F6FA}
         <div class="btn-group" id="grp-emp2">
           <button class="btn-filter active" data-v="todos">Todos</button>
           <button class="btn-filter" data-v="qualificacao">Qualificação</button>
-          <button class="btn-filter" data-v="gaideski">Gaideski</button>
-          <button class="btn-filter" data-v="planicon">Planicon</button>
+          <button class="btn-filter" data-v="comercial">Comercial</button>
         </div>
         <div class="filter-div"></div>
         <span class="filter-label">Tipo</span>
@@ -617,8 +615,8 @@ const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agos
 const MC=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 // ✅ FIX: Pipeline ID da Qualificação atualizado: 13512120 → 11807368
-const PID={qualificacao:11807368,gaideski:13512132,planicon:13512140,clientesAtivos:13825620};
-const PSET=new Set([11807368,13512132,13512140,13825620]);
+const PID={qualificacao:11807368,comercial:13825548,clientesAtivos:13825620};
+const PSET=new Set([11807368,13825548,13825620]);
 
 const CFV=2057155,ENR=1797505,ENE=1797507;
 
@@ -675,7 +673,11 @@ function sm2(m){localStorage.setItem("gaideski_metas",JSON.stringify(m))}
 function gmv(a,m,t){return parseFloat(gm()[a+"_"+m+"_"+t]||0)}
 function sok(t){document.getElementById("sdot").className="ok";document.getElementById("stxt").textContent=t}
 function serr(t){document.getElementById("sdot").className="err";document.getElementById("stxt").textContent=t}
-function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PID.gaideski,PID.planicon];return[PID[x]]}
+function gpipes(e){const x=e||filt.emp;if(x==="todos")return[PID.qualificacao,PID.comercial,PID.clientesAtivos];if(x==="qualificacao")return[PID.qualificacao];if(x==="comercial")return[PID.comercial];if(x==="clientesativos")return[PID.clientesAtivos];return[PID.qualificacao,PID.comercial,PID.clientesAtivos]}
+function getTags(l){return(l._embedded?.tags||l.tags||[]).map(t=>((t.name||t||"")).toUpperCase())}
+function isGaideski(l){return getTags(l).some(t=>t.includes("GAIDESKI"))}
+function isPlanicon(l){return getTags(l).some(t=>t.includes("PLANICON"))}
+function getEmpresa(l){if(isGaideski(l))return"gaideski";if(isPlanicon(l))return"planicon";return null}
 
 // TABS
 function initTabs(){
@@ -770,19 +772,18 @@ async function carregar(){
   document.getElementById("cont").style.display="none";
   document.getElementById("emsg").style.display="none";
   try{
-    const[ld,ldWon,ldLost,ldQual,ldQualWon,ldAtivos,pd]=await Promise.all([
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=0").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[statuses][0][status_id]=143").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=11807368&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields&filter[pipeline_id]=13825620").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+    const[ldQual,ldQualWon,ldCom,ldComWon,ldAtivos,pd]=await Promise.all([
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=11807368").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=11807368&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
+      fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825620").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads/pipelines?limit=50").then(r=>r.json())
     ]);
-    const allLeads=[...(ld?._embedded?.leads||[]),...(ldWon?._embedded?.leads||[]),...(ldLost?._embedded?.leads||[]),...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[]),...(ldAtivos?._embedded?.leads||[])];
+    const allLeads=[...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[]),...(ldCom?._embedded?.leads||[]),...(ldComWon?._embedded?.leads||[]),...(ldAtivos?._embedded?.leads||[])];
     const seen=new Set();
     const ll=allLeads.filter(l=>{if(seen.has(l.id))return false;seen.add(l.id);return true});
-    console.log("[DEBUG FETCH] Ativos:",ld?._embedded?.leads?.length||0,"Ganhos:",ldWon?._embedded?.leads?.length||0,"Perdidos:",ldLost?._embedded?.leads?.length||0,"Qualif:",ldQual?._embedded?.leads?.length||0,"Total único:",ll.length);
+    console.log("[DEBUG FETCH] Qualif:",ldQual?._embedded?.leads?.length||0,"QualifWon:",ldQualWon?._embedded?.leads?.length||0,"Comercial:",ldCom?._embedded?.leads?.length||0,"ComercialWon:",ldComWon?._embedded?.leads?.length||0,"Ativos:",ldAtivos?._embedded?.leads?.length||0,"Total único:",ll.length);
     const pd2=pd; const pp=pd2?._embedded?.pipelines||[];
     pipes=pp.filter(p=>PSET.has(p.id));
     sm={};pm={};
@@ -963,7 +964,7 @@ function renderFunis(ll,pa,cid){
 }
 
 function renderFunisAll(){
-  const pa=[PID.qualificacao,PID.gaideski,PID.planicon];
+  const pa=[PID.qualificacao,PID.comercial,PID.clientesAtivos];
   const ll=leads.filter(l=>!isWin(l)&&!isLost(l));
   const old=filt.tipo;filt.tipo="ativos";
   renderFunis(ll,pa,"funis-all");filt.tipo=old;
@@ -1012,13 +1013,13 @@ function renderMetas(){
   const cart=lRec.reduce((a,l)=>a+(l.price||0),0);
   const lExt=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&gdt(l)>=iTs&&gdt(l)<=fTs);
   const ext=lExt.reduce((a,l)=>a+(l.price||0),0);
-  const lRecG=lRec.filter(l=>getLeadPipe(l)===PID.gaideski);
+  const lRecG=lRec.filter(l=>isGaideski(l));
   const cartG=lRecG.reduce((a,l)=>a+(l.price||0),0);
-  const lRecP=lRec.filter(l=>getLeadPipe(l)===PID.planicon);
+  const lRecP=lRec.filter(l=>isPlanicon(l));
   const cartP=lRecP.reduce((a,l)=>a+(l.price||0),0);
-  const lExtG=lExt.filter(l=>getLeadPipe(l)===PID.gaideski);
+  const lExtG=lExt.filter(l=>isGaideski(l));
   const extG=lExtG.reduce((a,l)=>a+(l.price||0),0);
-  const lExtP=lExt.filter(l=>getLeadPipe(l)===PID.planicon);
+  const lExtP=lExt.filter(l=>isPlanicon(l));
   const extP=lExtP.reduce((a,l)=>a+(l.price||0),0);
 
   const mR=gmv(b.ano,b.mes,"rec")||0;
@@ -1210,14 +1211,14 @@ function renderProjecao(cartAtual){
   const anoAtual=ag.getFullYear();
   const mesAtual=ag.getMonth();
 
-  const todosRecG=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&getLeadPipe(l)===PID.gaideski);
-  const todosRecP=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&getLeadPipe(l)===PID.planicon);
+  const todosRecG=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&isGaideski(l));
+  const todosRecP=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&isPlanicon(l));
   const cartG=todosRecG.reduce((a,l)=>a+(l.price||0),0);
   const cartP=todosRecP.reduce((a,l)=>a+(l.price||0),0);
   const iTs=Math.floor(new Date(anoAtual,mesAtual,1)/1000);
   const fTs=Math.floor(new Date(anoAtual,mesAtual+1,0,23,59,59)/1000);
-  const extG=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&getLeadPipe(l)===PID.gaideski&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
-  const extP=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&getLeadPipe(l)===PID.planicon&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
+  const extG=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&isGaideski(l)&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
+  const extP=leads.filter(l=>isWin(l)&&gtv(l)==="extra"&&isPlanicon(l)&&gdt(l)>=iTs&&gdt(l)<=fTs).reduce((a,l)=>a+(l.price||0),0);
 
   const meses=[];
   for(let m=0;m<12;m++){
@@ -1509,8 +1510,8 @@ function renderRelatorio(){
   const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
-  const isGaideski=l=>getLeadPipe(l)===PID.gaideski;
-  const isPlanicon=l=>getLeadPipe(l)===PID.planicon;
+  const isGaideski=l=>isGaideski(l);
+  const isPlanicon=l=>isPlanicon(l);
 
   const gnG=gnAll.filter(isGaideski); const vGnG=gnG.reduce((a,l)=>a+(l.price||0),0);
   const gnP=gnAll.filter(isPlanicon); const vGnP=gnP.reduce((a,l)=>a+(l.price||0),0);
