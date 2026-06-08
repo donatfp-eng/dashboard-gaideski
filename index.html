@@ -629,7 +629,7 @@ function isActive(l){return !isWin(l)&&!isLost(l)}
 function detectStatusIds(){
   const winIds=new Set([106679232]);
   const lostIds=new Set();
-  pipes.forEach(p=>{
+  const allPipes=[...pipes,...(window._allPipes||[])];allPipes.forEach(p=>{
     (p._embedded?.statuses||[]).forEach(s=>{
       const n=(s.name||"").toLowerCase();
       if(n.includes("venda ganha")||n.includes("ganho")||n.includes("won")||
@@ -778,7 +778,7 @@ async function carregar(){
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825548&filter[statuses][0][status_id]=142").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
       fetch(BASE+"/leads?limit=250&order[created_at]=desc&with=custom_fields,tags&filter[pipeline_id]=13825620").then(r=>r.json()).catch(()=>({_embedded:{leads:[]}})),
-      fetch(BASE+"/leads/pipelines?limit=50").then(r=>r.json())
+      fetch(BASE+"/leads/pipelines?limit=50&with=statuses").then(r=>r.json())
     ]);
     const allLeads=[...(ldQual?._embedded?.leads||[]),...(ldQualWon?._embedded?.leads||[]),...(ldCom?._embedded?.leads||[]),...(ldComWon?._embedded?.leads||[]),...(ldAtivos?._embedded?.leads||[])];
     const seen=new Set();
@@ -786,6 +786,7 @@ async function carregar(){
     console.log("[DEBUG FETCH] Qualif:",ldQual?._embedded?.leads?.length||0,"QualifWon:",ldQualWon?._embedded?.leads?.length||0,"Comercial:",ldCom?._embedded?.leads?.length||0,"ComercialWon:",ldComWon?._embedded?.leads?.length||0,"Ativos:",ldAtivos?._embedded?.leads?.length||0,"Total único:",ll.length);
     const pd2=pd; const pp=pd2?._embedded?.pipelines||[];
     pipes=pp.filter(p=>PSET.has(p.id));
+    window._allPipes=pp;
     sm={};pm={};
     pp.forEach(p=>{(p._embedded?.statuses||[]).forEach(s=>{sm[s.id]=s.name;pm[s.id]=p.id})});
     
