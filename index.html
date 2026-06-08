@@ -692,7 +692,7 @@ function initTabs(){
       if(tab==="rk")renderRank();
       if(tab==="fn")renderFunisAll();
       if(tab==="ld")renderLeads();
-      if(tab==="rl")renderRelatorio();
+      if(tab==="rl"){try{renderRelatorio();}catch(ex){console.error("[ERR renderRelatorio]",ex.message,ex.stack);}}
     });
   });
 }
@@ -810,14 +810,14 @@ async function carregar(){
     const dbgGanhos=leads.filter(l=>isWin(l));
     console.log("[DEBUG] Total leads filtrados:",leads.length);
     console.log("[DEBUG] Leads ganhos (status 142):",dbgGanhos.length);
-    aplicarFiltros();
+    try{aplicarFiltros();}catch(ex){console.error("[ERR aplicarFiltros]",ex.message,ex.stack);}
     document.getElementById("loading").style.display="none";
     document.getElementById("cont").style.display="block";
     sok("Conectado ao Kommo");
     document.getElementById("atu").textContent="Atualizado em "+new Date().toLocaleString("pt-BR");
     if(tab==="mt")renderMetas();
     if(tab==="rk")renderRank();
-    if(tab==="rl")renderRelatorio();
+    if(tab==="rl"){try{renderRelatorio();}catch(ex){console.error("[ERR renderRelatorio]",ex.message,ex.stack);}}
     setTimeout(carregar,5*60*1000);
   }catch(e){
     document.getElementById("loading").style.display="none";
