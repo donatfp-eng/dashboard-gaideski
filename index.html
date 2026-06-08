@@ -1510,9 +1510,6 @@ function renderRelatorio(){
   const lRec=leads.filter(l=>isWin(l)&&gtv(l)==="recorrente"&&gdt(l)<=fTs);
   const lExt=gnAll.filter(l=>gtv(l)==="extra");
 
-  const isGaideski=l=>isGaideski(l);
-  const isPlanicon=l=>isPlanicon(l);
-
   const gnG=gnAll.filter(isGaideski); const vGnG=gnG.reduce((a,l)=>a+(l.price||0),0);
   const gnP=gnAll.filter(isPlanicon); const vGnP=gnP.reduce((a,l)=>a+(l.price||0),0);
   const gnQ=gnAll.filter(l=>getLeadPipe(l)===PID.qualificacao);
